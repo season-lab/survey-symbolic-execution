@@ -39,7 +39,7 @@ Symbolic execution is a static analysis technique that have been introduced to p
 
 Symbolic execution overcomes common limitations of random testing techniques by evaluating a piece of code using {\em symbols}, instead of concrete values for the inputs. The main idea is to consider classes of input values, instead of a single instance values. Before analyzing how symbolic execution can identify the proper inputs which will make the function {\tt foobar} crash, we need to introduce few basic definitions.
 
-\subsection{Basic definitions}
+\subsection{A simple execution model}
 \label{simple-execution-model}
 
 Symbolic execution is a methodology for executing a program symbolically. At any point of the execution, a state is kept by the symbolic execution engine.
@@ -140,14 +140,69 @@ The example described in Section~\ref{symbolic-execution-example} shows the effe
   \item (environment) {\em How does symbolic execution handle interaction with the environment}? 
   Real-world applications interacts constantly with the environment: this is typically achieved by invoking library or system routines. A crucial aspect of these interactions is that they may cause some side-effects on the environments (e.g., creation of a file or initialization of a memory area) which must be considered since they may affect the actual execution of the code. Evaluating any possible outcome of an interaction is not feasible in most scenarios due to the large number of execution states which could be required. Moreover, it is likely that only a very small subset of this outcome is actually realistic. Hence, it is common to create models for popular library and system routines that help the symbolic execution engine to consider only significant outcomes.
 
-  \item (path explosion) {\em How does symbolic execution deal with path explosion}? \\
+  \item (state space explosion, path selection) {\em How does symbolic execution deal with path explosion}? \\
   A relatively simple code such as function {\tt foobar}, which is composed by less 12 lines of code, has generated 16 execution states, where $5$ out of $16$ are independent and must be checked to determine possible unsafe input values. Although this could seem a reasonable number of states, few lines of code, such as loops, may contribute to exponentially increase the number of states. For this reason, it is unlikely that a symbolic execution engine is able to exhaustively explore all the possible execution states within a reasonable amount of time. In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 
   \item (constraint solver) {\em What is a constraint solver in practice}? \\
   Constraint solvers exist in practice but they have significant limitations. A common limitation is that they are able to solve complex constraints in a reasonable amount of time only if these constraints are composed by linear expression over the symbols $\alpha_i$. For this reason, it is common to integrate optimizations in the symbolic execution engine that are able to generate {\em solver-friendly} constraints.
+
+  \item (binary code) {\em What are the disadvantages of symbolically executing binary code}? \\
+  The example presented in Section~\ref{symbolic-execution-example} is written in C. This does not mean that symbolic execution cannot be performed directly on binary code. However, having the source code of an application can significantly make it easier its symbolic execution since several sound assumptions can be obtained by statically analyzing the source code (e.g., the maximum size of a buffer or the number of iterations for a loop).
    
 \end{enumerate}
 Depending on the specific application context of symbolic execution, different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is enough for reaching the ultimate goal (e.g., identify a single input that crashes an application).
+
+\subsection{Memory model}
+\subsection{Loops}
+\subsection{Interaction with environment}
+
+\subsection{State space explosion}
+
+
+\subsubsection{Kinds of executors}
+A symbolic execution engine should guarantee three main principles (\cite{MAYHEM-SP12}):
+\begin{enumerate}
+  \item the system should be able to forward progress for arbitrarily long times, ideally forever, without exceeding the given resources
+  \item to maximize performance, no work should be repeated
+  \item the system should reuse as much as possible previous analysis results
+\end{enumerate}
+
+Based on these principles, symbolic executors can be divided into:
+\begin{itemize}
+  \item {\em offline} executors (e.g., \cite{SAGE-NDSS08}): one path at time, every run independent from the others, results can be immediately reused, each run restart the execution of the program from the beginning. In order to perform a run, two inputs must be provided: the target program and a seed input. The program is concretely executed and a trace is recorded. Then the trace is symbolically executed. This is can be seen as a way of {\em concolic} execution.
+  \item {\em online} executors (e.g., \cite{KLEE-OSDI08,CKC-TOCS12,AEG-NDSS11}: for each fork, the execution state is cloned. All active execution states are kept in memory, no need to re-execute but huge burden on memory resources. A form of {\em context switch} is often needed. Execute may stop forking at a certain point to allow progress, but then some path are ignored. Memory is saved by aggressive copy-on-write optimization (e.g., immutable state). DFS can be used as exploration strategy in order to minimize memory consumption but can be very slow at doing progress. Notice that since multiple runs may be executed in parallel, isolation must be guaranteed (e.g., keeping different states of the OS by emulating system calls).
+  \item {\em hybrid} executors (e.g., \cite{MAYHEM-SP12}): mixed approach. Start with an online approach, if needed switch to offline mode by doing checkpoints. A checkpoint contains the symbolic execution state and replay information. Concrete execution state is discarded since it can quickly recovered at runtime by using one input generated by solver before checkpointing.
+\end{itemize}
+
+\subsection{Path selection (aka state scheduling)}
+Different heuristics can be used for deciding which execution state should be evaluated:
+\begin{itemize}
+
+  \item \cite{AEG-NDSS11}:
+  \begin{itemize}
+    \item {\em buggy-path-first}: priority to path that shown to contain errors (even if not exploitable)
+    \item {\em loop exhaustion}: give priority to path that are exhausting a loop. In practice this can hit exploitable bugs (buffer overflows), but can prevent progress. Allow only one executor that is exhausting a loop, aggressive preconditioned symbolic execution.
+  \end{itemize}
+
+  \item \cite{KLEE-OSDI08} interleaves in a round robin fashion these strategies:
+  \begin{itemize}
+    \item {\em random path selection}: build a binary tree structure of all the state (each state is always create due to a fork from a parent). Assign same probability to be executed among states of the same subtree. Avoid starvation by given priority to states high in the tree.
+    \item {\em coverage optimize search}: assign weights based on how much new code has been covered by a path. Pick up state randomly using weights as probability.
+  \end{itemize}
+  Each state is executed only for time slice defined both as maximum number of instructions and as maximum amount of time.
+
+  \item \cite{MAYHEM-SP12} same heuristics as~\cite{SAGE-NDSS08} and~\cite{KLEE-OSDI08}:
+  \begin{itemize}
+    \item executors exploring new code have high priority
+    \item executors that identify symbolic memory accesses have high priority
+    \item executors where symbolic instruction pointers are detected have high priority
+  \end{itemize}
+\end{itemize}
+
+\subsection{Constraint solvers}
+\subsection{Challenges given by symbolic execution of binary code}
+
+\section{Literature on symbolic execution}
 
 \subsection{\cite{K-ACM76} Symbolic execution and program testing} 
 
@@ -371,7 +426,7 @@ Main aspects:
 
 This a formalization of symbolic execution and taint analysis.
 
-\section{Concolic Execution}
+\section{Literature on concolic execution}
 
 Concolic execution has been introduced by~\cite{DART-PLDI05} and later improved by~\cite{CUTE-FSE13}. Notice that concolic execution can be seen a symbolic execution where constraints on the inputs lead to single input instance.
 
