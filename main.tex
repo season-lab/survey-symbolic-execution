@@ -5,6 +5,7 @@
 \usepackage{comment}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{amssymb}
 %\usepackage{hyperref}
 
 \setlength{\parindent}{0pt}
@@ -95,23 +96,22 @@ Since, in general, any memory location may have associated a symbol, it is commo
 \begin{figure}[t]
   \centering
   \includegraphics[width=1.0\columnwidth]{images/example} 
-  \caption{Symbolic execution tree of the function {\tt foobar}. Each execution state is labeled with an alphabet letter.}
+  \caption{Symbolic execution tree of the function {\tt foobar}. Each execution state is labeled with an alphabet letter. Side effects on execution state are highlighted in gray. Leaves are evaluated against division by zero error. For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
 \end{figure}
 
 The symbolic execution of the function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially, a new symbol is introduced for each input argument and for each local variable. For the sake of the presentation, we have associated symbol $\alpha_{var}$ to the variable $var$. Moreover, we have assumed to know the set of local variables used by the function. In general, obtaining this information may be non trivial and thus it it common to introduce symbols related to local variables only when the statements defining the variables are evaluated. To track the mapping between variables and symbols, a mapping table is maintained. 
 
-The first statement of the function is line 2. For this reason, the initial execution state $A$ is given by $(2, \{\})$ where the path constraint set is empty since no assumption can be made on any symbol. After executing line 2, the $pc$ is updated adding constraints on the value of $\alpha_x$, $\alpha_y$, and $\alpha_z$ (see execution state $B$). Line 3 contains a conditional branch: since the condition cannot be uniquely resolved based on the current set of assumptions, the execution is forked. Depending on the taken branch, a different statement is next evaluated and different assumptions are made on the symbol (see execution state $C$ and $D$). On the other hand, if the condition can be uniquely determined such as when evaluating the execution state $H$, then there is not need to fork the execution but it is sufficient to follow only the interesting branch (i.e., $K$), pruning away unrealistic execution states. 
+The first statement of the function is line 2. For this reason, the initial execution state $A$ is given by $(2, \{\})$ where the path constraint set is empty since no assumption can be made on any symbol. After executing line 2, the $pc$ is updated adding constraints on the value of $\alpha_x$, $\alpha_y$, and $\alpha_z$ (see execution state $B$). Line 3 contains a conditional branch: since the condition cannot be uniquely resolved based on the current set of assumptions, the execution is forked. Depending on the taken branch, a different statement is next evaluated and different assumptions are made on the symbol (see execution state $C$ and $D$). On the other hand, if the condition can be uniquely determined such as when evaluating the execution state $H$, then there is not need to fork the execution but it is sufficient to follow only the interesting branch (e.g., $L$ from $H$), pruning away unrealistic execution states. 
 
-After expanding any execution state until it reaches the statement on line 10, we can finally check which values for the input parameters {\tt a}, {\tt b}, and {\tt c} make the function {\tt foobar} crash by performing a division by zero operation. Analyzing execution states $\{K, L, M, N, O\}$, we can conclude that only the execution state $M$ lead to an unsafe operation. The path constraint set of $M$ defines the set of inputs which are unsafe for function {\tt foobar}: any input parameters for $\alpha_a$, $\alpha_b$, and $\alpha_c$ such that:
+After expanding any execution state until it reaches the statement on line 10, we can finally check which values for the input parameters {\tt a}, {\tt b}, and {\tt c} make the function {\tt foobar} crash by performing a division by zero operation. Analyzing execution states $\{L, M, N, O, P\}$, we can conclude that only the execution state $N$ lead to an unsafe operation. The path constraint set of $N$ defines the set of inputs which are unsafe for function {\tt foobar}: any input parameters for $\alpha_a$, $\alpha_b$, and $\alpha_c$ such that:
  \[ \alpha_x + \alpha_y + \alpha_z - 3 = 0 \wedge \alpha_a = 0 \wedge \alpha_b < \alpha_c \wedge \alpha_c \neq 0 \]
-
-will crash this function. An instance of unsafe input parameters for {\tt foobar} can determined exploiting a constraint solver (i.e., an oracle able to resolve constraints). For instance, a solver may come up with the values $a = 0$, $b = 1$, and $c = 2$ given the execution state $M$. Notice that a constraint solver is also needed when evaluating the satisfiability of branch conditions. 
+will crash this function. An instance of unsafe input parameters for {\tt foobar} can determined exploiting a constraint solver (i.e., an oracle able to resolve constraints). For instance, given the execution state $N$, a solver may come up with the values $a = 0$, $b = 1$, and $c = 2$. Notice that a constraint solver is also needed when evaluating the satisfiability of branch conditions. 
 
 \subsection{Discussion}
 \label{example-discussion}
 
-The example described in Section~\ref{symbolic-execution-example} shows the effectiveness of the symbolic execution methodology in finding {\em all} the possible unsafe input values which may trigger a crash given by the division performed on line 10. This is achieved by symbolic execution through an exhaustive exploration of all the possible execution states. For this reason, at least from a theoretical point of view, symbolic execution can be seen as a sound and complete approach. This means that if an input values is detected as unsafe then it is actually unsafe. Moreover, symbolic execution is able to always find all the unsafe inputs. However, several observations and questions naturally arise:
+The example described in Section~\ref{symbolic-execution-example} shows the effectiveness of the symbolic execution methodology in finding {\em all} the possible unsafe input values which may trigger a crash due to an unsafe division performed at line 10. This is achieved by symbolic execution through an exhaustive exploration of all the possible execution states. For this reason, at least from a theoretical point of view, symbolic execution can be seen as a sound and complete approach. This means that if an input values is detected as unsafe then it is actually unsafe. Moreover, symbolic execution is able to always find all the unsafe inputs. However, real-world code can be significantly more complex than the example shown in Figure~\ref{fig:example-1}. Several observations and questions naturally arise:
 
 \begin{enumerate}
 
@@ -150,26 +150,120 @@ The example described in Section~\ref{symbolic-execution-example} shows the effe
   The example presented in Section~\ref{symbolic-execution-example} is written in C. This does not mean that symbolic execution cannot be performed directly on binary code. However, having the source code of an application can significantly make it easier its symbolic execution since several sound assumptions can be obtained by statically analyzing the source code (e.g., the maximum size of a buffer or the number of iterations for a loop).
    
 \end{enumerate}
-Depending on the specific application context of symbolic execution, different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is enough for reaching the ultimate goal (e.g., identify a single input that crashes an application).
+Depending on the specific application context of symbolic execution, different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
 \subsection{Memory model}
+A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
+
+\subsubsection{Index-based memory~\cite{MAYHEM-SP12}}
+\begin{itemize}
+  \item memory is a map $\pi : I \to E$ from 32-bit indices ($i \in I$) to expressions ($e \in E$)
+  \item load expressions $e = load(\pi, i)$: $i$ indixes $\pi$ and the loaded value $e$ represents the contents of the $i$-th memory cell
+  \item store expressions $store(\pi, i, e)$: a new memory $\pi'$ where $i$ is mapped to $e$, i.e., $\pi' = \pi[i \gets e]$
+\end{itemize}
+When using this memory model, handling of arbitrary symbolic indices is notoriously hard, since a symbolic index may reference any cell in memory. Two approaches can be pursued: (a) concretization of the index where only value is evaluated for the index (see Section~\ref{concolic-execution} for more details), (b) fully symbolic memory where any possible value for the index is evaluated (e.g., \cite{BAP-CAV11}). The former is often excessively limiting (many paths are pruned away), while the former is hard to make scalable. To overcome the limitations of both approaches, \cite{MAYHEM-SP12} models memory {\em partially}: symbolic writes are always concretized, while symbolic reads are allowed to be modeled symbolically.
+
+\paragraph{Memory objects} Whenever there is a symbolic read, an immutable memory object $\mathcal{M}$ is generated that contains all values that could be accessed by the index, i.e., $\mathcal{M}$ is partial snapshot of the global memory $\pi$. In practice, \cite{MAYHEM-SP12} reasons on $\mathcal{M}[i]$ instead of reasoning on $\pi[i]$, since the former is typically smaller than the latter.
+
+\paragraph{Memory object bounds resolution} \cite{MAYHEM-SP12} trades accuracy with scalability by resolving the bounds $[\mathcal{L}, \mathcal{U}]$ of the memory region, where $\mathcal{L}$ is lower and $\mathcal{U}$ is the upper bound for the index $i$. Initially, $\mathcal{L} \in [0, 2^{32}-1]$. The solver is used to test if $i < \frac{2^{32}-1}{2}$ makes the path constrains unsatisfiable. If satisfiable then $\mathcal{L} \in [0, \frac{2^{32}-1}{2}]$, otherwise $\mathcal{L} \in [\frac{2^{32}-1}{2}, 2^{32}-1]$. The same strategy is repeated as much as possible. This is akin to a binary search algorithm. Whenever the bounds become reasonable, a memory object is generated. Unfortunately, there several cases where the bounds cannot be narrowed down drastically and thus other techniques can be used:
+\begin{itemize}
+  \item {\em value set analysis (VSA)}
+  \item {\em refinement cache}
+  \item {\em lemma cache}
+  \item {\em index search trees (IST)}
+  \item {\em bucketization with linear functions}
+\end{itemize}
+Whenever the size of the memory object exceeds a threshold (e.g., $|\mathcal{M}| \geq 1024$), then~\cite{MAYHEM-SP12} concretizes the index. However, instead of choosing a random value for the index, it tries to assign some {\em interesting} value (e.g., test it if it makes sense for it to be equal to an invalid memory address which can be exploited for security purposes).
+
 \subsection{Loops}
+
+A technique to make it easier to perform symbolic execution on loops is through imposing some preconditions. See Section~\ref{precontioned-symbolic-execution} for more details.
+
 \subsection{Interaction with environment}
+
+Environment can be seen as an input source. Since it can be unfeasible to analyze all possible interactions with the environment, it is common to model these interactions, emulating their behaviors and their side-effects. The main intuition is that models understand the semantics of the desired actions well enough to generate the required constraints.\\
+
+\cite{KLEE-OSDI08}:
+\begin{itemize}
+  \item {\em file system}: operations on concrete files are actually performed. Operations on symbolic files are emulated modeling a simple symbolic file system, which is private for each execution state. Symbolic file system is a directory with $N$ symbolic files. Users specify both the number of files and their sizes. Any operation on a unconstrained symbolic file will generate $N+1$ branches: one for each symbolic file, plus one for a failing scenario. Emulation done at library level, not system call level. This make symbolic execution simpler (no need to symbolically execute library code) but assumption that library code is correct. If needed, library code is tested separately.
+  \item {\em environment failures}: \cite{KLEE-OSDI08} emulates failures (e.g., failures of {\tt write}). This is optional since some applications may be not sensitive to environment failure.
+  \item {\em re-running test cases}: inputs which may crash an application may depend on the environment failures. To force concrete execution towards failures, \cite{KLEE-OSDI08} exploits {\tt ptrace}.
+\end{itemize}
+
+\cite{AEG-NDSS11}:
+\begin{itemize}
+  \item {\em symbolic files}: emulation of {\tt open}, {\tt read}, {\tt write}, and similar other system calls. Similar to~\cite{KLEE-OSDI08}.
+  \item {\em symbolic sockets}: emulation of {\tt socket}, {\tt bind}, {\tt accept}, {\tt send}, and similar other system calls. 
+  \item {\em environment variables}: a complete summary of all possible results (concrete values, fully symbolic, and failures) of {\tt get\_env}.
+  \item {\em library function calls and system calls}: emulation of more than 70 library routines and system calls. In particular, formatting functions (e.g., {\tt fprintf}) are emulated to capture buffer overflows.
+\end{itemize}
+
+\cite{DART-PLDI05}: external interfaces are extracted by analyzing library and system calls, then random results are returned (compliant with the type).
 
 \subsection{State space explosion}
 
+\subsubsection{Preconditioned symbolic execution~\cite{AEG-NDSS11}}
+\label{precontioned-symbolic-execution}
 
-\subsubsection{Kinds of executors}
+The main challenge with symbolic execution is managing the state space explosion problem. Since symbolic execution forks off a new interpreter at every (undecidable) branch, the total number of interpreters is exponentially in the number of of branches.\\
+
+\cite{AEG-NDSS11} have proposed {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subset of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
+Note that preconditions cannot be selected at random. If a precondition is too specific, we will detect no exploits (since exploitability will probably not imply the precondition); if it is too general, we will have to explore almost the entire state space. Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
+
+Preconditioned symbolic execution enforces the precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the shrinking of the state space -- imposed by the precondition constraints -- outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do no further checks and do not fork off an interpreter at all for the branch. We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
+
+\paragraph{Preconditions} Kinds of preconditions:
+\begin{itemize}
+  \item {\em None}. There is no precondition and the state space is explored as normal.
+  \item {\em Known Length}. The precondition is that inputs are of known maximum length, as in the previous example. We use static analysis to automatically determine this precondition.
+  \item {\em Known Prefix}. The precondition is that the symbolic inputs have a known prefix.
+  \item {\em Concolic Execution}. Concolic execution [24] can be viewed as a specific form of preconditioned symbolic execution where the precondition is specified by a single program path as realized by an example input. For example, we may already have an input that crashes the program, and we use it as a precondition to determine if the executed path is exploitable. See Section~\ref{concolic-execution} for a more detailed discussion of this technique.
+\end{itemize}
+
+\paragraph{An example} Consider the example:
+
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+    // N symbolic branches 
+    if (input[0] < 42) [...]
+    [...]
+    if (input[N - 1] < 42) [...]
+
+    // symbolic loop
+    strcpy(dest, input); 
+
+    // M symbolic branches
+    if (input[N + 1] < 42) [...]
+    [...]
+    if (input[N + M - 1] < 42) [...]
+    \end{lstlisting}
+where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
+\begin{itemize}
+  \item {\em None}. No constraint is added. State space is $2^N \cdot S \cdot 2^M$.
+  \item {\em Known Length}. For instance, we add constraint that $(S - 1)$ bytes of {\tt input} are not equal to \textbackslash0. Since the symbolic loop is known, then the state space is reduce to $2^N \cdot 2^M$.
+  \item {\em Known Prefix}. For instance, we add constraint that the $P$ bytes of {\tt input} are known ($P < N < S$). E.g., fixed header string). Since first $P$ branches and first $P$ iterations are concrete, then state space is $S \cdot 2^{N-P} \cdot 2^M$.
+  \item {\em Concolic Execution}. We decide the exact values for all bytes of {\tt input}. Input space is $1$.
+\end{itemize}
+
+\subsubsection{Concolic execution}
+\label{concolic-execution}
+
+{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. Different scenarios:
+\begin{itemize}
+  \item {\em Use concolic execution to generate useful random inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution.
+  \item {\em Use concolic execution to overcome unsolvable constraints}. Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed. Use concrete values also to avoid to perform alias analysis on pointer, which is typically very expensive. Whenever meaningful, \cite{DART-PLDI05} tries to test both valid (not {\tt NULL}) and invalid ({\tt NULL}) input pointers in order to maximize bug detection. However~\cite{DART-PLDI05} will never artificially negate a branch if that condition cannot be exercised using a concrete input. In other words, both branches of an {\tt if} statement are considered only if they are both meaningful (more precisely: \cite{DART-PLDI05} is able to generate a valid input). Notice that~\cite{DART-PLDI05} may generate an input using a solver by considering only a subset of branch constraints. For instance, consider constraints ($C_1, C_2, C_3$) given by three nested branches: if $C_1$ is non linear (hard to solve), it needs only to generate a random input for taking $C_1$ and then use the solver for exploring path given by $(C_2, C_3)$. A traditional symbolic execution engine may get stuck at $C_1$ and give up after some time on {\em all} the derived path. Notice that whenever a concrete input is used to overcome a hard constraint, the approach become incomplete.
+\end{itemize} 
+
+\subsection{Symbolic executors}
 A symbolic execution engine should guarantee three main principles (\cite{MAYHEM-SP12}):
 \begin{enumerate}
-  \item the system should be able to forward progress for arbitrarily long times, ideally forever, without exceeding the given resources
-  \item to maximize performance, no work should be repeated
+  \item the system should be able to forward progress for arbitrarily long time, ideally forever, without exceeding the given resources
+  \item to maximize performance, no work should be repeated (avoid to restart symbolic / concrete execution)
   \item the system should reuse as much as possible previous analysis results
 \end{enumerate}
 
 Based on these principles, symbolic executors can be divided into:
 \begin{itemize}
-  \item {\em offline} executors (e.g., \cite{SAGE-NDSS08}): one path at time, every run independent from the others, results can be immediately reused, each run restart the execution of the program from the beginning. In order to perform a run, two inputs must be provided: the target program and a seed input. The program is concretely executed and a trace is recorded. Then the trace is symbolically executed. This is can be seen as a way of {\em concolic} execution.
+  \item {\em offline} executors (e.g., \cite{SAGE-NDSS08}): one path at time, every run independent from the others, results can be immediately reused, each run restarts the execution of the program from the beginning. In order to perform a run, two inputs must be provided: the target program and a seed input. The program is concretely executed and a trace is recorded. Then the trace is symbolically executed. This is can be seen as a way of {\em concolic} execution.
   \item {\em online} executors (e.g., \cite{KLEE-OSDI08,CKC-TOCS12,AEG-NDSS11}: for each fork, the execution state is cloned. All active execution states are kept in memory, no need to re-execute but huge burden on memory resources. A form of {\em context switch} is often needed. Execute may stop forking at a certain point to allow progress, but then some path are ignored. Memory is saved by aggressive copy-on-write optimization (e.g., immutable state). DFS can be used as exploration strategy in order to minimize memory consumption but can be very slow at doing progress. Notice that since multiple runs may be executed in parallel, isolation must be guaranteed (e.g., keeping different states of the OS by emulating system calls).
   \item {\em hybrid} executors (e.g., \cite{MAYHEM-SP12}): mixed approach. Start with an online approach, if needed switch to offline mode by doing checkpoints. A checkpoint contains the symbolic execution state and replay information. Concrete execution state is discarded since it can quickly recovered at runtime by using one input generated by solver before checkpointing.
 \end{itemize}
@@ -184,12 +278,14 @@ Different heuristics can be used for deciding which execution state should be ev
     \item {\em loop exhaustion}: give priority to path that are exhausting a loop. In practice this can hit exploitable bugs (buffer overflows), but can prevent progress. Allow only one executor that is exhausting a loop, aggressive preconditioned symbolic execution.
   \end{itemize}
 
+  \item \cite{EXE-CCS06} uses a mixture of best-first and depth-first search. Best-first approach uses heuristic that give high priority to the path which is blocked at the line that has been executed the fewest number of times. The picket path is executed with DFS for a limited amount of time in order to avoid starvation. 
+
   \item \cite{KLEE-OSDI08} interleaves in a round robin fashion these strategies:
   \begin{itemize}
     \item {\em random path selection}: build a binary tree structure of all the state (each state is always create due to a fork from a parent). Assign same probability to be executed among states of the same subtree. Avoid starvation by given priority to states high in the tree.
     \item {\em coverage optimize search}: assign weights based on how much new code has been covered by a path. Pick up state randomly using weights as probability.
   \end{itemize}
-  Each state is executed only for time slice defined both as maximum number of instructions and as maximum amount of time.
+  Each state is executed only for a time slice defined both as maximum number of instructions and as maximum amount of time.
 
   \item \cite{MAYHEM-SP12} same heuristics as~\cite{SAGE-NDSS08} and~\cite{KLEE-OSDI08}:
   \begin{itemize}
@@ -284,7 +380,7 @@ Symbolic execution engine for generating code coverage tests for C applications.
 
 \subsubsection{Approach}
 
-KLEE does not currently support: symbolic floating point, longjmp, threads, and assembly code. Additionally, memory objects are required to have concrete sizes.
+KLEE does not currently support: symbolic floating point, longjmp, threads, and assembly code. Additionally, memory objects are required to have concrete sizes. STP is the constraint solver (see~\cite{EXE-CCS06}).
 
 KLEE works on the LLVM bytecode generate by LLVM-gcc. Given as input the bytecode, it generates inputs (constraints can be put on the number of cmd arguments, their maximum length, maximum times syscall can fail), Tests can be run on actual code, generated with native compiler. Input marked as symbolic have associated a constraint on it (initially this could be nothing). When a conditional is met in the code, a constraint solver determines which branch is taken. If current constraints do not lead to a specific branch, then there is an execution fork. When a bug (exception, memory error) or process exit is hit, the constrain solver is used to obtain valid inputs which lead to that exit point. KLEE analyzes the bytecode and modifies the state based on the side effects given by a statement. If a fork is needed, the state is cloned and a new KLEE process is instantiated. If a load/store works on an address which could point to different objects, for each object a fork is executed and the address is bounded to that object from now on. Memory is not seen as a single array, but divided in many objects (stack, heap objects, etc.) and copy on write is used to minimize overhead due to cloning (e.g., cloning heap has constant cost).
 
@@ -513,7 +609,7 @@ Efficiently test code
 \end{enumerate}
 
 
-Notice that when a constrain cannot be solve, the concrete value is considered. If due to this, some path cannot be explored (the concrete value always lead to the same branch) then a new execution of CUTE is started where other random inputs are used as concrete values.
+Notice that when a constrain cannot be solve, the concrete value is considered. If due to this, some paths cannot be explored (the concrete value always lead to the same branch) then a new execution of CUTE is started where other random inputs are used as concrete values.
 
 Notice that if a functions takes as input a data structure then two approached can used:
 \begin{itemize}
