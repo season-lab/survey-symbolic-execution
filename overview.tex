@@ -89,10 +89,10 @@ The example described in Section~\ref{symbolic-execution-example} shows the effe
   In general, any arbitrary complex object can be seen as an array of bytes, where each byte can have associated a distinct symbol. Indeed, even a C {\tt int} type can be seen as an array of four bytes. In practice, it is convenient, whenever possible (e.g., by statically analyzing the source code), to exploit structural properties of the data. 
 
   \item (loops) {\em How does symbolic execution handle loops?} \\
-  Using the execution model presented in Section~\ref{simple-execution-model}, a loop can be evaluated by translated it into a combination of conditional branches and $goto$ statements. This transformation is not uncommon when a high-level language like C is compiled into binary code. However, the main critical aspect when symbolically executing a loop is choosing how many iterations should be analyzed. In general, a loop may be repeated depending on the value of some variables whose values may be not constant, e.g., the number of iterations is given by the value of an input parameter. The naive approach can lead to create a new execution state for each possible repetition of the loop.
+  Using the execution model presented in Section~\ref{simple-execution-model}, a loop can be evaluated by translating it into a combination of conditional branches and $goto$ statements. This transformation is not uncommon when a high-level language like C is compiled into binary code. However, the main critical aspect when symbolically executing a loop is choosing how many iterations should be analyzed. In general, a loop may be repeated depending on the value of some variables whose values may be not constant, e.g., the number of iterations is given by the value of an input parameter. The naive approach can lead to create a new execution state for each possible repetition of the loop.
 
   \item (subroutines) {\em How does symbolic execution handle subroutines?} \\
-  The execution model presented in Section~\ref{simple-execution-model} does not specify how to handle invocation to subroutines (i.e., a $call$ statement). An way to extend our execution model in order to handle subroutines it to expand the execution state by adding a simple execution stack.
+  The execution model presented in Section~\ref{simple-execution-model} does not specify how to handle invocation to subroutines (i.e., a $call$ statement). A way to extend our execution model in order to handle subroutines it to expand the execution state by adding a simple execution stack.
 
   \item (recursion) {\em How does symbolic execution handle recursion?} \\
   Consider, as an example, the code:
@@ -103,11 +103,11 @@ The example described in Section~\ref{symbolic-execution-example} shows the effe
     4.    return 1 + sum(n - 1);
     5.  }
     \end{lstlisting}
-  Assuming to have introduced an execution stack in the execution state, it can be easily observed that the above can easily lead to a very large number of executions states. Indeed, the number of executions states is related to the number of times that the conditional branch on line 2 is not taken. 
+  Assuming to have introduced an execution stack in the execution state, it can be easily observed that the above code can easily lead to a very large number of executions states. Indeed, the number of executions states is related to the number of times that the conditional branch on line 2 is not taken. 
 
   Since the {\tt int} type in C can have $2^{31} - 1$ positive values, symbolic execution has to create more than $2^{31} - 1$  execution states to cover all the possible execution paths.
  
-  \item (environment) {\em How does symbolic execution handle interaction with the environment}? 
+  \item (environment) {\em How does symbolic execution handle interaction with the environment}? \\
   Real-world applications interacts constantly with the environment: this is typically achieved by invoking library or system routines. A crucial aspect of these interactions is that they may cause some side-effects on the environments (e.g., creation of a file or initialization of a memory area) which must be considered since they may affect the actual execution of the code. Evaluating any possible outcome of an interaction is not feasible in most scenarios due to the large number of execution states which could be required. Moreover, it is likely that only a very small subset of this outcome is actually realistic. Hence, it is common to create models for popular library and system routines that help the symbolic execution engine to consider only significant outcomes.
 
   \item (state space explosion, path selection) {\em How does symbolic execution deal with path explosion}? \\
