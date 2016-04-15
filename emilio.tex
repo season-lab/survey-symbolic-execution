@@ -682,6 +682,34 @@ Very similar to \cite{MineSweeper-BOTNET08}. Differences:
   \item symbolic constraints can be solved only if linear.
 \end{itemize}
 
+\subsubsection{\cite{ANGR-SP16} State of) The Art of War: Offensive Techniques in Binary Analysis} 
+
+\paragraph{Goal}
+
+\paragraph{Approach} 
+
+Security -- Static analysis techniques:
+\begin{itemize}
+  \item recovering the control flow graph: main problem is given by indirect jumps, which can be computed at runtime, context-sensitive (e.g., invocation of a user callback), object-sensitive invocations (e.g., virtual functions). In practice, many techniques are used to deal with indirect jumps, however soundness and completeness of the CFG can be significantly affected by them.
+  \item discovering graph-based vulnerability: a bug can be modeled as a set of nodes in a control flow graph (or data flow, or control-dependence).
+  \item value-set analysis: this analysis attempts to find a tight over approximation of the program state (values and registers). It can be used track indirects jumps. It may lack accuracy but is sound. It can be used to identify overlapping buffers, problem that can lead to buffer overflows.
+\end{itemize}
+
+Security -- Dynamic analysis techniques:
+\begin{itemize}
+  \item fuzzing: start from a random input, mutate it, test code to find bugs:
+    \begin{itemize}
+      \item coverage-based fuzzing: use coverage metric to decide where it should continue to test
+      \item taint-based fuzzing: analysis of how the user input flows through code and based on this generate different inputs
+    \end{itemize}
+  \item dynamic symbolic execution: subset of symbolic execution. While the system emulates the program execution, it tracks symbol constraints, then negates constraints to explore other branches. Main problem is path explosion.
+    \begin{itemize}
+      \item symbolic-assisted (guided) fuzzing: exploit symbolic execution to make progress when fuzzer tools get stuck.
+    \end{itemize}
+
+\end{itemize}
+
+
 \begin{comment}
 
 \subsubsection{\cite{}} 
@@ -716,6 +744,11 @@ A list of papers about symbolic execution (methodology) that we are currently re
   \item \cite{GDV-ISSTA12} Probabilistic symbolic execution
   \item \cite{CGK-ICSE11} Symbolic execution for software testing in practice: preliminary assessment
   \item \cite{PRV-ISSTA11} Symbolic execution with mixed concrete-symbolic solving
+  \item (EMILIO) \cite{DRILLER-NDSS16} Driller: Augmenting Fuzzing Through Selective Symbolic Execution 
+  \item Effient State Merging in Symbolic Execution. PLDI 2012.
+  \item Loop-Extended Symbolic Execution on Binary Programs, ISSTA 2009.
+  \item Program-Adaptive Mutational Fuzzing. IEEE SP 2015.
+  \item Under-constrained Execution: Making Automatic Code Destruction Easy and Scalable. ISSTA 2007.
 \end{itemize}
 
 \subsubsection{Applications}
@@ -733,6 +766,7 @@ A list of papers about applications of symbolic execution that we are currently 
   \item \cite{YBD-CCS15} Symbolic Execution of Obfuscated Code
   \item \cite{CWO-ASPLOS06} Temporal search: detecting hidden malware timebombs with virtual machines
   \item \cite{BHK-TR07} BitScope: Automatically Dissecting Malicious Binaries
+  \item (EMILIO) \cite{ANGR-SP16} (State of) The Art of War: Offensive Techniques in Binary Analysis
 \end{itemize}
 
 \bibliographystyle{abstract} %abbrv
