@@ -199,7 +199,18 @@ Pointers are seen as array reference at some offset. This means that allocation 
 
 \section{Loops}
 
-Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. For this reason, it is common to specifically deal with them:
+Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. Example taken from~\cite{CS-ACM13}:
+    \begin{lstlisting}[basicstyle=\ttfamily\small]
+    1.  int N = sym_input(); // e.g., read
+    2.  while (N > 0) {
+    3.    N = sym_input();  
+    4.  }
+    \end{lstlisting}
+The path constraint set of any final state will contain:
+  \[ \left ( \bigwedge_{i \in [1, n]]} N_i > 0 \right ) \wedge (N_{n+1} \leq 0) \]
+where $N_i$ is the symbol introduced at the i-th iteration.\\
+
+For this reason, it is common to specifically deal with them:
 \begin{itemize}
 
   \item {\em preconditions}: a technique to make it easier to perform symbolic execution on loops is through imposing some preconditions, e.g., use static analysis techniques to understand number of iterations for a loop. See Section~\ref{precontioned-symbolic-execution} for more details.
@@ -285,14 +296,29 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
   \item {\em Concolic Execution}. We decide the exact values for all bytes of {\tt input}. Input space is $1$.
 \end{itemize}
 
-\subsection{Concolic execution}
-\label{concolic-execution}
+\subsection{Dynamic Symbolic Execution}
 
+
+\paragraph{Concolic execution}
+\label{concolic-execution}
 {\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. Different scenarios:
 \begin{itemize}
-  \item {\em Use concolic execution to generate useful random inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution.
-  \item {\em Use concolic execution to overcome unsolvable constraints}. Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Use concrete values also to avoid to perform alias analysis on pointers, which is typically very expensive. Whenever meaningful, \cite{DART-PLDI05} tries to test both valid (not {\tt NULL}) and invalid ({\tt NULL}) input pointers in order to maximize bug detection. However~\cite{DART-PLDI05} will never artificially negate a branch if that condition cannot be exercised using a concrete input. In other words, both branches of an {\tt if} statement are considered only if they are both meaningful (more precisely: \cite{DART-PLDI05} is able to generate a valid input). Notice that~\cite{DART-PLDI05} may generate an input using a solver by considering only a subset of branch constraints. For instance, consider constraints ($C_1, C_2, C_3$) given by three nested branches: if $C_1$ is non linear (hard to solve), it needs only to generate a random input for taking $C_1$ and then use the solver for exploring path given by $(C_2, C_3)$. A traditional symbolic execution engine may get stuck at $C_1$ and give up after some time on {\em all} the derived path. Notice that whenever a concrete input is used to overcome a hard constraint, the overall approach become incomplete.
+  \item {\em Use concolic execution to generate useful (random) inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
+
+  \item {\em Use concolic execution to overcome unsolvable constraints}. Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-ACM13}:
+    \begin{lstlisting}[basicstyle=\ttfamily\small]
+    int non_linear(int v) {
+      return (v * v) % 50;
+    }
+    \end{lstlisting}
+  The non-linear operation inside this function can be hard for a solver. Using a concrete execution, the engine can overcome this problem, but then the precision and completeness may be affected.
+  
+  Notice that the use of concrete values can also avoid to perform alias analysis on pointers, which is typically very expensive. Whenever meaningful, \cite{DART-PLDI05} tries to test both valid (not {\tt NULL}) and invalid ({\tt NULL}) input pointers in order to maximize bug detection. However~\cite{DART-PLDI05} will never artificially negate a branch if that condition cannot be exercised using a concrete input. In other words, both branches of an {\tt if} statement are considered only if they are both meaningful (more precisely: \cite{DART-PLDI05} is able to generate a valid input). Notice that~\cite{DART-PLDI05} may generate an input using a solver by considering only a subset of branch constraints. For instance, consider constraints ($C_1, C_2, C_3$) given by three nested branches: if $C_1$ is non linear (hard to solve), it needs only to generate a random input for taking $C_1$ and then use the solver for exploring path given by $(C_2, C_3)$. A traditional symbolic execution engine may get stuck at $C_1$ and give up after some time on {\em all} the derived path. Notice that whenever a concrete input is used to overcome a hard constraint, the overall approach become incomplete.
+
 \end{itemize} 
+
+\paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-ACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
+
 
 \section{Symbolic executors}
 A symbolic execution engine should guarantee three main principles (\cite{MAYHEM-SP12}):
