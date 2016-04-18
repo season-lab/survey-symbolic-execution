@@ -199,7 +199,26 @@ Pointers are seen as array reference at some offset. This means that allocation 
 
 \section{Loops}
 
-A technique to make it easier to perform symbolic execution on loops is through imposing some preconditions. See Section~\ref{precontioned-symbolic-execution} for more details.
+Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. For this reason, it is common to specifically deal with them:
+\begin{itemize}
+
+  \item {\em preconditions}: a technique to make it easier to perform symbolic execution on loops is through imposing some preconditions, e.g., use static analysis techniques to understand number of iterations for a loop. See Section~\ref{precontioned-symbolic-execution} for more details.
+
+  \item {\em choose a behavior}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
+
+  \item {\em approximations}: effects of a loop are often approximated using {\em fixpoints} (e.g., in~\cite{KKM-USEC05,BNS-SP06,CFB-ACSAC06}). A fixpoint F is an approximation of the effect of loop body on an execution state. F approximates the state after the execution of loop whenever the initial state before the loop was F (?). Transforming an execution state to a fixpoint state is defined as widening. Construction of the fixpoint:
+  \begin{itemize}
+    \item S1: state after first iteration
+    \item S2: state after second iteration
+    \item compare S1 and S2: assign bottom to each symbol that has been altered
+    \item repeat until there is no difference between Si and Si+1
+    \item if there is a branch inside the loop, then either the branch is known or its condition is on a symbol which has been assign to bottom. In this case, two parallel states are created and then compared.
+  \end{itemize}
+
+\end{itemize}
+
+Notice that detection/analysis of loops can be done using techniques such as~\cite{SGL-TOPLAS96} (e.g., in~\cite{CFB-ACSAC06}).
+
 
 \section{Interaction with environment}
 
@@ -291,6 +310,8 @@ Based on these principles, symbolic executors can be divided into:
 \end{itemize}
 
 \section{Path selection (aka state scheduling)}
+\label{heuristics}
+
 Different heuristics can be used for deciding which execution state should be evaluated:
 \begin{itemize}
 

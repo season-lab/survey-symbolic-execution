@@ -684,10 +684,6 @@ Very similar to \cite{MineSweeper-BOTNET08}. Differences:
 
 \subsubsection{\cite{ANGR-SP16} State of) The Art of War: Offensive Techniques in Binary Analysis} 
 
-\paragraph{Goal}
-
-\paragraph{Approach} 
-
 Security -- Static analysis techniques:
 \begin{itemize}
   \item recovering the control flow graph: main problem is given by indirect jumps, which can be computed at runtime, context-sensitive (e.g., invocation of a user callback), object-sensitive invocations (e.g., virtual functions). In practice, many techniques are used to deal with indirect jumps, however soundness and completeness of the CFG can be significantly affected by them.
@@ -705,10 +701,37 @@ Security -- Dynamic analysis techniques:
   \item dynamic symbolic execution: subset of symbolic execution. While the system emulates the program execution, it tracks symbol constraints, then negates constraints to explore other branches. Main problem is path explosion.
     \begin{itemize}
       \item symbolic-assisted (guided) fuzzing: exploit symbolic execution to make progress when fuzzer tools get stuck.
+      \item under-constrained symbolic execution: analyze symbolically parts of the application. This can give false positives, since the context may never shows some bugs of some piece of code.
     \end{itemize}
-
 \end{itemize}
 
+Notice that techniques such as de-randomization can generate crashing inputs which are not actually replayable. AT the end, the only way to find a real bug is to run it in the real environment.
+
+{\tt angr} is cross-platform, cross architecture. It supports different analysis paradigms: need to support different memory models. Using {\tt angr}, several results from previous papers (e.g., \cite{AEG-NDSS11}), not only related to symbolic execution,  can be easily reproduced. It is composed by several submodules:
+
+\begin{itemize}
+  \item {\em intermediate representation}: VEX and PyVEX.
+  \item {\em binary loading}: loader called {\tt CLE (CLE Loads Everything)} that exploits several native libraries (e.g., {\tt elftools}, {\tt pefile}) to support many formats.
+  \item {\em program state representation/modification}: {\tt SimuVEX} simulates the state:
+    \begin{itemize}
+      \item registers
+      \item symbolic memory: index-based memory similar to~\cite{MAYHEM-SP12}
+      \item abstract memory: a region-based memory, typically used by most static analysis tools
+      \item POSIX: track state of files
+      \item log: it keeps a log of any side-effect on the state
+      \item inspection: it can easily debugged, allowing breakpoints, taint conditions, symbolic conditions, instrumentation (e.g., memory accesses).
+      \item solver: {\tt claripy}
+      \item architecture info: a way to expose properties of the architecture (e.g., word size).
+    \end{itemize}  
+  \item data model: it exploits {\tt claripy} to write expression trees over values. Several backends/frontends: e.g.,~\cite{Z3-TACS08}, VSA~\cite{WYSINWYX-TOPLAS10}.
+  \item full-program analysis: {\tt PathGroup} tracks paths as they run through an application which is useful to implement path prioritization, {\tt Analysis} manages the life-cycle of static analysis (e.g., CFG recovery).
+\end{itemize}
+
+\paragraph{CFG recovery}: two algorithms:
+\begin{itemize}
+  \item {\tt CFGAccurate}: slow, iterative CFG recovery, mix of {\em force execution}, {\em backwards slicing}, {\em symbolic execution} to recover indirect jumps.
+  \item {\tt CFGFast}: fast but inaccurate, based on a dissambler
+\end{itemize}
 
 \begin{comment}
 
@@ -767,6 +790,7 @@ A list of papers about applications of symbolic execution that we are currently 
   \item \cite{CWO-ASPLOS06} Temporal search: detecting hidden malware timebombs with virtual machines
   \item \cite{BHK-TR07} BitScope: Automatically Dissecting Malicious Binaries
   \item (EMILIO) \cite{ANGR-SP16} (State of) The Art of War: Offensive Techniques in Binary Analysis
+  \item CRAX: Software Crash Analysis for Automatic Exploit Generation by Modeling Attacks as Symbolic Continuations. IEE SERE 2012.
 \end{itemize}
 
 \bibliographystyle{abstract} %abbrv
