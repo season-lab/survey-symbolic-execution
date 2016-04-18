@@ -2,7 +2,7 @@
 
 \section{Overview}
 
-Symbolic execution has been originally introduced in~\cite{K-ACM76} and~\cite{H-TSE77}. A good introduction to symbolic execution is present in~\cite{KLEE-OSDI08} (while~\cite{EXE-CCS06} is a previous effort of the same authors). \cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution (and taint analysis).
+Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H-TSE77}. A good introduction to symbolic execution is present in~\cite{KLEE-OSDI08} (while~\cite{EXE-CCS06} is a previous effort of the same authors). \cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution (and taint analysis).
 
 \subsection{Motivation}
 
@@ -199,7 +199,7 @@ Pointers are seen as array reference at some offset. This means that allocation 
 
 \section{Loops}
 
-Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. Example taken from~\cite{CS-ACM13}:
+Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. Example taken from~\cite{CS-CACM13}:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     1.  int N = sym_input(); // e.g., read
     2.  while (N > 0) {
@@ -305,7 +305,7 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
 \begin{itemize}
   \item {\em Use concolic execution to generate useful (random) inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
 
-  \item {\em Use concolic execution to overcome unsolvable constraints}. Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-ACM13}:
+  \item {\em Use concolic execution to overcome unsolvable constraints}. Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-CACM13}:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     int non_linear(int v) {
       return (v * v) % 50;
@@ -317,7 +317,7 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
 
 \end{itemize} 
 
-\paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-ACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
+\paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
 
 \subsection{Limiting state space through other techniques}
 
