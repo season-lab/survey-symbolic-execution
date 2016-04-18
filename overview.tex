@@ -125,6 +125,8 @@ Depending on the specific application context of symbolic execution, different c
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Memory model}
+\label{memory-model}
+
 A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
 \subsection{Index-based memory~\cite{MAYHEM-SP12}}
@@ -319,7 +321,7 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
 
 \paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
 
-\subsection{Limiting state space through other techniques}
+\subsection{Limiting state space through other program analysis techniques}
 
 Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
 \begin{itemize}
@@ -379,10 +381,11 @@ Different heuristics can be used for deciding which execution state should be ev
 
 \end{itemize}
 
+\section{Constraint solving}
 
+Most of the execution time of a symbolic engine is spent invoking the constraint solver.
 
-\section{Constraint solvers}
-
+\subsection{Solvers}
 A list of constraint solvers:
 \begin{itemize}
   \item \cite{STP-TR07}: used by~\cite{EXE-CCS06,KLEE-OSDI08,MineSweeper-BOTNET08}
@@ -390,6 +393,25 @@ A list of constraint solvers:
   \item \cite{DISSOLVER-TR03}: initially used by \cite{SAGE-NDSS08}
   \item \cite{PPL-SCP08}: used by \cite{AEG-NDSS11}
 \end{itemize}
+
+\subsection{Constraint optimization}
+
+Many optimization can be applied to constraints in order to make it more solver-friendly:
+\begin{itemize}
+
+  \item some optimizations are listed in Section~\ref{memory-model}. We have to decide where to discuss optimization.
+
+  \item {\em irrelevant constraint optimization}: remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
+
+  \item {\em incremental solving}: many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
+      \begin{itemize}
+        \item if a subset of constraints has not solution, any superset does not have as well
+        \item if a superset has a solution, any subset has a solution
+        \item if a subset has a solution, try it for the superset
+      \end{itemize}
+
+\end{itemize}
+
 
 \section{Challenges given by symbolic execution of binary code}
 
