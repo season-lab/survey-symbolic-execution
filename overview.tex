@@ -296,7 +296,7 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
   \item {\em Concolic Execution}. We decide the exact values for all bytes of {\tt input}. Input space is $1$.
 \end{itemize}
 
-\subsection{Dynamic Symbolic Execution}
+\subsection{Dynamic symbolic execution}
 
 
 \paragraph{Concolic execution}
@@ -312,13 +312,21 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
     }
     \end{lstlisting}
   The non-linear operation inside this function can be hard for a solver. Using a concrete execution, the engine can overcome this problem, but then the precision and completeness may be affected.
-  
+
   Notice that the use of concrete values can also avoid to perform alias analysis on pointers, which is typically very expensive. Whenever meaningful, \cite{DART-PLDI05} tries to test both valid (not {\tt NULL}) and invalid ({\tt NULL}) input pointers in order to maximize bug detection. However~\cite{DART-PLDI05} will never artificially negate a branch if that condition cannot be exercised using a concrete input. In other words, both branches of an {\tt if} statement are considered only if they are both meaningful (more precisely: \cite{DART-PLDI05} is able to generate a valid input). Notice that~\cite{DART-PLDI05} may generate an input using a solver by considering only a subset of branch constraints. For instance, consider constraints ($C_1, C_2, C_3$) given by three nested branches: if $C_1$ is non linear (hard to solve), it needs only to generate a random input for taking $C_1$ and then use the solver for exploring path given by $(C_2, C_3)$. A traditional symbolic execution engine may get stuck at $C_1$ and give up after some time on {\em all} the derived path. Notice that whenever a concrete input is used to overcome a hard constraint, the overall approach become incomplete.
 
 \end{itemize} 
 
 \paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-ACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
 
+\subsection{Limiting state space through other techniques}
+
+Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
+\begin{itemize}
+  \item {\em program slicing}
+  \item {\em taint-analysis}
+  \item {\em source code analysis}: extraction of input properties (e.g., size or contents of an array)
+\end{itemize}
 
 \section{Symbolic executors}
 A symbolic execution engine should guarantee three main principles (\cite{MAYHEM-SP12}):
@@ -364,7 +372,12 @@ Different heuristics can be used for deciding which execution state should be ev
     \item executors that identify symbolic memory accesses have high priority
     \item executors where symbolic instruction pointers are detected have high priority
   \end{itemize}
+
+  \item \cite{CS-ACM13} mentions that a {\em fitness function} can be used to drive exploration of input space. Some examples: 
+
 \end{itemize}
+
+
 
 \section{Constraint solvers}
 
