@@ -204,7 +204,7 @@ Loops can easily lead to the path explosion problem: any iteration of a loop can
 
   \item {\em preconditions}: a technique to make it easier to perform symbolic execution on loops is through imposing some preconditions, e.g., use static analysis techniques to understand number of iterations for a loop. See Section~\ref{precontioned-symbolic-execution} for more details.
 
-  \item {\em choose a behavior}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
+  \item {\em fixed exploration}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
 
   \item {\em approximations}: effects of a loop are often approximated using {\em fixpoints} (e.g., in~\cite{KKM-USEC05,BNS-SP06,CFB-ACSAC06}). A fixpoint F is an approximation of the effect of loop body on an execution state. F approximates the state after the execution of loop whenever the initial state before the loop was F (?). Transforming an execution state to a fixpoint state is defined as widening. Construction of the fixpoint:
   \begin{itemize}

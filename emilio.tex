@@ -698,7 +698,7 @@ Security -- Dynamic analysis techniques:
       \item coverage-based fuzzing: use coverage metric to decide where it should continue to test
       \item taint-based fuzzing: analysis of how the user input flows through code and based on this generate different inputs
     \end{itemize}
-  \item dynamic symbolic execution: subset of symbolic execution. While the system emulates the program execution, it tracks symbol constraints, then negates constraints to explore other branches. Main problem is path explosion.
+  \item dynamic symbolic execution (concolic execution): subset of symbolic execution. While the system emulates the program execution, it tracks symbol constraints, then negates constraints to explore other branches. Main problem is path explosion.
     \begin{itemize}
       \item symbolic-assisted (guided) fuzzing: exploit symbolic execution to make progress when fuzzer tools get stuck.
       \item under-constrained symbolic execution: analyze symbolically parts of the application. This can give false positives, since the context may never shows some bugs of some piece of code.
@@ -727,11 +727,31 @@ Notice that techniques such as de-randomization can generate crashing inputs whi
   \item full-program analysis: {\tt PathGroup} tracks paths as they run through an application which is useful to implement path prioritization, {\tt Analysis} manages the life-cycle of static analysis (e.g., CFG recovery).
 \end{itemize}
 
-\paragraph{CFG recovery}: two algorithms:
+\paragraph{CFG recovery} Two algorithms:
 \begin{itemize}
-  \item {\tt CFGAccurate}: slow, iterative CFG recovery, mix of {\em force execution}, {\em backwards slicing}, {\em symbolic execution} to recover indirect jumps.
-  \item {\tt CFGFast}: fast but inaccurate, based on a dissambler
+  \item {\tt CFGAccurate}: slow, iterative CFG recovery, mix of {\em force execution}, {\em backwards slicing}, {\em symbolic execution} to recover indirect jumps. It computes a {\em backward slicing} from unresolved jumps and then ue the constraint engine to identify possible targets.
+  \item {\tt CFGFast}: fast but inaccurate, the goal is to get quickly high coverage, based on a dissambler. Performs several steps: function identification,  recursive dissasembly, indirect jump resolution (through light-weighted alias analysis, data flow-tracking, heuristics).
 \end{itemize}
+
+\paragraph{Value Set Analysis} Static technique that combines numerical analysis and pointer analysis. It uses an abstract domain to approximate values of location and of registers may hold at each program point. VSA analyzes a program until it reaches a {\em fix point} for all program points in the function: e.g., it returns a complete lists of all possible write target given a write operation. To make it VSA effective: discrete set of strided intervals, applying an algebreic solver to path predicates, adopting a signedness-agnostic domain.
+
+\paragraph{Dynamic Symbolic Execution} Same approach as~\cite{MAYHEM-SP12}, it uses~\cite{Z3-TACS08}. State merging is done using approach presented in~\cite{VERITESTING-ICSE14}.
+
+\paragraph{Under-Constrained Symbolic Execution} Same approach as in~\cite{RE-USEC15}. The main idea is to symbolically execute each function separately. The main issue is that is not replayable, since it lacks its {\em context}. For this reason, the missing context is tagged as under-constrained. Improvements: global memory is treated as under-constrained, additional path limiters, false positive filtering.
+
+\paragraph{Symbolic-Assisted Fuzzing} They have developed~ \cite{DRILLER-NDSS16}.
+
+\paragraph{Crash reproduction} Similar approach presented by~\cite{REPLAYER-CCS06}. Given a program $P$, an initial state $s_a$, crash state $q_a$, input $i_a$ that brings from $s_a$ to $q_a$: sometimes $i_a$ cannot be reproduced (e.g., it works only in a de-randomized execution). Using symbolic execution, they obtain the full input $i_b$ that can be used to replay the crash. 
+
+\paragraph{Exploit generation and hardening} Similar approach as~\cite{AEG-NDSS11,MAYHEM-SP12}. For hardening, they use a ROP compiler.
+
+
+\subsubsection{\cite{DRILLER-NDSS16} Driller: Augmenting Fuzzing Through Selective Symbolic Execution}
+
+\paragraph{Goal} Find bugs in code.
+
+\paragraph{Approach} Interleaved use of a fuzzing technique and symbolic execution. The main idea is that fuzzing techniques are fast and effective at exploring a {\em compartment} of a program but they straggle at exploring other {\em compartments}. Strategy: use as much as possible the fuzzer, when it gets stuck, switch temporarily to concolic execution. Their fuzzer is based on {\em American Fuzzy Loop (AFL)}.
+
 
 \begin{comment}
 
@@ -772,6 +792,9 @@ A list of papers about symbolic execution (methodology) that we are currently re
   \item Loop-Extended Symbolic Execution on Binary Programs, ISSTA 2009.
   \item Program-Adaptive Mutational Fuzzing. IEEE SP 2015.
   \item Under-constrained Execution: Making Automatic Code Destruction Easy and Scalable. ISSTA 2007.
+  \item \cite{VERITESTING-ICSE14} Enhancing symbolic execution with veritesting
+  \item \cite{RE-USEC15} Under-Constrained Symbolic Execution: Correctness Checking for Real Code
+  \item (EMILIO) \cite{CS-ACM13} Symbolic execution for software testing: three decades later
 \end{itemize}
 
 \subsubsection{Applications}
@@ -782,7 +805,6 @@ A list of papers about applications of symbolic execution that we are currently 
   \item \cite{ZFM-CCS13} Obfuscation resilient binary code reuse through trace-oriented programming
   \item \cite{BC-CCS14} A Computationally Complete Symbolic Attacker for Equivalence Properties
   \item \cite{MWX-USEC15} TaintPipe: Pipelined Symbolic Taint Analysis
-  \item \cite{RE-USEC15} Under-Constrained Symbolic Execution: Correctness Checking for Real Code
   \item \cite{BLR-WOOT15} Symbolic Execution for {BIOS} Security
   \item \cite{CJS-SP05} Semantics-Aware Malware Detection
   \item \cite{KRV-ACSAC04} Detecting Kernel-Level Rootkits Through Binary Analysis
@@ -791,6 +813,7 @@ A list of papers about applications of symbolic execution that we are currently 
   \item \cite{BHK-TR07} BitScope: Automatically Dissecting Malicious Binaries
   \item (EMILIO) \cite{ANGR-SP16} (State of) The Art of War: Offensive Techniques in Binary Analysis
   \item CRAX: Software Crash Analysis for Automatic Exploit Generation by Modeling Attacks as Symbolic Continuations. IEE SERE 2012.
+  \item \cite{REPLAYER-CCS06} Replayer: automatic protocol replay by binary analysis
 \end{itemize}
 
 \bibliographystyle{abstract} %abbrv
