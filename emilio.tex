@@ -737,7 +737,7 @@ Notice that techniques such as de-randomization can generate crashing inputs whi
 
 \paragraph{Dynamic Symbolic Execution} Same approach as~\cite{MAYHEM-SP12}, it uses~\cite{Z3-TACS08}. State merging is done using approach presented in~\cite{VERITESTING-ICSE14}.
 
-\paragraph{Under-Constrained Symbolic Execution} Same approach as in~\cite{RE-USEC15}. The main idea is to symbolically execute each function separately. The main issue is that is not replayable, since it lacks its {\em context}. For this reason, the missing context is tagged as under-constrained. Improvements: global memory is treated as under-constrained, additional path limiters, false positive filtering.
+\paragraph{Under-Constrained Symbolic Execution} Same approach as in~\cite{UCKLEE-USEC15}. The main idea is to symbolically execute each function separately. The main issue is that is not replayable, since it lacks its {\em context}. For this reason, the missing context is tagged as under-constrained. Improvements: global memory is treated as under-constrained, additional path limiters, false positive filtering.
 
 \paragraph{Symbolic-Assisted Fuzzing} They have developed~ \cite{DRILLER-NDSS16}.
 
