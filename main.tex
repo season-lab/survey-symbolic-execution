@@ -54,8 +54,8 @@ Sapienza University of Rome  \\
 
 \subsubsection{Other surveys}
 \begin{itemize}
-\item \cite{GDLNRST-IEEESW08} Automated Software Testing Using Program Analysis, 2008
-\item \cite{PV-JSTTT09} A Survey of New Trends in Symbolic Execution for Software Testing and Analysis, 2009
+\item (EMILIO) \cite{GDLNRST-IEEESW08} Automated Software Testing Using Program Analysis, 2008
+\item (EMILIO) \cite{PV-JSTTT09} A Survey of New Trends in Symbolic Execution for Software Testing and Analysis, 2009
 \item \cite{SAB-SP10} All You Ever Wanted to Know About Dynamic Taint Analysis and Forward Symbolic Execution (but Might Have Been Afraid to Ask), 2010
 \item (EMILIO) \cite{CGK-ICSE11} Symbolic execution for software testing in practice: preliminary assessment, 2011
 \item (EMILIO, CAMIL) \cite{CS-CACM13} Symbolic execution for software testing: three decades later, 2013
@@ -67,7 +67,7 @@ A list of papers about symbolic execution (methodology) that we are currently re
   \item \cite{BCE-TACAS08} RWset: Attacking Path Explosion in Constraint-Based Test Generation
   \item (DANIELE - ASPLOS version) \cite{CKC-TOCS12} The S2E Platform: Design, Implementation, and Applications
   \item \cite{BPS-SPE00} A static analyzer for finding dynamic programming errors
-  \item \cite{KCF-PLDI10} Mixing type checking and symbolic execution
+  \item (EMILIO) \cite{KCF-PLDI10} Mixing type checking and symbolic execution
   \item \cite{KPV-TACAS03} Generalized Symbolic Execution for Model Checking and Testing
   \item (DANIELE) \cite{BLISS-TSE15} BLISS: Improved Symbolic Execution by Bounded Lazy Initialization with SAT Support
   \item (DANIELE) \cite{GDV-ISSTA12} Probabilistic symbolic execution
@@ -79,17 +79,22 @@ A list of papers about symbolic execution (methodology) that we are currently re
   \item (EMILIO) \cite{ED-ISSTA07} Under-constrained Execution: Making Automatic Code Destruction Easy and Scalable
   \item (EMILIO) \cite{VERITESTING-ICSE14} Enhancing symbolic execution with veritesting
   \item (EMILIO) \cite{UCKLEE-USEC15} Under-Constrained Symbolic Execution: Correctness Checking for Real Code
-  \item \cite{PATHFINDER-ASE10} Symbolic PathFinder: Symbolic Execution of Java Bytecode
+  \item (EMILIO) \cite{PATHFINDER-ASE10} Symbolic PathFinder: Symbolic Execution of Java Bytecode
   \item \cite{RE-CAV11} Practical, Low-effort Equivalence Verification of Real Code
   \item (CAMIL)\cite{PYR-PLDI11} Directed Incremental Symbolic Execution
   \item \cite{BPR-SPIN13} Regression Verification Using Impact Summaries
-  \item \cite{CHW-ASPLOS13} Verifying Systems Rules Using Rule-directed Symbolic Execution
+  \item (EMILIO) \cite{CHW-ASPLOS13} Verifying Systems Rules Using Rule-directed Symbolic Execution
   \item \cite{RED-ICSE16} (EMILIO) On the Techniques We Create, the Tools We Build, and Their Misalignments: A Study of KLEE
+  \item \cite{PEX-TAP08} Pex: White Box Test Generation for .NET
+  \item \cite{VGD-FSE12} Green: Reducing, Reusing and Recycling Constraints in Program Analysis
+  \item \cite{ES-SAT03} An Extensible SAT-solver
+  \item \cite{DL-ASE06} Bogor/Kiasan: A k-bounded Symbolic Execution for Checking Strong Heap Properties of Open Systems
 \end{itemize}
 
 \subsubsection{Applications}
 A list of papers about applications of symbolic execution that we are currently reading:
 \begin{itemize}
+  \item \cite{KKK-ICSE12} Industrial application of concolic testing approach: a case study on libexif by using CREST-BV and KLEE
   \item \cite{LOOP-CCS15} LOOP: Logic-Oriented Opaque Predicate Detection in Obfuscated Binary Code
   \item \cite{BDG-CCS14} Automating Information Flow Analysis of Low Level Code
   \item \cite{ZFM-CCS13} Obfuscation resilient binary code reuse through trace-oriented programming
@@ -105,6 +110,18 @@ A list of papers about applications of symbolic execution that we are currently 
   \item \cite{CRAX-SERE12} CRAX: Software Crash Analysis for Automatic Exploit Generation by Modeling Attacks as Symbolic Continuations
   \item \cite{REPLAYER-CCS06} Replayer: automatic protocol replay by binary analysis
   \item (DANIELE) \cite{RK-ICSE07} Hybrid Concolic Testing
+  \item see papers based on KLEE cite in~\cite{RED-ICSE16} 
+\end{itemize}
+
+\subsubsection{Tools}
+A list of tools:\mynote{maybe we should make a table}
+\begin{itemize}
+  \item \href{http://angr.io/}{angr}
+  \item \href{https://klee.github.io/}{KLEE LLVM Execution Engine}
+  \item \href{https://github.com/osl/jcute}{The Java Concolic Unit Testing Engine (jCUTE)}
+  \item \href{http://babelfish.arc.nasa.gov/trac/jpf}{Java PathFinder}
+  \item \href{http://vsl.cis.udel.edu/civl/}{CIVIL: The Concurrency Intermediate Verification Language} (see technical report)
+  \item \href{https://github.com/jburnim/crest}{CREST is a concolic test generation tool for C}
 \end{itemize}
 
 \bibliographystyle{abstract} %abbrv
