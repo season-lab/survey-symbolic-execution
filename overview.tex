@@ -383,6 +383,8 @@ Although this technique is not able to find {\em all} the possible errors in a f
 
 \subsection{State merging}
 
+\mynote{We need an example}
+
 Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would described the individual states if they were kept separate.
 
 Early work~\cite{G-POPL07, HSS-RV09} has shown that merging techniques effectively decrease the number of paths to explore, but also put a burden on constraints solvers, which typically encounter difficulties when dealing with disjunction. Merging can also introduce new symbolic expressions in the code, for instance when merging different concrete values from a conditional assignment into a symbolic expression over the condition.
@@ -391,7 +393,7 @@ Early work~\cite{G-POPL07, HSS-RV09} has shown that merging techniques effective
 
 \mynote{Function summaries}
 
-Intermediate merging solutions can adopt heuristics for driving both merging decisions and CFG exploration. Generating larger symbolic expressions and possibly extra solvers invocations can outweigh the benefit of having fewer states, leading to poorer overall performance~\cite{HSS-RV09, KKB-PLDI12}. Moreover, in order to maximize the opportunities for merging a symbolic execution engine should traverse the CFG in a topological order, which denies search exploration strategies aiming at prioritizing more "interesting" states over others.
+Intermediate merging solutions can adopt heuristics for driving both merging decisions and CFG exploration. Generating larger symbolic expressions and possibly extra solvers invocations can outweigh the benefit of having fewer states, leading to poorer overall performance~\cite{HSS-RV09, KKB-PLDI12}. Moreover, in order to maximize the opportunities for merging a symbolic execution engine should traverse the CFG in a topological order, which denies search exploration strategies aiming at prioritizing more ``interesting'' states over others.
 
 \cite{KKB-PLDI12} introduces two novel techniques to tackle this issues: {\em query count estimation} to identify state merges that can reduce exploration time, and {\em dynamic state merging} to efficiently combine static state merging with common search heuristics. Query count estimation relies on a simple form of static analysis to identify how often each variable is used in branch conditions past any given point in the CFG. The estimate is used as a proxy for the number of solver queries that a given variable is likely to be part of. When two states are sufficiently similar, the overhead from solving more complex queries is likely to be outweighed by the savings from exploring fewer paths.
 
