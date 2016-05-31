@@ -148,7 +148,7 @@ Depending on the specific context in which symbolic execution is used, different
 
 A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
-\subsection{Index-based memory~\cite{MAYHEM-SP12}}
+\subsection{Index-based memory}
 \begin{itemize}
   \item memory is a map $\pi : I \to E$ from 32-bit indices ($i \in I$) to expressions ($e \in E$)
   \item load expressions $e = load(\pi, i)$: $i$ indixes $\pi$ and the loaded value $e$ represents the contents of the $i$-th memory cell
@@ -168,7 +168,7 @@ When using this memory model, handling of arbitrary symbolic indices is notoriou
 \end{itemize}
 Whenever the size of the memory object exceeds a threshold (e.g., $|\mathcal{M}| \geq 1024$), then~\cite{MAYHEM-SP12} concretizes the index. However, instead of choosing a random value for the index, it tries to assign some {\em interesting} value (e.g., test it if it makes sense for it to be equal to an invalid memory address which can be exploited for security purposes).
 
-\subsection{Object-based memory~\cite{EXE-CCS06,STP-TR07}}
+\subsection{Object-based memory}
 
 \cite{STP-TR07} is a decision procedure for bitvectors and arrays. Memory is seen as untyped bytes. Three data types are available:
 \begin{itemize}
