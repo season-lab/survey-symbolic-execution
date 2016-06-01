@@ -6,29 +6,6 @@ Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H
 %(while~\cite{EXE-CCS06} is a previous effort of the same authors).
 \cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution and of taint analysis as well.
 
-\paragraph{Black-box approach versus white-box approach}
-
-Discussion of black-box approach and white-box approach. Symbolic execution is a white-box technique. Black-box approaches can be very fast but not always effective. White-box approaches can be very effective but are typically slower than black-box techniques. An in-depth discussion of this aspect will be done when we will discuss~\cite{DRILLER-NDSS16}.
-
-\begin{figure}[H]
-  \vspace{-3mm}
-  \centering
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/blackbox} 
-    \caption{Black-box approach}
-    %\label{fig:sub1}
-  \end{subfigure}%
-  \begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/whitebox} 
-    \caption{White-box approach}
-    %\label{fig:sub2}
-  \end{subfigure}
-  %\label{fig:example-symbolic-execution}
-  \vspace{-3mm}
-\end{figure}
-
 \subsection{Motivation}
 
 Symbolic execution is a static analysis technique that has been introduced to perform automatic testing of
