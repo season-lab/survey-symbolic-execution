@@ -94,15 +94,26 @@ A list of papers about applications of symbolic execution that we are currently 
 \end{itemize}
 
 \subsubsection{Tools}
-A list of tools:\mynote{maybe we should make a table}
-\begin{itemize}
-  \item \href{http://angr.io/}{angr}
-  \item \href{https://klee.github.io/}{KLEE LLVM Execution Engine}
-  \item \href{https://github.com/osl/jcute}{The Java Concolic Unit Testing Engine (jCUTE)}
-  \item \href{http://babelfish.arc.nasa.gov/trac/jpf}{Java PathFinder}
-  \item \href{http://vsl.cis.udel.edu/civl/}{CIVIL: The Concurrency Intermediate Verification Language} (see technical report)
-  \item \href{https://github.com/jburnim/crest}{CREST is a concolic test generation tool for C}
-\end{itemize}
+A list of symbolic execution engines is presented in Table~\ref{tab:symbolic-engines}.
+
+\begin{figure}[t]
+  \centering
+  \begin{small}
+  \begin{tabular}{| l || c || l |}
+    \hline      
+    Symbolic engine & Paper(s) & Project URL  \\ \hline\hline
+    {\tt angr} & \cite{FIRMALICE-NDSS15} & \url{http://angr.io/} \\
+    {\tt KLEE}: a LLVM Execution Engine & \cite{KLEE-OSDI08} & \url{https://klee.github.io/} \\
+    {\tt jCUTE}: Java Concolic Unit Testing Engine & -- & \url{https://github.com/osl/jcute} \\
+    {\tt Java PathFinder} & \cite{PATHFINDER-ASE10} & \url{http://babelfish.arc.nasa.gov/trac/jpf}\\
+    {\tt CIVIL}: The Concurrency Intermediate Verification Language & add technical report & \url{http://vsl.cis.udel.edu/civl/}\\
+    {\tt CREST}: a concolic test generation tool for C & -- & \url{https://github.com/jburnim/crest} \\
+    \hline  
+  \end{tabular}
+  \end{small}
+  \caption{List of tools.}
+  \label{tab:symbolic-engines}
+\end{figure}
 
 \bibliographystyle{abstract} %abbrv
 \bibliography{symbolic}
