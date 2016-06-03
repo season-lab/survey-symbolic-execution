@@ -64,8 +64,8 @@ As in general every memory location can be associated with a symbol, an executio
              10.    return a / (x + y + z - 3);
              11.  }
 \end{lstlisting}
-\label{fig:example-1}
 \caption{Example: a very simple C function}
+\label{fig:example-1}
 \end{figure}
 
 \begin{figure}[t]
@@ -463,6 +463,11 @@ Recent works (e.g., \cite{KKB-PLDI12} and \cite{VERITESTING-ICSE14}) have introd
   \item {\em veritesting} dynamically identifies set of statements that generate formulas which are easy for solvers. Using a dynamically recovered CFG, it detects pieces of code that do not contain system calls, indirect jumps, or other statements that are difficult to precisely reason about statically. In particular, frontiers of hard-to-analyze statements are identified. Easy to analyze set of statements are then analyzed maintaining a single formula that describe all the merged states, while hard to analyze set of statements are evaluated using separate states pursuing the traditional symbolic execution approach.
 
 \end{itemize}
+
+\subsection{Abstraction}
+
+Abstraction~\cite{C-SEFM07} is a technique that may be used for computing {\tt under-approximations} or {\tt over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
+
 
 \subsection{Limiting state space through other program analysis techniques}
 
