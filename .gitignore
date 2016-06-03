@@ -8,4 +8,5 @@ main.pdf
 *.fdb_latexmk
 *.fls
 *.synctex.gz
-
+.DS_Store
+Icon?
