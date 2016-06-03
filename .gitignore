@@ -9,4 +9,4 @@ main.pdf
 *.fls
 *.synctex.gz
 .DS_Store
-Icon?
+Icon*
