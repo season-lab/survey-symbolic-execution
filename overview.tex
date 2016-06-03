@@ -252,7 +252,7 @@ For this reason, it is common to specifically deal with them:
 Notice that detection/analysis of loops can be done using techniques such as~\cite{SGL-TOPLAS96} (e.g., in~\cite{CFB-ACSAC06}).
 
 \section{Complex objects}
-It is common to use {\em lazy initialization} for handling complex memory objects.
+It is common to use {\em lazy initialization} for handling complex memory objects. Notice that if lazy initialization is not used by the symbolic engine, then it is likely that it has to treat complex objects completely symbolically, requiring a constraint solver that is able to solve the resulting constraints. In other words, the solver must support some form of theory of data structures or arrays.
 
 \paragraph{Recursive data structures} Lazy initialization over recursive data structure works~\cite{PV-JSTTT09} as follows:
 \begin{itemize}
@@ -267,6 +267,8 @@ Notice that if some input preconditions~\ref{precontioned-symbolic-execution} ha
 
 \paragraph{Input arrays}
 It is common that programs may have loops bounded by the length of some input arrays. If this length cannot be statically determined then the symbolic engine may non-deterministically choose when to stop a loop. This means that the number of entries in a symbolic array does not need to be chosen as soon as the symbolic array is created, but this choice can be postponed.
+
+\paragraph{Native code} Several programming languages provide data types that can be very complex. For instance, Java provides the {\tt String} type. Prior works (see, e.g.,~\cite{SHZ-TAIC07}) has presented some approaches for addressing these issues.
 
 \section{Subroutines and recursion}
 
@@ -385,7 +387,9 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
 \subsection{Under-constrained symbolic execution} 
 \label{under-constrinained}
 
-By isolating a function from the rest of the program, we can perform symbolic execution on it. The results from this analysis can be exploited when any other program is symbolically executed and a call to the function is present. However, detected errors in the isolated function may be false positives since some of the input values may never been valid when the function is actually executed in the context of the full program. {\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function but clearly marks which symbols are {\em under-constrained} to distinguish them from the {\em exactly-constrained} symbols.
+By isolating a function from the rest of the program, we can perform symbolic execution on it. The results from this analysis can be exploited when any other program is symbolically executed and a call to the function is present. However, detected errors in the isolated function may be false positives since some of the input values may never been valid when the function is actually executed in the context of the full program. Some prior works (e.g., \cite{CS-ICSE05}\mynote{check this paper}) first analyze code in isolation and then test the generated crashing inputs using concrete executions. 
+
+{\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function but clearly marks which symbols are {\em under-constrained} to distinguish them from the {\em exactly-constrained} symbols.
 
 Errors due to concrete values and exactly-constrained symbols are treated as true positives. Errors due to under-constrained are treated as true positives only if {\em all} solutions to the currently known constraints on the symbols cause the error to occur. Otherwise the negation of the error is added to the constraint set and the symbolic execution of the isolated function is continued. In other words, an error is reported if and only if it is {\em context-insensitive}. Notice that a symbol may initially be under-constrained and then become exactly constrained. For instance, consider the following piece of code:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -553,12 +557,14 @@ A significant amount of the execution time of a symbolic engine is spent invokin
 A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid check for contradiction at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
 
 \subsection{Solvers}
-A list of constraint solvers:
+A list of constraint solvers\mynote{Table?}:
 \begin{itemize}
   \item \cite{STP-TR07}: used by~\cite{EXE-CCS06,KLEE-OSDI08,MineSweeper-BOTNET08}
   \item \cite{Z3-TACS08}: used by~\cite{FIRMALICE-NDSS15,MAYHEM-SP12}
   \item \cite{DISSOLVER-TR03}: initially used by \cite{SAGE-NDSS08}
   \item \cite{PPL-SCP08}: used by \cite{AEG-NDSS11}
+  \item (incremental solver) \href{http://www.cs.nyu.edu/acsys/cvc3/}{CVC3}: an automatic theorem prover for Satisfiability Modulo Theories
+  \item (incremental solver) \href{http://yices.csl.sri.com/}{Yices}: The Yices SMT Solver
 \end{itemize}
 
 \subsection{Constraint optimizations}
