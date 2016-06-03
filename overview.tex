@@ -482,8 +482,8 @@ Based on these principles, symbolic executors can be divided into:
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
     low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    random path selection & randomly pick a path with probability based on its height & \cite{KLEE-OSDI08} \\
-    coverage optimize search & weight paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12} \\
+    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
+    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12} \\
     pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
     memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
     fitness function & prioritize paths based on a fitness function & \cite{CS-CACM13} \\
