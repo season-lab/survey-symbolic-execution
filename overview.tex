@@ -251,6 +251,23 @@ For this reason, it is common to specifically deal with them:
 
 Notice that detection/analysis of loops can be done using techniques such as~\cite{SGL-TOPLAS96} (e.g., in~\cite{CFB-ACSAC06}).
 
+\section{Complex objects}
+It is common to use {\em lazy initialization} for handling complex memory objects.
+
+\paragraph{Recursive data structures} Lazy initialization over recursive data structure works~\cite{PV-JSTTT09} as follows:
+\begin{itemize}
+  \item whenever an instance method is called over a symbolic object, the object is created with uninitialized fields
+  \item whenever an uninitialized field of a non-native type is accessed, the symbolic engine non deterministically initialize it with: (a) a {\tt null} reference, (b) a reference to a previously created object, (c) a reference to a new object with uninitialized fields. 
+  \item whenever an uninitialized field of a native type\mynote{this is my guess, it's not clear explained in~\cite{PV-JSTTT09}}) is accessed, a new symbolic value is introduced. 
+\end{itemize}
+
+\mynote{Merge discussion of {\em lazy initialization} done in Section~\ref{under-constrinained}.}
+
+Notice that if some input preconditions~\ref{precontioned-symbolic-execution} has been set, lazy evaluation should consider and exploit them. For instance, the object may have been marked as acyclic and thus fewer possible alternatives should be considered when initializing a uninitialized field. Further complication~\cite{PV-JSTTT09} may arise for programs that perform destructive updates. 
+
+\paragraph{Input arrays}
+It is common that programs may have loops bounded by the length of some input arrays. If this length cannot be statically determined then the symbolic engine may non-deterministically choose when to stop a loop. This means that the number of entries in a symbolic array does not need to be chosen as soon as the symbolic array is created, but this choice can be postponed.
+
 \section{Subroutines and recursion}
 
 \section{Interaction with environment}
@@ -366,6 +383,7 @@ where {\tt input} is an array of {\tt S} bytes. Impact of preconditions:
 \paragraph{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
 
 \subsection{Under-constrained symbolic execution} 
+\label{under-constrinained}
 
 By isolating a function from the rest of the program, we can perform symbolic execution on it. The results from this analysis can be exploited when any other program is symbolically executed and a call to the function is present. However, detected errors in the isolated function may be false positives since some of the input values may never been valid when the function is actually executed in the context of the full program. {\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function but clearly marks which symbols are {\em under-constrained} to distinguish them from the {\em exactly-constrained} symbols.
 
@@ -379,9 +397,9 @@ The first {\tt assert} will not trigger an error: indeed, there is at least one 
 
 Although this technique is not able to find {\em all} the possible errors in a function, it still can find interesting bugs. Moreover, since symbolically executing a full program may be unfeasible, this technique can make it feasible to test tons of line of code in a reasonable amount of time. In particular, this technique allows an engine to skip code: if a function or any other construct (e.g., a loop) may be troublesome for symbolic execution, it can be skipped by just marking the locations affected by it as under-constrained. However, a possible implementation issue is given by the propagation of under-constrained symbols: given the line of code {\tt if (s < t)}, if {\tt t} is under-constrained while {\tt s} is exactly constrained then when the symbolic execution is proceeded into the two possible branches, {\tt s} must be marked as under-constrained. Some optimization may be needed in order to minimize this propagation effect.
 
-\paragraph{Under-constrained KLEE}\mynote{I will revise it (emilio)} In~\cite{UCKLEE-USEC15}, KLEE~\cite{KLEE-OSDI08} has been extended in order to support under-constrained symbolic execution . In particular, these are some of the main improvements:
+\paragraph{Under-constrained KLEE}\mynote{I will revise this (emilio)} In~\cite{UCKLEE-USEC15}, KLEE~\cite{KLEE-OSDI08} has been extended in order to support under-constrained symbolic execution . In particular, these are some of the main improvements:
 \begin{itemize}
-  \item {\em Lazy initialization.} Whenever there is a pointer that is not concrete and without any active constraint (i.e., it is unbound), it its value is checked against {\tt NULL} then two path are analyzed: (a) where the pointer is {\tt NULL} and (b) where the pointer is pointing to a freshly allocated block of memory, whose content is marked as unbound.This means that pointer aliasing is assumed to not occur. In both paths, the pointer is not longer unbound.  In path (b), any test against the pointer is known and dereferences will be successfully resolved. Lazy initialization is common for data structure and thus it is common to bound its maximum length (i.e., {\em k-bounding}) in order to prevent the engine from allocating an unbounded number of objects.
+  \item {\em Lazy initialization.} Whenever there is a pointer that is not concrete and without any active constraint (i.e., it is unbound), its value is checked against {\tt NULL} then two path are analyzed: (a) where the pointer is {\tt NULL} and (b) where the pointer is pointing to a freshly allocated block of memory, whose content is marked as unbound.This means that pointer aliasing is assumed to not occur. In both paths, the pointer is not longer unbound.  In path (b), any test against the pointer is known and dereferences will be successfully resolved. Lazy initialization is common for data structure and thus it is common to bound its maximum length (i.e., {\em k-bounding}) in order to prevent the engine from allocating an unbounded number of objects.
   \item {\em Patch checking.} The main goal of~\cite{UCKLEE-USEC15} is to detect if a patch has introduced new bugs. In order to do so, it symbolically executes two compiled versions of a function: $P$, the unpatched version, and $P'$, the patched version. If it finds any execution paths along which $P'$ crashes but $P$ does not (when given the same symbolic inputs), it reports a potential bug. Indeed, due to missing input preconditions, not all crashes are real bugs: if both $P$ and $P'$ crash on an input, then maybe the crash is given by the unknown preconditions. 
   \item {\em Pruning techniques.} Using a static cross-checker (that navigates the control-flow graph and marks differing basic block between $P$ and $P'$), \cite{UCKLEE-USEC15} prunes paths that have never executed a differing basic block and that cannot reach a differing basic block from their current program counter and call stack. Moreover, $P'$ is executed before executing $P$, allowing the system to prune paths that return from $P'$ without triggering an error, or that trigger an error without reaching different blocks.
   \item {Dealing with false positives.} Two approaches are pursued to limit false positives:
@@ -531,6 +549,9 @@ Table~\ref{tab:heuristics} provides a list of search heuristics that have been p
 
 A significant amount of the execution time of a symbolic engine is spent invoking the constraint solver.
 
+\subsection{Lazy evaluation}\mynote{citations?}
+A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid check for contradiction at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
+
 \subsection{Solvers}
 A list of constraint solvers:
 \begin{itemize}
@@ -545,6 +566,8 @@ A list of constraint solvers:
 
 Many optimization can be applied to constraints in order to make it more solver-friendly:
 \begin{itemize}
+
+  \item possibly a relevant paper is \cite{S-FMCAD08}
 
   \item some optimizations are listed in Section~\ref{memory-model}. We have to decide where to discuss optimization.
 
