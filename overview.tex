@@ -1,4 +1,4 @@
-% !TEX root = main.tex
+% !TEX root = CSUR/main.tex
 
 \section{Overview}
 
@@ -8,34 +8,34 @@ Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H
 
 \subsection{Motivation}
 
-Symbolic execution is a static analysis technique that has been introduced to perform automatic testing of
-%complex
-software. For instance, let us consider the C function shown in Figure~\ref{fig:example-1}. A critical operation performed in this code is the division on line 10. In principle, testing techniques such as random testing can generate bottomless input tests for this function, although it is unlikely that the inputs which make this code crash are effectively picked up by these techniques\mynote{Fuzzing?}. Indeed, albeit this code is relatively simple, too many assignments to the input values {\tt a}, {\tt b}, and {\tt c} are possible. Each {\tt int} input variable can be assigned to $2^{32}$ distinct values, but only those leading to $x + y + z - 3 = 0$ would make the code crash.
+Symbolic execution has been originally introduced to perform automatic testing of software. As an example, consider the C function shown in Figure~\ref{fig:example-1}. A critical operation performed by this code is the division at line 10. In principle, testing techniques such as random testing can generate bottomless input tests\mynote{IF: what are ''bottomless'' input tests?} for this function, although it is unlikely that the inputs which make this code crash are effectively picked up by these techniques\mynote{Fuzzing?}. Indeed, albeit this code is relatively simple, each of the {\tt int} input values {\tt a}, {\tt b}, and {\tt c} can be assigned with $2^{32}$ distinct values, but only those leading to $x + y + z - 3 = 0$ would make the code crash.
 
 Symbolic execution overcomes common limitations of random testing techniques by evaluating a piece of code using {\em symbols} instead of concrete values for the inputs. The intuition behind it is to consider classes of input values instead of single instance values. Before analyzing how symbolic execution can identify the proper inputs which will make the function {\tt foobar} crash, we now introduce a few basic definitions.
 
 \subsection{A Simple Execution Model}
 \label{simple-execution-model}
 
-Symbolic execution is a methodology for executing a program symbolically. In particular, every local or global variable is associated with a {\em symbol} of the form $\alpha_i$.  At any point of the execution, a symbolic engine has to maintain an execution state.
+In symbolic execution, every global or local variable is associated with a {\em symbol} $\alpha_i$.  At any point of the execution, the symbolic engine maintains:
 
-%\paragraph{Symbol} Any local or global variable is associated to a symbol $\alpha_i$. 
-\paragraph{Execution state} An execution state $(stmt,~pc)$ is composed of two elements:
 \begin{itemize}
-  \item $stmt$: the statement to evaluate
-  \item $pc$: a collection of path constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
+  \item  an execution state $(stmt,~pc)$ where:
+\begin{itemize}
+  \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
+  \item $pc$ is a collection of path\mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
+\end{itemize}
+\item a {\em memory mapping} $M$ for storing constraints over different symbols. This is required since in general every memory location can be associated with a symbol\mynote{Rephrase}.
 \end{itemize}
 
-As in general every memory location can be associated with a symbol, an execution engine typically maintains also a {\em memory mapping} $M$ for storing constraints over different symbols.\mynote{Rephrase}
-
-\paragraph{Execution model} In this section we discuss a simple language supporting assignments, conditional branches and jumps. A discussion of more complex constructs such as $call$, $return$, $while$, or $for$ will be provided in Section~\ref{example-discussion}. Depending on the kind of the statement $stmt$, the execution engine modifies the state as follows:
+\noindent Depending on $stmt$, the symbolic engine modifies the state as follows:
 \begin{itemize}
-  \item (constant assignment) $\alpha_i = c$: when a constant value $c$ is assigned to a variable associated to the symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:\mynote{Redundant?}
+  \item $stmt$ is a constant assignment $\alpha_i = c$: when a constant value $c$ is assigned to a variable associated to the symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:\mynote{Redundant? IF: I would remove the constant assignment}
     \[ pc \gets pc \wedge \alpha_i = c\]
-  \item (assignment) $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
+
+  \item $stmt$ is an assignment $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
     \[ pc \gets pc \wedge \alpha_i = e\]
   where $e$ can be any expression, involving unary or binary operators, over symbols and constants.
-  \item (conditional branch) {\tt if} $e$ {\tt then} $s_{true}$ {\tt else} $s_{false}$: $pc$ is evaluated. Two scenarios are possible:
+
+  \item $stmt $ is a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$: $pc$ is evaluated. Two scenarios are possible:
     \begin{itemize}
       \item (non-forking) $e$ is evaluated as always true or false under the assumptions in $pc$: the proper branch is taken, and symbolic execution advances to $s_{true}$ or $s_{false}$ accordingly;
       \item (forking) $e$ cannot be evaluated without instantiating values for one or more symbols in it: the symbolic execution process is forked, creating two execution states:
@@ -43,8 +43,8 @@ As in general every memory location can be associated with a symbol, an executio
         \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
     \end{itemize}
     Symbolic execution proceeds on both states in parallel.
-  \item (jump) {\tt goto} $s$: execution state is updated to advance symbolic execution to $s$. 
-  %\item (other constructs) A discussion of other constructs such as $call$, $return$, $while$, or $for$ is provided in Section~\ref{example-discussion}. 
+
+  \item $stmt $ is a jump {\tt goto} $s$: execution state is updated to advance symbolic execution to $s$. 
 \end{itemize}
 
 \subsection{Example}
