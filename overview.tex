@@ -2,71 +2,9 @@
 
 \section{Overview}
 
-Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H-TSE77}. A good introduction to symbolic execution is presented in~\cite{KLEE-OSDI08}.\mynote{Extend this paragraph}
-%(while~\cite{EXE-CCS06} is a previous effort of the same authors).
-\cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution and of taint analysis as well.
-
-\subsection{Motivation}
-
-Symbolic execution has been originally introduced to perform automatic testing of software. As an example, consider the C function shown in Figure~\ref{fig:example-1}. A critical operation performed by this code is the division at line 10. In principle, testing techniques such as random testing can generate bottomless input tests\mynote{IF: what are ''bottomless'' input tests?} for this function, although it is unlikely that the inputs which make this code crash are effectively picked up by these techniques\mynote{Fuzzing?}. Indeed, albeit this code is relatively simple, each of the {\tt int} input values {\tt a}, {\tt b}, and {\tt c} can be assigned with $2^{32}$ distinct values, but only those leading to $x + y + z - 3 = 0$ would make the code crash.
-
-Symbolic execution overcomes common limitations of random testing techniques by evaluating a piece of code using {\em symbols} instead of concrete values for the inputs. The intuition behind it is to consider classes of input values instead of single instance values. Before analyzing how symbolic execution can identify the proper inputs which will make the function {\tt foobar} crash, we now introduce a few basic definitions.
-
-\subsection{A Simple Execution Model}
-\label{simple-execution-model}
-
-In symbolic execution, every global or local variable is associated with a {\em symbol} $\alpha_i$.  At any point of the execution, the symbolic engine maintains:
-
-\begin{itemize}
-  \item  an execution state $(stmt,~pc)$ where:
-\begin{itemize}
-  \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
-  \item $pc$ is a collection of path\mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
-\end{itemize}
-\item a {\em memory mapping} $M$ for storing constraints over different symbols. This is required since in general every memory location can be associated with a symbol\mynote{Rephrase}.
-\end{itemize}
-
-\noindent Depending on $stmt$, the symbolic engine modifies the state as follows:
-\begin{itemize}
-  \item $stmt$ is a constant assignment $\alpha_i = c$: when a constant value $c$ is assigned to a variable associated to the symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:\mynote{Redundant? IF: I would remove the constant assignment}
-    \[ pc \gets pc \wedge \alpha_i = c\]
-
-  \item $stmt$ is an assignment $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
-    \[ pc \gets pc \wedge \alpha_i = e\]
-  where $e$ can be any expression, involving unary or binary operators, over symbols and constants.
-
-  \item $stmt $ is a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$: $pc$ is evaluated. Two scenarios are possible:
-    \begin{itemize}
-      \item (non-forking) $e$ is evaluated as always true or false under the assumptions in $pc$: the proper branch is taken, and symbolic execution advances to $s_{true}$ or $s_{false}$ accordingly;
-      \item (forking) $e$ cannot be evaluated without instantiating values for one or more symbols in it: the symbolic execution process is forked, creating two execution states:
-        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
-        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
-    \end{itemize}
-    Symbolic execution proceeds on both states in parallel.
-
-  \item $stmt $ is a jump {\tt goto} $s$: execution state is updated to advance symbolic execution to $s$. 
-\end{itemize}
 
 \subsection{Example}
 \label{symbolic-execution-example}
-
-\begin{figure}[t]
-\begin{lstlisting}[basicstyle=\ttfamily\small]
-              1.  int foobar(int a, int b, int c) {
-              2.    int x = 0, y = 0, z = 0;
-              3.    if (a != 0)
-              4.      x = -2;
-              5.    if (b < 5) {
-              6.      z = 2;
-              7.      if (a == 0 && c != 0)
-              8.        y = 1;
-              9.    }
-             10.    return a / (x + y + z - 3);
-             11.  }
-\end{lstlisting}
-\caption{Example: a very simple C function}
-\label{fig:example-1}
-\end{figure}
 
 \begin{figure}[t]
   \centering
