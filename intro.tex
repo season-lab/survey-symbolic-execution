@@ -17,26 +17,8 @@ We start with a simple example that will introduce many of the fundamental issue
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Consider the simple C function shown in Figure~\ref{fig:example-1}, whose most critical operation is the {\tt assert} at line 8. Each of the input values {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values, though only values leading to $x - y = 0$ make the {\tt assert} fail. While techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the crash-inducing inputs would be randomly picked up\mynote{Fuzzing?}. 
+Assume that we want to characterize inputs of the C function shown in Figure~\ref{fig:example-1} for which the {\tt assert} at line 8 fails. Each of the two input values {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values. Hence, while techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 Symbolic execution overcomes these limitations by evaluating a piece of code using {\em symbols}, instead of concrete values, for its inputs. This makes it possible to reason on {\em classes of input values}, instead of single input instances. 
-
-%\begin{figure}[t]
-%\begin{lstlisting}[basicstyle=\ttfamily\small]
-%              1.  int foobar(int a, int b, int c) {
-%              2.    int x = 0, y = 0, z = 0;
-%              3.    if (a != 0)
-%              4.      x = -2;
-%              5.    if (b < 5) {
-%              6.      z = 2;
-%              7.      if (a == 0 && c != 0)
-%              8.        y = 1;
-%              9.    }
-%             10.    return a / (x + y + z - 3);
-%             11.  }
-%\end{lstlisting}
-%\caption{Simple C function used in the warm-up example.}
-%\label{fig:example-1}
-%\end{figure}
 
 \begin{figure}[t]
 \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -54,39 +36,36 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 \label{fig:example-1}
 \end{figure}
 
-In more details, every global or local variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains an execution state $(stmt,~\sigma_s,~pct)$ where:
-
-two formulas:symbolic store and a path constraint
+In more details, every input variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains a state $(stmt,~\sigma_s,~pct)$ where:
 
 \begin{itemize}
 
-  \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
+\item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs such as iteration and function calls will be provided in later sections).
 
-\item $\sigma_s$ is a {\em symbolic store} that associates variables with symbolic values. 
+\item $\sigma_s$ is a {\em symbolic store} that associates program variables with expressions over concrete and symbolic values $\alpha_i$.
 
-  \item $pct$ is {\em path constraint} \mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
+  \item $pct$ is {\em path constraint}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. The path constraint is trivially true at the beginning of the analysis.
 
 \end{itemize}
 
-\noindent Depending on $stmt$, the symbolic engine modifies the state as follows:
+\noindent Depending on $stmt$, the symbolic engine changes the state as follows:
 \begin{itemize}
-  \item $stmt$ is a constant assignment $\alpha_i = c$: when a constant value $c$ is assigned to a variable associated to the symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:\mynote{Redundant? IF: I would remove the constant assignment}
-    \[ pc \gets pc \wedge \alpha_i = c\]
+  \item The evaluation of an assignment $x=e$ changes the symbolic store by associating $x$ with a new symbolic expression $e_s$ obtained by evaluating $e$ in the context of the current state. In short $x\mapsto e_s$, where $e_s$ can be any expression, involving unary or binary operators, over symbols and constants.
+  
+%   $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
+%    \[ pc \gets pc \wedge \alpha_i = e\]
+%  where $e$ can be any expression, involving unary or binary operators, over symbols and constants.
 
-  \item $stmt$ is an assignment $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
-    \[ pc \gets pc \wedge \alpha_i = e\]
-  where $e$ can be any expression, involving unary or binary operators, over symbols and constants.
-
-  \item $stmt $ is a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$: $pc$ is evaluated. Two scenarios are possible:
-    \begin{itemize}
-      \item (non-forking) $e$ is evaluated as always true or false under the assumptions in $pc$: the proper branch is taken, and symbolic execution advances to $s_{true}$ or $s_{false}$ accordingly;
-      \item (forking) $e$ cannot be evaluated without instantiating values for one or more symbols in it: the symbolic execution process is forked, creating two execution states:
-        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
-        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
-    \end{itemize}
+  \item The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint. Two scenarios are possible:
+    \begin{enumerate}
+      \item {\em Non-forking}: if $e$ is evaluated\mynote{IF: can we remove the non-forking case? Is it an optimization discussed later?} as always true (resp., false) under the assumptions in the current state, the proper branch is taken and the symbolic execution advances to $s_{true}$ (resp., $s_{false}$);
+      \item {\em Forking}: if $e$ cannot be evaluated without instantiating values for one or more of its symbols, the symbolic execution is forked by creating two execution states with path constraints $pct_{true}$ and $pct_{false}$, respectively, corresponding to the two {\tt if} branches. Namely, $pct_{true}=pct \wedge e_s$ and $pct_{false}=pct \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
+%        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
+%        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
     Symbolic execution proceeds on both states in parallel.
+    \end{enumerate}
 
-  \item $stmt $ is a jump {\tt goto} $s$: execution state is updated to advance symbolic execution to $s$. 
+  \item The evaluation of a jump {\tt goto} $s$ updates the execution state by advancing the symbolic execution to statement $s$. 
 \end{itemize}
 
 %\subsection{Example}
@@ -106,12 +85,8 @@ two formulas:symbolic store and a path constraint
   \label{fig:example-symbolic-execution}
 \end{figure}
 
-A symbolic execution of the function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially, a new symbol is introduced for each input argument and for each local variable. For the sake of the presentation, we associate a symbol $\alpha_{var}$ with each variable $var$. 
-Moreover, we assume that the set of local\mynote{locals only right? I added "at each point"} variables in use at each point by the function is known. In general, obtaining this information may be non trivial, and symbols are typically introduced when statements defining the variables are reached.
-%Moreover, we have assumed to know the set of local variables used by the function. In general, obtaining this information may be non trivial and thus it it common to introduce symbols related to local variables only when the statements defining the variables are evaluated.
-We also maintain a mapping table to track the mapping between variables and symbols. 
-
-The first statement of the function is located at line 2. For this reason, the initial execution state $A$ is given by $(2, \{\})$ where the path constraint set is empty as no assumption is made on any symbol. After executing line 2,  $pc$ is updated by adding constraints on the value of $\alpha_x$, $\alpha_y$, and $\alpha_z$ (execution state $B$). Line 3 contains a conditional branch: since the condition cannot be uniquely determined based on the current set of assumptions, the execution is forked. Depending on the branch taken, a different statement is evaluated next and different assumptions are made on the symbol (execution states $C$ and $D$). On the other hand, when a condition can be uniquely determined (e.g., as in execution state $H$), it is sufficient to follow only the relevant branch (e.g., going to state $L$ from $H$), thus pruning unrealistic execution states. 
+A symbolic execution of the function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially, a new symbol is introduced in the symbolic store for the input arguments {\tt a} and {\tt b} and the path constraint is {\tt true}. 
+After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic store is updated by associating {\tt x} and {\tt y} with concrete values 1 and 0, respectively (execution state $B$). Line 3 contains a conditional branch and the execution is forked. Depending on the branch taken, a different statement is evaluated next and different assumptions are made on the symbol (execution states $C$ and $D$). On the other hand, when a condition can be uniquely determined (e.g., as in execution state $H$), it is sufficient to follow only the relevant branch (e.g., going to state $L$ from $H$), thus pruning unrealistic execution states. 
 
 After expanding every execution state until the statement on line 10 is reached, we can check which input values for parameters {\tt a}, {\tt b}, and {\tt c} can make the function {\tt foobar} crash as a consequence of a division-by-zero operation. Analyzing execution states $\{L, M, N, O, P\}$, we can conclude that only $N$ can lead to an unsafe operation. The path constraint set for $N$ thus defines\mynote{implicitly defines?} the set of inputs that are unsafe for {\tt foobar}. Indeed, any input values for $\alpha_a$, $\alpha_b$, and $\alpha_c$ such that:
  \[ \alpha_a = 0 \wedge \alpha_b < 5 \wedge \alpha_c \neq 0 \]
