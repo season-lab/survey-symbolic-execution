@@ -80,6 +80,7 @@ Pointers are seen as array reference at some offset. This means that allocation 
 \end{itemize}
 
 \section{Loops}
+\label{se:loops}
 
 Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. Example taken from~\cite{CS-CACM13}:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -137,6 +138,7 @@ It is common that programs may have loops bounded by the length of some input ar
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Subroutines and recursion}
+\label{se:recursion}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,7 +186,19 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Pruning unrealizable paths}
 
-A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. \mynote{refer to the warm-up example.}
+A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. 
+
+From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
+
+The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint. Two scenarios are possible:
+    \begin{enumerate}
+      \item {\em Non-forking}: if $e$ is evaluated as always true (resp., false) under the assumptions in the current state, the proper branch is taken and the symbolic execution advances to $s_{true}$ (resp., $s_{false}$);
+      \item {\em Forking}: if $e$ cannot be evaluated without instantiating values for one or more of its symbols, the symbolic execution is forked by creating two execution states with path constraints $pct_{true}$ and $pct_{false}$, respectively, corresponding to the two {\tt if} branches. Namely, $pct_{true}=pct \wedge e_s$ and $pct_{false}=pct \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
+%        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
+%        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
+    Symbolic execution proceeds on both states in parallel.
+    \end{enumerate}
+
 
 \begin{figure}[t]
   \centering
