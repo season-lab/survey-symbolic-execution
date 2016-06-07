@@ -6,7 +6,9 @@
 
 A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Index-based memory}
+
 \begin{itemize}
   \item memory is a map $\pi : I \to E$ from 32-bit indices ($i \in I$) to expressions ($e \in E$)
   \item load expressions $e = load(\pi, i)$: $i$ indixes $\pi$ and the loaded value $e$ represents the contents of the $i$-th memory cell
@@ -26,6 +28,7 @@ When using this memory model, handling of arbitrary symbolic indices is notoriou
 \end{itemize}
 Whenever the size of the memory object exceeds a threshold (e.g., $|\mathcal{M}| \geq 1024$), then~\cite{MAYHEM-SP12} concretizes the index. However, instead of choosing a random value for the index, it tries to assign some {\em interesting} value (e.g., test it if it makes sense for it to be equal to an invalid memory address which can be exploited for security purposes).
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Object-based memory}
 
 \cite{STP-TR07} is a decision procedure for bitvectors and arrays. Memory is seen as untyped bytes. Three data types are available:
@@ -109,7 +112,10 @@ For this reason, it is common to specifically deal with them:
 
 Notice that detection/analysis of loops can be done using techniques such as~\cite{SGL-TOPLAS96} (e.g., in~\cite{CFB-ACSAC06}).
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Complex objects}
+
 It is common to use {\em lazy initialization} for handling complex memory objects. Notice that if lazy initialization is not used by the symbolic engine, then it is likely that it has to treat complex objects completely symbolically, requiring a constraint solver that is able to solve the resulting constraints. In other words, the solver must support some form of theory of data structures or arrays.
 
 \paragraph{Recursive data structures} Lazy initialization over recursive data structure works~\cite{PV-JSTTT09} as follows:
@@ -128,8 +134,12 @@ It is common that programs may have loops bounded by the length of some input ar
 
 \paragraph{Native code} Several programming languages provide data types that can be very complex. For instance, Java provides the {\tt String} type. Prior works (see, e.g.,~\cite{SHZ-TAIC07}) has presented some approaches for addressing these issues.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Subroutines and recursion}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Interaction with environment}
 
 Environment can be seen as an input source. Since it can be unfeasible to analyze all possible interactions with the environment, it is common to model these interactions, emulating their behaviors and their side-effects. The main intuition is that models understand the semantics of the desired actions well enough to generate the required constraints.\\
@@ -151,14 +161,16 @@ Environment can be seen as an input source. Since it can be unfeasible to analyz
 
 \cite{DART-PLDI05}: external interfaces are extracted by analyzing library and system calls, then random results are returned (compliant with the type).
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Path explosion}
 
 One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new interpreter at every branch, the total number of interpreters may be exponential in the number of branches of the program. This impact both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Pruning unrealizable paths}
 
 A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. \mynote{refer to the warm-up example.}
-
 
 \begin{figure}[t]
   \centering
@@ -186,6 +198,7 @@ A common technique for reducing the path space is invoking the constraint solver
 \end{figure}
 
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Bounding computational resources}
 \label{heuristics}
 
@@ -224,6 +237,7 @@ Table~\ref{tab:heuristics} provides a list of search heuristics that have been p
 \end{itemize}
 
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Preconditioned symbolic execution}
 \label{precontioned-symbolic-execution}
 
@@ -279,17 +293,7 @@ where {\tt input} is an array of $S\ge N+M$ bytes. Impact of preconditions:
 
 %Dynamic symbolic execution refers to a body of techniques that exploit execution with concrete values to explore [...].
 
-\subsubsection{Concolic execution}
-\label{concolic-execution}
-
-%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
-
-{\em Use concolic execution to generate useful (random) inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
-
-%Errors related to concrete values and 
-\subsubsection{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
-
-
+% ---------------------------------------------------------------------------------------------------
 \subsection{Under-constrained symbolic execution} 
 \label{under-constrinained}
 
@@ -332,6 +336,7 @@ Although this technique is not able to find {\em all} the possible errors in a f
 \end{itemize}
 
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{State merging}
 
 Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would described the individual states if they were kept separate.
@@ -372,12 +377,13 @@ Recent works (e.g., \cite{KKB-PLDI12} and \cite{VERITESTING-ICSE14}) have introd
 
 \end{itemize}
 
-% ------------------------------------------------------
+% ---------------------------------------------------------------------------------------------------
 \subsection{Abstraction}
 
 Abstraction~\cite{C-SEFM07} is a technique that may be used for computing {\tt under-approximations} or {\tt over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
 
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Limiting state space through other program analysis techniques}
 
 Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
@@ -389,7 +395,10 @@ Other static or dynamic techniques can be used to help a symbolic engine to focu
   \item {\em compositional techniques}: caching and reusing the analysis of lower-level function in subsequent computations. The main idea is to compute function summaries. See, e.g.,~\cite{G-POPL07,G-PLDI11,MS-TR07}.
 \end{itemize}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Symbolic executors}
+
 A symbolic execution engine should guarantee three main principles (\cite{MAYHEM-SP12}):
 \begin{enumerate}
   \item the system should be able to forward progress for arbitrarily long time, ideally forever, without exceeding the given resources
@@ -398,6 +407,7 @@ A symbolic execution engine should guarantee three main principles (\cite{MAYHEM
 \end{enumerate}
 
 Based on these principles, symbolic executors can be divided into:
+
 \begin{itemize}
   \item {\em offline} executors (e.g., \cite{SAGE-NDSS08}): one path at time, every run independent from the others, results can be immediately reused, each run restarts the execution of the program from the beginning. In order to perform a run, two inputs must be provided: the target program and a seed input. The program is concretely executed and a trace is recorded. Then the trace is symbolically executed. This can be seen as a form of {\em concolic} execution (see Section~\ref{concolic-execution}).
   \item {\em online} executors (e.g., \cite{KLEE-OSDI08,CKC-TOCS12,AEG-NDSS11}: for each fork, the execution state is cloned. All active execution states are kept in memory, no need to re-execute but huge burden on memory resources. A form of {\em context switch} is often needed. Executors may stop forking at a certain point to allow progress, but then some path are ignored. Memory is saved by aggressive copy-on-write optimization (e.g., immutable state). DFS can be used as exploration strategy in order to minimize memory consumption but can be very slow at doing progress. Notice that since multiple runs may be executed in parallel, isolation must be guaranteed (e.g., keeping different states of the OS by emulating system calls).
@@ -405,14 +415,16 @@ Based on these principles, symbolic executors can be divided into:
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Constraint solving}
 
 A significant amount of the execution time of a symbolic engine is spent invoking the constraint solver.
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Lazy evaluation}\mynote{citations?}
 A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid check for contradiction at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Solvers}
 A list of constraint solvers\mynote{Table?}:
 \begin{itemize}
@@ -424,6 +436,7 @@ A list of constraint solvers\mynote{Table?}:
   \item (incremental solver) \href{http://yices.csl.sri.com/}{Yices}: The Yices SMT Solver
 \end{itemize}
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Constraint optimizations}
 \label{constraint-optimizations}
 
@@ -445,6 +458,7 @@ Many optimization can be applied to constraints in order to make it more solver-
 
 \end{itemize}
 
+% ---------------------------------------------------------------------------------------------------
 \subsection{Dealing with unsolvable constraints} 
 
 Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-CACM13}:
@@ -480,7 +494,21 @@ Notice that the use of concrete values can also avoid to perform alias analysis 
   \vspace{-3mm}
 \end{figure}
 
+% ---------------------------------------------------------------------------------------------------
+\subsection{}
 
+\subsubsection{Concolic execution}
+\label{concolic-execution}
+
+%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
+
+{\em Use concolic execution to generate useful (random) inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
+
+%Errors related to concrete values and 
+\subsubsection{Execution-Generated Testing} {\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Challenges given by symbolic execution of binary code}
 
 Symbolic techniques may work on the source code or on the binary code. However, it is not uncommon that both the former and the latter work by reasoning on an intermediate representation of the original code. For instance, ~\cite{KLEE-OSDI08} interprets the LLVM bytecode generated by compiling the source code, while~\cite{ANGR-SP16} reasons on the VEX IR that has been obtained by lifting the binary code.
