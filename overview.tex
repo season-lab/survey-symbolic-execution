@@ -437,28 +437,6 @@ A list of constraint solvers\mynote{Table?}:
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Constraint optimizations}
-\label{constraint-optimizations}
-
-Many optimization can be applied to constraints in order to make it more solver-friendly:
-\begin{itemize}
-
-  \item possibly a relevant paper is \cite{S-FMCAD08}
-
-  \item some optimizations are listed in Section~\ref{memory-model}. We have to decide where to discuss optimization.
-
-  \item {\em irrelevant constraint optimization}: remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
-
-  \item {\em incremental solving}: many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
-      \begin{itemize}
-        \item if a subset of constraints has not solution, any superset does not have as well
-        \item if a superset has a solution, any subset has a solution
-        \item if a subset has a solution, try it for the superset
-      \end{itemize}
-
-\end{itemize}
-
-% ---------------------------------------------------------------------------------------------------
 \subsection{Dealing with unsolvable constraints} 
 
 Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-CACM13}:
@@ -470,6 +448,29 @@ Assume to start a concrete execution with a concrete input and in parallel symbo
 The non-linear operation inside this function can be hard for a solver. Using a concrete execution, the engine can overcome this problem, but then the precision and completeness may be affected.
 
 Notice that the use of concrete values can also avoid to perform alias analysis on pointers, which is typically very expensive. Whenever meaningful, \cite{DART-PLDI05} tries to test both valid (not {\tt NULL}) and invalid ({\tt NULL}) input pointers in order to maximize bug detection. However~\cite{DART-PLDI05} will never artificially negate a branch if that condition cannot be exercised using a concrete input. In other words, both branches of an {\tt if} statement are considered only if they are both meaningful (more precisely: \cite{DART-PLDI05} is able to generate a valid input). Notice that~\cite{DART-PLDI05} may generate an input using a solver by considering only a subset of branch constraints. For instance, consider constraints ($C_1, C_2, C_3$) given by three nested branches: if $C_1$ is non linear (hard to solve), it needs only to generate a random input for taking $C_1$ and then use the solver for exploring path given by $(C_2, C_3)$. A traditional symbolic execution engine may get stuck at $C_1$ and give up after some time on {\em all} the derived path. Notice that whenever a concrete input is used to overcome a hard constraint, the overall approach become incomplete.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Constraint optimizations}
+\label{constraint-optimizations}
+
+\mynote{add \cite{S-FMCAD08} + some optimizations listed in Section~\ref{memory-model}.}
+
+Many optimization can be applied to constraints in order to make it more solver-friendly.
+
+\subsubsection{Irrelevant constraint optimization} Remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
+
+\subsubsection{Incremental solving} Many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
+      \begin{itemize}
+        \item if a subset of constraints has not solution, any superset does not have as well
+        \item if a superset has a solution, any subset has a solution
+        \item if a subset has a solution, try it for the superset
+      \end{itemize}
+
+%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
+
+\subsubsection{Constraint-based path generation}
+%{\em Use concolic execution to generate useful (random) inputs.} 
+Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
 
 \paragraph{An example}\mynote{Improve this discussion} Given a concrete input, an application will execute only a subsets of its basic blocks $B_i$. Moreover, they will be executed following a specific order. For instance, the program execution shown in Figure~\ref{fig:example-concrete-execution}a has executed the sequence of basic blocks $\{B_1, B_2, B_4, B_6\}$. Other blocks, such as $B_3$, have not been executed due to non-taken branches. Driven by the concrete execution, a symbolic execution engine may trace symbolic constraints on the taken branches and then generate an input that forces the execution to take a never-taken branch. For instance, if the symbolic execution engine may want to generate an input that executes basic block $B_5$, then it traces the constraints on the two taken branches and then negate the constraint on the branch that leads the execution toward $B_5$. Figure~\ref{fig:example-concrete-execution}b provides the logical steps performed by the engine.
 
@@ -494,17 +495,8 @@ Notice that the use of concrete values can also avoid to perform alias analysis 
   \vspace{-3mm}
 \end{figure}
 
-% ---------------------------------------------------------------------------------------------------
-\subsection{}
-
-%\subsubsection{Concolic execution}
-%\label{concolic-execution}
-
-%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
-
-{\em Use concolic execution to generate useful (random) inputs.} Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
-
-{\em Execution-Generated Testing (EGT)} is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
+\subsubsection{Execution-Generated Testing (EGT)} 
+Is the approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
