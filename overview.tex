@@ -153,18 +153,12 @@ Environment can be seen as an input source. Since it can be unfeasible to analyz
 
 \section{Path explosion}
 
-One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new interpreter at every branch, the total number of interpreters is exponential in the number of branches of the program. This impact both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new interpreter at every branch, the total number of interpreters may be exponential in the number of branches of the program. This impact both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
 
 \subsection{Pruning unrealizable paths}
 
 A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. \mynote{refer to the warm-up example.}
 
-\subsection{Bounding computational resources}
-
-Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting the next path to be explored.
-
-\paragraph{Path selection (aka state scheduling)}
-\label{heuristics}
 
 \begin{figure}[t]
   \centering
@@ -191,6 +185,12 @@ Another common approach is to limit the amount of resources symbolic execution i
   \label{tab:heuristics}
 \end{figure}
 
+
+\subsection{Bounding computational resources}
+\label{heuristics}
+
+Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting the next path to be explored.
+%\paragraph{Path selection (aka state scheduling)}
 Table~\ref{tab:heuristics} provides a list of search heuristics that have been presented or discussed in prior works. Different heuristics can be used for deciding which execution state should be evaluated next:
 
 \begin{itemize}
