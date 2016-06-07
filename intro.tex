@@ -10,35 +10,49 @@ We start with a simple example that will introduce many of the fundamental issue
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Consider the simple C function shown in Figure~\ref{fig:example-1}, whose most critical operation is the division at line 10. Each of the input values {\tt a}, {\tt b}, and {\tt c} can be assigned with $2^{32}$ distinct integer values, though only values leading to $x + y + z - 3 = 0$ make the code crash. While techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the crash-inducing inputs would be randomly picked up\mynote{Fuzzing?}. 
+Consider the simple C function shown in Figure~\ref{fig:example-1}, whose most critical operation is the {\tt assert} at line 8. Each of the input values {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values, though only values leading to $x - y = 0$ make the {\tt assert} fail. While techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the crash-inducing inputs would be randomly picked up\mynote{Fuzzing?}. 
 Symbolic execution overcomes these limitations by evaluating a piece of code using {\em symbols}, instead of concrete values, for its inputs. This makes it possible to reason on {\em classes of input values}, instead of single input instances. 
+
+%\begin{figure}[t]
+%\begin{lstlisting}[basicstyle=\ttfamily\small]
+%              1.  int foobar(int a, int b, int c) {
+%              2.    int x = 0, y = 0, z = 0;
+%              3.    if (a != 0)
+%              4.      x = -2;
+%              5.    if (b < 5) {
+%              6.      z = 2;
+%              7.      if (a == 0 && c != 0)
+%              8.        y = 1;
+%              9.    }
+%             10.    return a / (x + y + z - 3);
+%             11.  }
+%\end{lstlisting}
+%\caption{Simple C function used in the warm-up example.}
+%\label{fig:example-1}
+%\end{figure}
 
 \begin{figure}[t]
 \begin{lstlisting}[basicstyle=\ttfamily\small]
-              1.  int foobar(int a, int b, int c) {
-              2.    int x = 0, y = 0, z = 0;
-              3.    if (a != 0)
-              4.      x = -2;
-              5.    if (b < 5) {
-              6.      z = 2;
-              7.      if (a == 0 && c != 0)
-              8.        y = 1;
-              9.    }
-             10.    return a / (x + y + z - 3);
-             11.  }
+              1.  void foobar(int a, int b) {
+              2.     int x = 1, y = 0;
+              3.     if (a != 0) {
+              4.        y = 3+x;
+              5.        if (b == 0)
+              6.           x = 2*(a+b);
+              7.     }
+              8.     assert (x-y != 0);
+              9.  }
 \end{lstlisting}
 \caption{Simple C function used in the warm-up example.}
 \label{fig:example-1}
 \end{figure}
 
-In more details, every global or local variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains:
+In more details, every global or local variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains an execution state $(stmt,~pc)$ where:
 
-\begin{itemize}
-  \item  an execution state $(stmt,~pc)$ where:
 \begin{itemize}
   \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
   \item $pc$ is a collection of path\mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
-\end{itemize}
+
 \item a {\em memory mapping} $M$ for storing constraints over different symbols. This is required since in general every memory location can be associated with a symbol\mynote{Rephrase}.
 \end{itemize}
 
