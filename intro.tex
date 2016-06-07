@@ -54,13 +54,18 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 \label{fig:example-1}
 \end{figure}
 
-In more details, every global or local variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains an execution state $(stmt,~pc)$ where:
+In more details, every global or local variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains an execution state $(stmt,~\sigma_s,~pct)$ where:
+
+two formulas:symbolic store and a path constraint
 
 \begin{itemize}
-  \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
-  \item $pc$ is a collection of path\mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
 
-\item a {\em memory mapping} $M$ for storing constraints over different symbols. This is required since in general every memory location can be associated with a symbol\mynote{Rephrase}.
+  \item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs for iteration and function calls will be provided in Section~\ref{example-discussion});
+
+\item $\sigma_s$ is a {\em symbolic store} that associates variables with symbolic values. 
+
+  \item $pct$ is {\em path constraint} \mynote{IF: my feeling is that pc does not denote a set. Better notation? Isn't pc a logical formula?} constraints, i.e., a set of assumptions made over the symbols $\alpha_i$ in order to reach $stmt$. Initially $pc$ is empty, and is thus trivially satisfied.
+
 \end{itemize}
 
 \noindent Depending on $stmt$, the symbolic engine modifies the state as follows:
@@ -87,9 +92,16 @@ In more details, every global or local variable is associated with a symbol $\al
 %\subsection{Example}
 %\label{symbolic-execution-example}
 
+%\begin{figure}[t]
+%  \centering
+%  \includegraphics[width=1.0\columnwidth]{images/example} 
+%  \caption{Symbolic execution tree of the function {\tt foobar}. Each execution state is labeled with an alphabet letter. Side effects on execution states are highlighted in gray. Leaves are evaluated against division by zero error. For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
+%  \label{fig:example-symbolic-execution}
+%\end{figure}
+
 \begin{figure}[t]
   \centering
-  \includegraphics[width=1.0\columnwidth]{images/example} 
+  \includegraphics[width=1.0\columnwidth]{images/photo_tree} 
   \caption{Symbolic execution tree of the function {\tt foobar}. Each execution state is labeled with an alphabet letter. Side effects on execution states are highlighted in gray. Leaves are evaluated against division by zero error. For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
 \end{figure}
