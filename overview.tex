@@ -142,14 +142,24 @@ It is common that programs may have loops bounded by the length of some input ar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Interaction with environment}
 
-Environment can be seen as an input source. Since it can be unfeasible to analyze all possible interactions with the environment, it is common to model these interactions, emulating their behaviors and their side-effects. The main intuition is that models understand the semantics of the desired actions well enough to generate the required constraints.\\
+When a program interacts with its environment - e.g., filesystem, environment variables, network - a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, drivers, etc.
 
-\cite{KLEE-OSDI08}:
-\begin{itemize}
-  \item {\em file system}: operations on concrete files are actually performed. Operations on symbolic files are emulated modeling a simple symbolic file system, which is private for each execution state. Symbolic file system is a directory with $N$ symbolic files. Users specify both the number of files and their sizes. Any operation on a unconstrained symbolic file will generate $N+1$ branches: one for each symbolic file, plus one for a failing scenario. Emulation done at library level, not system call level. This make symbolic execution simpler (no need to symbolically execute library code) but assumption that library code is correct. If needed, library code is tested separately.
-  \item {\em environment failures}: \cite{KLEE-OSDI08} emulates failures (e.g., failures of {\tt write}). This is optional since some applications may be not sensitive to environment failure.
-  \item {\em re-running test cases}: inputs which may crash an application may depend on the environment failures. To force concrete execution towards failures, \cite{KLEE-OSDI08} exploits {\tt ptrace}.
-\end{itemize}
+A body of early works (e.g., ~\cite{DART-PLDI05,CUTE-FSE13,EXE-CCS06}) include the environment in symbolic analysis by actually executing external calls using concrete arguments for them\mynote{Concolic should have already been defined before}. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible.
+
+Another way to tackle the problem is to create an abstract model that captures these interactions. For instance, in \cite{KLEE-OSDI08} symbolic files are supported through a simple symbolic file system, which is private for each execution state. In particular, it consists of a directory with $N$ symbolic files, whose number and sizes are specified by the user. An operation on a symbolic file will lead to $N+1$ branches in the state: one for each possible file, plus an (optional) one to capture unexpected errors in the operation. As writing models is an error-prone and rather expensive process~\cite{Ball06}, they are implemented at system call-level rather than library level, as the number of functions in a standard library (which can also be tested as well) is typically large.
+
+
+
+%In order to analyze a program, a symbolic executor has typically to take into account the whole environment surrounding it, including system libraries, devices etc.
+%Environment can be seen as an input source. Since it can be unfeasible to analyze all possible interactions with the environment, it is common to model these interactions, emulating their behaviors and their side-effects. The main intuition is that models understand the semantics of the desired actions well enough to generate the required constraints.\\
+
+\iffalse
+%\cite{KLEE-OSDI08}: \begin{itemize}
+%\item {\em file system}: operations on concrete files are actually performed. Operations on symbolic files are emulated modeling a simple symbolic file system, which is private for each execution state. Symbolic file system is a directory with $N$ symbolic files. Users specify both the number of files and their sizes. Any operation on a unconstrained symbolic file will generate $N+1$ branches: one for each symbolic file, plus one for a failing scenario. Emulation done at library level, not system call level. This make symbolic execution simpler (no need to symbolically execute library code) but assumption that library code is correct. If needed, library code is tested separately.
+%\item {\em environment failures}: \cite{KLEE-OSDI08} emulates failures (e.g., failures of {\tt write}). This is optional since some applications may be not sensitive to environment failure.
+ %\item {\em re-running test cases}: inputs which may crash an application may depend on the environment failures. To force concrete execution towards failures, \cite{KLEE-OSDI08} exploits {\tt ptrace}.
+%\end{itemize}
+\fi
 
 \cite{AEG-NDSS11}:
 \begin{itemize}
