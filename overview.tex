@@ -153,12 +153,14 @@ Environment can be seen as an input source. Since it can be unfeasible to analyz
 
 \section{State space explosion}
 
-One of the main challenges of symbolic execution is the state space explosion problem. Since symbolic execution forks off a new interpreter at every (undecidable)\mynote{why ``undecidable''?} branch, the total number of interpreters is exponential in the number of branches of the program. A common approach is to compute an under-approximation of the analysis that only considers a relevant subset of the state space.
+One of the main challenges of symbolic execution is the state space explosion problem. Since symbolic execution forks off a new interpreter at every (undecidable)\mynote{why ``undecidable''?} branch, the total number of interpreters is exponential in the number of branches of the program. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+
+\bigskip\noindent [add section on pruning by unrealizable paths]
 
 \subsection{Preconditioned symbolic execution}
 \label{precontioned-symbolic-execution}
 
-\cite{AEG-NDSS11} has proposed {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subset of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
+\cite{AEG-NDSS11} has proposed {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subsets of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
 Note that preconditions cannot be selected at random. If a precondition is too specific, we will detect no bugs or exploits; if it is too general, we will have to explore almost the entire state space. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
 
 Preconditioned symbolic execution enforces the precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the shrinking of the state space -- imposed by the precondition constraints -- outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do no further checks and do not fork off an interpreter at all for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
@@ -175,6 +177,8 @@ Preconditioned symbolic execution enforces the precondition by adding the precon
 
 \paragraph{An example} Consider the example\mynote{citation to example source, if any?}:
 
+\begin{figure}[t]
+\begin{small}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
     // N symbolic branches 
     if (input[0] < 42) [...]
@@ -188,7 +192,13 @@ Preconditioned symbolic execution enforces the precondition by adding the precon
     if (input[N + 1] < 42) [...]
     [...]
     if (input[N + M - 1] < 42) [...]
-    \end{lstlisting}
+\end{lstlisting}
+\end{small}
+\caption{State space size.}
+\label{fig:state-space-size}
+\end{figure}
+
+
 where {\tt input} is an array of $S\ge N+M$ bytes. Impact of preconditions:
 \begin{itemize}
   \item {\em None}. No constraint is added. State space size is $2^N \cdot S \cdot 2^M$.
@@ -220,11 +230,13 @@ By isolating a function from the rest of the program, we can perform symbolic ex
 {\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function but clearly marks which symbols are {\em under-constrained} to distinguish them from the {\em exactly-constrained} symbols.
 
 Errors due to concrete values and exactly-constrained symbols are treated as true positives. Errors due to under-constrained are treated as true positives only if {\em all} solutions to the currently known constraints on the symbols cause the error to occur. Otherwise the negation of the error is added to the constraint set and the symbolic execution of the isolated function is continued. In other words, an error is reported if and only if it is {\em context-insensitive}. Notice that a symbol may initially be under-constrained and then become exactly constrained. For instance, consider the following piece of code:
+
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     assert(a != 0); // no knowledge about this variable
     a = 0;          // from now on we know the value of a
     assert(a != 0); // we always hit this error: context-insensitive! 
     \end{lstlisting}
+
 The first {\tt assert} will not trigger an error: indeed, there is at least one possible value for the symbol associated to {\tt a} that does not hit the error. Conversely, the second {\tt assert} will always trigger an error since {\tt a} has a concrete value and it's not under-constrained anymore.\\
 
 Although this technique is not able to find {\em all} the possible errors in a function, it still can find interesting bugs. Moreover, since symbolically executing a full program may be unfeasible, this technique can make it feasible to test tons of line of code in a reasonable amount of time. In particular, this technique allows an engine to skip code: if a function or any other construct (e.g., a loop) may be troublesome for symbolic execution, it can be skipped by just marking the locations affected by it as under-constrained. However, a possible implementation issue is given by the propagation of under-constrained symbols: given the line of code {\tt if (s < t)}, if {\tt t} is under-constrained while {\tt s} is exactly constrained then when the symbolic execution is proceeded into the two possible branches, {\tt s} must be marked as under-constrained. Some optimization may be needed in order to minimize this propagation effect.
