@@ -207,16 +207,17 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
   \begin{tabular}{| l || l || l |}
     \hline      
     Heuristic & Goal & Discussed by \\ \hline\hline
-    BFS & maximize coverage & -- \\
-    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06} \\
+    BFS & maximize coverage & \cite{CKC-TOCS12} \\
+    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12} \\
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
     low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
     random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
-    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12} \\
+    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} \\
     pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
     memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
     fitness function & prioritize paths based on a fitness function & \cite{CS-CACM13} \\
+    kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
     \hline  
   \end{tabular}
   \end{small}
@@ -261,6 +262,14 @@ Table~\ref{tab:heuristics} provides a list of search heuristics that have been p
   \end{itemize}
 
   \item \cite{CS-CACM13} mentions that a {\em fitness function} can be used to drive exploration of input space. Some examples: \cite{BHH-ASE11,LMH-JSS10}.
+
+  \item Priority-based selection in~\cite{CKC-TOCS12}:
+    \begin{itemize}
+      \item bread-first search
+      \item depth-first search
+      \item max coverage heuristic
+      \item path killer heuristic: kill paths that are no longer of interest (e.g., kill path that repeats sequence of program counters more than $n$ times)
+    \end{itemize}
 
 \end{itemize}
 
@@ -408,7 +417,7 @@ Recent works (e.g., \cite{KKB-PLDI12} and \cite{VERITESTING-ICSE14}) have introd
 % ---------------------------------------------------------------------------------------------------
 \subsection{Abstraction}
 
-Abstraction~\cite{C-SEFM07} is a technique that may be used for computing {\tt under-approximations} or {\tt over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
+Abstraction~\cite{C-SEFM07} is a technique that may be used for computing {\em under-approximations} or {\em over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
 
 
 % ---------------------------------------------------------------------------------------------------
@@ -461,7 +470,13 @@ A list of constraint solvers\mynote{Table?}:
   \item \cite{DISSOLVER-TR03}: initially used by \cite{SAGE-NDSS08}
   \item \cite{PPL-SCP08}: used by \cite{AEG-NDSS11}
   \item (incremental solver) \href{http://www.cs.nyu.edu/acsys/cvc3/}{CVC3}: an automatic theorem prover for Satisfiability Modulo Theories
-  \item (incremental solver) \href{http://yices.csl.sri.com/}{Yices}: The Yices SMT Solver
+  \item (incremental solver) \href{http://yices.csl.sri.com/}{Yices}: The Yices SMT Solver~\cite{YICES-CAV06}
+  \item \href{http://choco-solver.org/}{CHOCO}: A Free and Open-Source Java Library for Constraint Programming
+  \item \href{http://www.cs.brandeis.edu/~tim/Applets/IAsolver.html}{IAsolver}: the Brandeis Interval Arithmetic Constraint Solver
+  \item \href{https://people.csail.mit.edu/akiezun/hampi/}{Hampi}: A Solver for String Constraints
+  \item \href{https://www.cs.umd.edu/projects/omega/}{Omega}~\cite{OMEGA-SC91}
+  \item \href{http://pagesperso.lina.univ-nantes.fr/~granvilliers-l/realpaver/}{RealPaver}: onlinear constraint solving \& rigorous global optimization
+  \item \href{http://smtlib.cs.uiowa.edu/}{SMT-LIB}: the satisfiability modulo theories library
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
@@ -493,6 +508,10 @@ Many optimization can be applied to constraints in order to make it more solver-
         \item if a superset has a solution, any subset has a solution
         \item if a subset has a solution, try it for the superset
       \end{itemize}
+
+\subsubsection{Bit-field theory expression} \cite{CKC-TOCS12} tries to simplify expression using a bit-field theory expressions: if parts of a symbolic variable are masked away by bit operations, then known bits of the symbolic variable can be replaced by their constant values. If all bits of a symbolic variable are constant, then the variable is marked as concrete.
+
+\subsection{Page boundings on pointers} Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
 
 %{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
 

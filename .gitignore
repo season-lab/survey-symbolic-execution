@@ -10,3 +10,5 @@ main.pdf
 *.synctex.gz
 .DS_Store
 Icon*
+*-eps-converted-to.pdf
+*-tree-eps-converted-to.pdf
