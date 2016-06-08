@@ -82,7 +82,7 @@ In more details, every input variable is associated with a symbol $\alpha_i$.  A
   \label{fig:example-symbolic-execution}
 \end{figure}
 
-A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraint is {\tt true} and there is a symbol for each of the input arguments {\tt a} and {\tt b}. 
+\noindent A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraint is {\tt true} and there is a symbol for each of the input arguments {\tt a} and {\tt b}. 
 After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic store is updated by associating {\tt x} and {\tt y} with concrete values 1 and 0, respectively (execution state $B$). Line 3 contains a conditional branch and the execution is forked: depending on the branch taken, a different statement is evaluated next and different assumptions are made on symbol $\alpha_a$ (execution states $C$ and $D$, respectively). In the branch where $\alpha_a\neq 0$, variable {\tt y} is assigned with ${\tt x}+3$, and since $x\mapsto 1$ in the current state we obtain $y\mapsto 4$. In general, arithmetic expression evaluation simply manipulates the symbolic values.
 After expanding every execution state until the {\tt assert} at line 8 is reached, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make the condition {\tt x-y != 0} false. The path constraint set for $H$ thus implicitly defines the set of inputs that are unsafe for {\tt foobar}. 
 Indeed, any input values such that:
