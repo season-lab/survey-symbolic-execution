@@ -503,6 +503,10 @@ Many optimization can be applied to constraints in order to make it more solver-
         \item if a subset has a solution, try it for the superset
       \end{itemize}
 
+\subsubsection{Bit-field theory expression} \cite{CKC-TOCS12} tries to simplify expression using a bit-field theory expressions: if parts of a symbolic variable are masked away by bit operations, then known bits of the symbolic variable can be replaced by their constant values. If all bits of a symbolic variable are constant, then the variable is marked as concrete.
+
+\subsection{Page boundings on pointers} Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
+
 %{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
 
 \subsubsection{Constraint-based path generation}
