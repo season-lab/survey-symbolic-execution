@@ -1,0 +1,79 @@
+% !TEX root = CSUR/main.tex
+
+\section{Memory model}
+\label{memory-model}
+
+A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Index-based memory}
+
+\begin{itemize}
+  \item memory is a map $\pi : I \to E$ from 32-bit indices ($i \in I$) to expressions ($e \in E$)
+  \item load expressions $e = load(\pi, i)$: $i$ indixes $\pi$ and the loaded value $e$ represents the contents of the $i$-th memory cell
+  \item store expressions $store(\pi, i, e)$: a new memory $\pi'$ where $i$ is mapped to $e$, i.e., $\pi' = \pi[i \gets e]$
+\end{itemize}
+When using this memory model, handling of arbitrary symbolic indices is notoriously hard, since a symbolic index may reference any cell in memory. Two approaches can be pursued: (a) concretization of the index where only a single value is evaluated for the index (see Section~\ref{concolic-execution} for more details), (b) fully symbolic memory where any possible value for the index is evaluated (e.g., \cite{BAP-CAV11}). The former is often excessively limiting (many paths are pruned away), while the latter is hard to make scalable. To overcome the limitations of both approaches, \cite{MAYHEM-SP12} models memory {\em partially}: symbolic writes are always concretized, while symbolic reads are allowed to be modeled symbolically.
+
+\paragraph{Memory objects} Whenever there is a symbolic read, an immutable memory object $\mathcal{M}$ is generated:  it contains all values that could be accessed by the index, i.e., $\mathcal{M}$ is a partial snapshot of the global memory $\pi$. In practice, \cite{MAYHEM-SP12} reasons on $\mathcal{M}[i]$ instead of reasoning on $\pi[i]$, since the former is typically smaller than the latter.
+
+\paragraph{Memory object bounds resolution}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} \cite{MAYHEM-SP12} trades accuracy with scalability by resolving the bounds $[\mathcal{L}, \mathcal{U}]$ of the memory region, where $\mathcal{L}$ is lower and $\mathcal{U}$ is the upper bound for the index $i$. Initially, $\mathcal{L} \in [0, 2^{32}-1]$. The solver is used to test if $i < \frac{2^{32}-1}{2}$ makes the path constrains unsatisfiable. If satisfiable then $\mathcal{L} \in [0, \frac{2^{32}-1}{2}]$, otherwise $\mathcal{L} \in [\frac{2^{32}-1}{2}, 2^{32}-1]$. The same strategy is repeated as much as possible. This is akin to a binary search algorithm. Whenever the bounds become reasonable, a memory object is generated. Unfortunately, there several cases where the bounds cannot be narrowed down drastically and thus other techniques can be used:
+\begin{itemize}
+  \item {\em value set analysis (VSA)}
+  \item {\em refinement cache}
+  \item {\em lemma cache}
+  \item {\em index search trees (IST)}
+  \item {\em bucketization with linear functions}
+\end{itemize}
+Whenever the size of the memory object exceeds a threshold (e.g., $|\mathcal{M}| \geq 1024$), then~\cite{MAYHEM-SP12} concretizes the index. However, instead of choosing a random value for the index, it tries to assign some {\em interesting} value (e.g., test it if it makes sense for it to be equal to an invalid memory address which can be exploited for security purposes).
+
+% ---------------------------------------------------------------------------------------------------
+\subsection{Object-based memory}
+
+\cite{STP-TR07} is a decision procedure for bitvectors and arrays. Memory is seen as untyped bytes. Three data types are available:
+\begin{itemize}
+  \item {\em booleans}
+  \item {\em bitvectors}: a fixed-length sequence of bits
+  \item {\em arrays of bitvectors}
+\end{itemize}
+Most linear and non-linear operations are mapped to bitvector constraints. Conditional branches are transformaed into {\em multiplexers}, which are similar to C ternary operator. Bitvector operations are translated into operations to individual bits. Floating-points data types are not supported. Expresions types:
+\begin{itemize}
+  \item {\em formulas}, which have boolean values. They are converted into DAGs of single bit operations, where expressions with identical structure are represented uniquely (an hash table is maintain to track of existing expressions and lookups are performed on it when a new expression is created).
+  \item {\em terms}, which have bitvectors values. They are converted into vectors of boolean formulas consisting entirely of single bit operations.
+\end{itemize}
+
+\paragraph{Mapping C code to STP primitives} Each C data block is represented symbolically as an array of 8-bit bitvectors. Typed operations in C generated constraints on the symbolic data (i.e., typeness is not actually known to~\cite{STP-TR07}). A mapping table is maintained to track symbolic data:
+\begin{itemize}
+  \item each input array $b$ is associated to a symbolic identically-size array $b_{sym}$ (i.e., the address of the C variable $b$ is mapped to the symbolic array $b_{sym}$ that is composed by $|b|$ 8-bit elements)
+  \item $v = e$: an assignment expression, where $e$ is an expression that involves one or more symbolic data, adds a mapping between the address of $v$ and the generated symbolic expression $e_{sym}$. If $v$ is overwritten with a constant value or deallocated then this mapping is removed.
+  \item $b[e]$: $b_{sym}$ is allocated, initializing it with the (constant) contents of $b$ (only if $b$ is actually initialized by a previous C statement). A mapping is added until $b$ is not deallocated.
+\end{itemize}
+
+\paragraph{Expression evaluation} An expression $e$ that contains some symbolic data can be seen as:
+\[ l_1~~op_1~~l_2~~op_2~~l_3~~... \]
+Each $l_i$ is evaluated in the following way:
+\begin{itemize}
+  \item if $l_i$ is concrete: the concrete value is used in the expression (e.g., if 4-byte $b$ is equal to 4 then the constant $000000...0100$ is used)
+  \item otherwise: a concatenation of all the symbolic bytes of $l_i$ is used (e.g., $b_{sym}[0] @b_{sym}[1] @ $ $b_{sym}[2] @ b_{sym}[3] @ ...$)
+\end{itemize}
+Pointers are seen as array reference at some offset. This means that allocation sites as well as pointer arithmetic expressions must be instrumented in order to track where a pointer can point to. Notice that double dereferences ({\tt **p}) force~\cite{STP-TR07} to concretize the first dereference ({\tt *p}). 
+
+\paragraph{Fast array transformations}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} Some transformations are needed to make\cite{STP-TR07} reason only on a purely functional language. In particular:
+\begin{itemize}
+  \item {\em read-over-write}: eliminates all write operations
+    \[ read(write(A, i, v), j) \implies ite(i = j, v, read(A, j)) \]
+    where $ite(a,b,c)$ is a ternary operator (i.e., if $a$ then $b$ else $c$). Notice that a write of a location without a subsequent read of the same location can be ignored.
+  \item {\em read elimination}:
+    \[ (read(A, i) = e_1) \wedge (read(A, j) = e_2) \]
+    will be transformed in:
+    \[ (v_1 = e_1) \wedge (v_2 = e_2) \wedge (i=j \implies v_1 = v_2) \]
+  \item {\em array substitution optimization}
+  \item {\em array-based refinement}
+  \item {\em simplifications}: boolean or mathematical identities
+\end{itemize} 
+
+\paragraph{Optimizations}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} Other optimizations are applied:
+\begin{itemize}
+  \item {\em constraint caching}: cache solver results and reuse them
+  \item {\em constraint independence}: tracks constraints into multiple independent subsets of constraints, This helps the system discards irrelevant constraints and adds additional cache hits.  
+\end{itemize}
