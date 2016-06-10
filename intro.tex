@@ -94,9 +94,9 @@ will make {\tt assert} fail. An instance of unsafe input parameters can be event
 \subsection{Discussion}
 \label{example-discussion}
 
-As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make {\tt assert} fail. This is achieved through an exhaustive exploration of all the possible execution states. For this reason, symbolic execution is a {\em sound} and {\em complete} methodology from a theoretical perspective. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
+As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the execution states. For this reason, symbolic execution is a {\em sound} and {\em complete} methodology from a theoretical perspective. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
 
-Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our toy example. Several observations and questions naturally arise:
+Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
 \begin{itemize}
 
@@ -105,11 +105,11 @@ Any arbitrarily complex object can be regarded as an array of bytes and each byt
 \vspace{1mm}
 
   \item {\em Loops}: how does the symbolic engine handle loops? \\
-A loop can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. When the number of iterations cannot be determined in advance (e.g., depends on an input parameter),  choosing how many iterations should be analyzed becomes critical for the symbolic engine. The naive approach of unrolling iterations for every valid index bound leads to a very large number of states. It is possible to limit the number of iterations to $k$, thus trading speed for completeness, or when loop invariants can be inferred through static analysis they can be used to merge equivalent states (\mynote{Recuperare citazione}e.g., when differences are not observable outside the loop body).
+A loop\mynote{IF: rimuoverei la prima frase, perche' va detto?} can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. Choosing the number of loop iterations to analyze is critical for the symbolic engine, especially when this number cannot be determined in advance (since, e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to limit the number of iterations to $k$, thus trading speed for completeness, or to infer loop invariants through static analysis  and use them to merge equivalent states (\mynote{Recuperare citazione}e.g., when differences are not observable outside the loop body).
 \vspace{1mm}
 
   \item {\em Subroutines and recursion}: how does the symbolic engine handle subroutines and recursive calls? \\
-In order to support subroutines, the execution state is typically provided with a simple execution stack. To understand issues due to recursion, consider the following example:
+In order to support subroutines, the execution state is typically provided with an execution stack. To understand issues due to recursion, consider the following example:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     1.  int bar(int n) {
     2.    if (n >= 0) 
@@ -117,18 +117,13 @@ In order to support subroutines, the execution state is typically provided with 
     4.    return 1 + sum(n - 1);
     5.  }
     \end{lstlisting}
-This code can easily lead to a very large number of execution states: a new state is indeed created each time the branch at line 2 is not taken. Since variable {\tt n} can assume up to  $2^{31} - 1$ positive values, the symbolic engine would create as many execution states to cover all the possible paths.
+This code can easily lead to a very large number of states: a new state would be indeed created each time the branch at line 2 is not taken. Since variable {\tt n} can assume up to  $2^{31} - 1$ positive values, the symbolic engine would create as many execution states to cover all the possible paths.
  %Indeed, the number of executions states is related to the number of times that the conditional branch on line 2 is not taken. 
  \vspace{1mm}
 
-  \item {\em Environment}: how does symbolic execution handle interaction with the environment? \\
-  Real-world applications interacts constantly with the environment (e.g., filesystem, network) through libraries or system calls. A crucial aspect of these interactions is that they may cause side-effects
-% on the environments 
-(e.g., creation of a file)
-%or initialization of a memory area
-that must be taken into account, as they may later affect the 
-%actual
-execution of the code. Evaluating any possible outcome of an interaction is typically not feasible due to the large number of possibly generated execution states, only a small number of which can actually happen in a non-symbolic scenario. Hence, it is common to create models for popular library and system routines that help the symbolic execution engine to consider only significant outcomes.
+  \item {\em Environment}: how does the symbolic engine handle interaction with the environment? \\
+  Real-world applications constantly interact with the environment (e.g., with the file system or the network) through libraries and system calls. These interactions may cause side-effects
+(such as the creation of a file) that could later affect the execution and must be thus taken into account. Evaluating any possible interaction outcome is typically not feasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and to create models that can help the symbolic engine analyze only significant outcomes.
 \vspace{1mm}
 
   \item {\em State space explosion, path selection}: how does symbolic execution deal with path explosion? \\
