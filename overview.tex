@@ -105,7 +105,9 @@ When an argument $x$ for a function call to concretize is symbolic, the engine s
 
 When execution returns to the symbolic domain, we have observed that updating constraints to reflect a concrete assignment might result in a corseting of the family of future paths that can be explored. Such constraints are marked in ~\cite{CKC-TOCS12} as {\em soft}, and whenever a branch in the symbolic domain is disabled because of a soft constraint, execution goes back and picks a value for the concrete call that would enable that branch.
 
+\subsection{Optimization strategies} \mynote{Provisionally placed here}
 
+\subsubsection{Function caching} Discuss techniques that cache the symbolic execution of single portions of a program, e.g., functions.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -71,9 +71,3 @@ Pointers are seen as array reference at some offset. This means that allocation 
   \item {\em array-based refinement}
   \item {\em simplifications}: boolean or mathematical identities
 \end{itemize} 
-
-\paragraph{Optimizations}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} Other optimizations are applied:
-\begin{itemize}
-  \item {\em constraint caching}: cache solver results and reuse them
-  \item {\em constraint independence}: tracks constraints into multiple independent subsets of constraints, This helps the system discards irrelevant constraints and adds additional cache hits.  
-\end{itemize}

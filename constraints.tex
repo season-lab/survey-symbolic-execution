@@ -48,6 +48,10 @@ Notice that the use of concrete values can also avoid to perform alias analysis 
 
 Many optimization can be applied to constraints in order to make it more solver-friendly.
 
+\subsubsection{Constraint caching} Cache solver results and reuse them \mynote{to be completed}
+
+\subsubsection{Constraint independence} tracks constraints into multiple independent subsets of constraints, This helps the system discards irrelevant constraints and adds additional cache hits.  \mynote{to be completed}
+
 \subsubsection{Irrelevant constraint optimization} Remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
 
 \subsubsection{Incremental solving} Many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
