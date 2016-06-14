@@ -6,6 +6,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\myinput{complex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Loops}
 \label{se:loops}
 
@@ -39,29 +43,6 @@ For this reason, it is common to specifically deal with them:
 \end{itemize}
 
 Notice that detection/analysis of loops can be done using techniques such as~\cite{SGL-TOPLAS96} (e.g., in~\cite{CFB-ACSAC06}).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Complex objects}
-
-It is common to use {\em lazy initialization} for handling complex memory objects. Notice that if lazy initialization is not used by the symbolic engine, then it is likely that it has to treat complex objects completely symbolically, requiring a constraint solver that is able to solve the resulting constraints. In other words, the solver must support some form of theory of data structures or arrays.
-
-\paragraph{Recursive data structures} Lazy initialization over recursive data structure works~\cite{PV-JSTTT09} as follows:
-\begin{itemize}
-  \item whenever an instance method is called over a symbolic object, the object is created with uninitialized fields
-  \item whenever an uninitialized field of a non-native type is accessed, the symbolic engine non deterministically initialize it with: (a) a {\tt null} reference, (b) a reference to a previously created object, (c) a reference to a new object with uninitialized fields. 
-  \item whenever an uninitialized field of a native type\mynote{this is my guess, it's not clear explained in~\cite{PV-JSTTT09}}) is accessed, a new symbolic value is introduced. 
-\end{itemize}
-
-\mynote{Merge discussion of {\em lazy initialization} done in Section~\ref{under-constrinained}.}
-
-Notice that if some input preconditions~\ref{precontioned-symbolic-execution} has been set, lazy evaluation should consider and exploit them. For instance, the object may have been marked as acyclic and thus fewer possible alternatives should be considered when initializing a uninitialized field. Further complication~\cite{PV-JSTTT09} may arise for programs that perform destructive updates. 
-
-\paragraph{Input arrays}
-It is common that programs may have loops bounded by the length of some input arrays. If this length cannot be statically determined then the symbolic engine may non-deterministically choose when to stop a loop. This means that the number of entries in a symbolic array does not need to be chosen as soon as the symbolic array is created, but this choice can be postponed.
-
-\paragraph{Native code} Several programming languages provide data types that can be very complex. For instance, Java provides the {\tt String} type. Prior works (see, e.g.,~\cite{SHZ-TAIC07}) has presented some approaches for addressing these issues.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Subroutines and recursion}
