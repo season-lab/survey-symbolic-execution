@@ -19,7 +19,7 @@ We start with a simple example that highlights many of the fundamental issues di
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Assume that we want to characterize inputs of the C function shown in Figure~\ref{fig:example-1} for which the {\tt assert} at line 8 fails. Each of the two input parameters {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values. Hence, while techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
+Suppose that we want to characterize the inputs of the C function shown in Figure~\ref{fig:example-1} for which the {\tt assert} at line 8 fails. Each of the two input parameters {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values. Hence, while techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 Symbolic execution overcomes these limitations by evaluating a piece of code using {\em symbols}, instead of concrete values, for its inputs. This makes it possible to reason on {\em classes of input values}, instead of single input instances. 
 
 \begin{figure}[t]
@@ -93,7 +93,7 @@ will make {\tt assert} fail. An instance of unsafe input parameters can be event
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
-\subsection{Discussion}
+\subsection{Challenges in Symbolic Execution}
 \label{example-discussion}
 
 As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the execution states. For this reason, for decidable analyses symbolic execution is a {\em sound} and {\em complete} methodology from a theoretical perspective. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
@@ -148,7 +148,7 @@ Depending on the specific context in which symbolic execution is used, different
 
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
-\subsection{Paper organization}
+\subsection{Organization of the Article}
 
 %\vspace{2cm}
 %\subsection{Removed stuff}
