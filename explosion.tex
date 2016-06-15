@@ -236,12 +236,6 @@ Recent works (e.g., \cite{KKB-PLDI12} and \cite{VERITESTING-ICSE14}) have introd
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Abstraction}
-
-Abstraction~\cite{C-SEFM07} is a technique that may be used for computing {\em under-approximations} or {\em over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
-
-
-% ---------------------------------------------------------------------------------------------------
 \subsection{Limiting state space through other program analysis techniques}
 
 Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
@@ -251,5 +245,7 @@ Other static or dynamic techniques can be used to help a symbolic engine to focu
   \item {\em source code analysis}: extraction of input properties (e.g., size or contents of an array)
   \item {\em phi-node folding transformation}: add select operations to merge statically paths (see, e.g., \cite{CCK-EUROSYS11})
   \item {\em compositional techniques}: caching and reusing the analysis of lower-level function in subsequent computations. The main idea is to compute function summaries. See, e.g.,~\cite{G-POPL07,G-PLDI11,MS-TR07}.
+  \item {\em abstraction}~\cite{C-SEFM07} is a technique that may be used for computing {\em under-approximations} or {\em over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
+  \item {\em type-checking}: \cite{KCF-PLDI10} shows how symbolic analysis can be effectively mixed with type-checking analysis. For instance, type-checking analysis can help a symbolic execution engine by detecting the type of an object (e.g., the type of a value returned by a {\em hard to reason} function). Although no assumption can be made on the value of the returned type, this information may still be useful for the symbolic engine (e.g., if the type has a fixed size, some preconditions can be set, possibly pruning some paths). Similarly, symbolic analysis can help a type checker. For instance, the symbolic engine may provide context-sensitive properties over a variable that clearly rules out type errors, reducing the number of false positive given by a traditional context-insensitive type checker.
 \end{itemize}
 
