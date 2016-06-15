@@ -2,10 +2,12 @@
 
 \section{Introduction}
 
-Symbolic execution is a powerful program analysis technique introduced in the mid 70's in the context of software testing (see, e.g.,~{\cite{K-CACM76} and~\cite{H-TSE77}})\mynote{IF: are references appropriate? Should we give more credits? It seems several groups introduced independently this technique}. The basic idea is to allow the program to take on ``symbolic'' -- instead of concrete -- input values. Variables and control flow paths are associated with expressions and constraints in terms of those symbols during a symbolic execution of the program, and constraints are eventually solved via SMT (satisfiability modulo theories) solvers.
+Symbolic execution is a powerful program analysis technique first introduced in the mid 70's in the context of software testing (see, e.g.,~{\cite{K-CACM76} and~\cite{H-TSE77}})\mynote{IF: are references appropriate? Should we give more credits? It seems several groups introduced independently this technique}. The basic idea is to allow the program to take on ``symbolic'' -- instead of concrete -- input values. Compared to a concrete execution, where a single path in the control flow graph is taken, symbolic execution aims to simultaneously explore all the potential paths that a program could take if fed with different inputs. Execution is performed by an abstract machine, which maintains for each explored path a mapping from variables to symbolic expressions and a first-order Boolean formula that describes the conditions satisfied by the branches taken on that path.
 
-In this article we survey the main aspects of symbolic execution and discuss its extensive usage in computer security applications\mynote{IF: want focus only on security?}, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code.
-We start with a simple example that will introduce many of the fundamental issues discussed in remainder of the paper.
+%Variables and control flow paths are associated with expressions and constraints in terms of those symbols during a symbolic execution of the program, and constraints are eventually solved via SMT (satisfiability modulo theories) solvers.
+
+In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in testing and computer security applications\mynote{IF: want focus only on security?}, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code.
+We start with a simple example that highlights many of the fundamental issues discussed in remainder of this article.
 
 \begin{figure}[t]
 \centering
@@ -36,11 +38,11 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 \label{fig:example-1}
 \end{figure}
 
-In more details, every input variable is associated with a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+In more details, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
 \begin{itemize}
 
-\item $stmt$ is the statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs such as iteration and function calls will be provided in later sections).
+\item $stmt$ is the next statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs such as iteration and function calls will be provided in later sections).
 
 \item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over concrete and symbolic values $\alpha_i$.
 
@@ -50,7 +52,7 @@ In more details, every input variable is associated with a symbol $\alpha_i$.  A
 
 \noindent Depending on $stmt$, the symbolic engine changes the state as follows:
 \begin{itemize}
-  \item The evaluation of an assignment $x=e$ changes the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$: in short $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression, involving unary or binary operators, over symbols and constants.
+  \item The evaluation of an assignment $x=e$ changes the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and constant values over a concrete domain.
   
 %   $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
 %    \[ pc \gets pc \wedge \alpha_i = e\]
@@ -82,19 +84,19 @@ In more details, every input variable is associated with a symbol $\alpha_i$.  A
   \label{fig:example-symbolic-execution}
 \end{figure}
 
-\noindent A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraint is {\tt true} and there is a symbol for each of the input arguments {\tt a} and {\tt b}. 
+\noindent A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraint is {\tt true} and input arguments {\tt a} and {\tt b} are associated with symbolic values. 
 After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic store is updated by associating {\tt x} and {\tt y} with concrete values 1 and 0, respectively (execution state $B$). Line 3 contains a conditional branch and the execution is forked: depending on the branch taken, a different statement is evaluated next and different assumptions are made on symbol $\alpha_a$ (execution states $C$ and $D$, respectively). In the branch where $\alpha_a\neq 0$, variable {\tt y} is assigned with ${\tt x}+3$, obtaining $y\mapsto 4$ in state $E$ because $x\mapsto 1$ in state $C$. In general, arithmetic expression evaluation simply manipulates the symbolic values.
 After expanding every execution state until the {\tt assert} at line 8 is reached on all branches, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make {\tt x-y = 0} true. The path constraint set for $H$ at this point implicitly defines the set of inputs that are unsafe for {\tt foobar}. 
-Indeed, any input values such that:
+In particular, any input values such that:
  \[ 2(\alpha_a+\alpha_b)-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b = 0 \]
-will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a constraint solver, which in this example would come up with values $a = 2$ and $b = 0$. 
+will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a model checker to solves the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
 \subsection{Discussion}
 \label{example-discussion}
 
-As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the execution states. For this reason, symbolic execution is a {\em sound} and {\em complete} methodology from a theoretical perspective. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
+As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the execution states. For this reason, for decidable analyses symbolic execution is a {\em sound} and {\em complete} methodology from a theoretical perspective. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
