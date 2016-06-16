@@ -3,7 +3,24 @@
 \section{Memory model}
 \label{memory-model}
 
-A crucial aspect of symbolic execution is how the memory should be modeled. In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
+A crucial aspect of symbolic execution is how the memory should be modeled. When executing load or store instructions on concrete addresses, a symbolic engine can maintain a map between addresses and corresponding values, which can be either symbolic expressions or concrete values. The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. This is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+
+\subsection{Fully symbolic memory}
+On the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indices is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11}) offer capabilities to handle fully symbolic memory. An engine can ask the solver the range of possible values for an address in order to restrict the exploration. \mynote{Cite VSA and aliasing as possible refinements?} When obtained ranges are too large, ~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size, although most symbolic memory accesses are typically already constrained to small ranges in practices, making this unnecessary.
+
+\subsection{Address concretization}
+On the other end, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indices. 
+
+Concretization is a natural choice for offline executors (Section \missing) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be efficiently solved, and resort to concretization for general symbolic references.
+
+
+%we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
+
+\subsection{Theory of arrays}
+A number of works 
+
+
+\mynote{[D] Previous text starts here}In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Index-based memory}
