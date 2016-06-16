@@ -9,18 +9,25 @@ A crucial aspect of symbolic execution is how the memory should be modeled. When
 On the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indices is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11}) offer capabilities to handle fully symbolic memory. An engine can ask the solver the range of possible values for an address in order to restrict the exploration. \mynote{Cite VSA and aliasing as possible refinements?} When obtained ranges are too large, ~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size, although most symbolic memory accesses are typically already constrained to small ranges in practices, making this unnecessary.
 
 \subsection{Address concretization}
-On the other end, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indices. 
+On the other end of the spectrum, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indices. 
 
-Concretization is a natural choice for offline executors (Section \missing) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be efficiently solved, and resort to concretization for general symbolic references.
+Concretization is a natural choice for offline executors\mynote{DART is also mentioned in CS-CACM13 as one using theories of arrays}(Section \missing) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be efficiently solved, and resort to concretization for general symbolic references.
 
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
 \subsection{Theory of arrays}
-A number of works 
+A number of works (e.g., ~\cite{EXE-CCS06,KLEE-OSDI08,SAGE-NDSS08} model pointers using the theory of arrays available from SMT decision procedures. In this section we provide a description of its implementation in the popular STP solver~\cite{STP-CAV07}.
 
+The design of STP has been mainly driven by the demands of research projects on software analysis. Its input language supports one-dimensional arrays that are indexed by bitvectors and contain bitvectors. Given an array $A$, a $read(A,i)$ operation returns the value $A[i]$ at the location expressed by the index $i$, while a $write(A,i,v)$ returns a new array with the same values as $A$ at all indexes except $i$, where it contains the value $v$. Array reads and write typically appear as subexpressions of an $ite(c,a,b)$ expression, which is syntactic sugar for $(if\,c\;then\,b\;else\,a)$.
 
-\mynote{[D] Previous text starts here}In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
+STP reduces formulas over array to an equisatisfiable form that contains no $read$ or $write$ operations by applying three standard transformations and introducing fresh bitvector variables. Generated formulas are then amenable to SAT solving. However, transformations can also introduce bottlenecks, for instance by destroying sharing of subterms, and thus are typically procrastinated using refinement algorithms. SMT attempts also to eliminate variables through linear solving~\cite{STP-CAV07}.
+
+\subsection{Index-based memory modeling}
+Motivated by the observation that concretizing all memory indices might not work well in some scenarios, while fully symbolic memory would not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model, where writes are always concretized, but symbolic reads can be modeled symbolically. 
+
+\iffalse
+\vspace{2em}\mynote{[D] Previous text starts here}In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Index-based memory}
@@ -88,3 +95,5 @@ Pointers are seen as array reference at some offset. This means that allocation 
   \item {\em array-based refinement}
   \item {\em simplifications}: boolean or mathematical identities
 \end{itemize} 
+
+\fi
