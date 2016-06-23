@@ -81,7 +81,7 @@ where $N_i$ is the symbol introduced at the i-th iteration.\\
 Many prior works have targeted the problem of mitigating the path explosion effect due to symbolic execution of loops. We briefly discuss the main ideas introduced by these papers. 
 \begin{itemize}
 
-  \item {\em preconditions}: the symbolic execution of a loop can be made easier if some preconditions are known on the symbolic variables involved in the loop. For instance, the number of loop iterations may be determinable using some static analysis techniques. Section~\ref{precontioned-symbolic-execution} further explains how preconditions can help symbolic execution.
+  \item {\em preconditions}: the symbolic execution of a loop can be made easier if some preconditions are known on the symbolic variables involved in the loop. For instance, if the number of loop iterations is known, the engine can drastically prune branching paths. For instance, this information may be determined using some static analysis techniques. Section~\ref{precontioned-symbolic-execution} provides a more general discussion of how preconditions can help symbolic execution.
 
   \item {\em fixed vs fully exploration}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or to explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
 
