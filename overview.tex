@@ -44,6 +44,7 @@ When an argument $x$ for a function call to concretize is symbolic, the engine s
 When execution returns to the symbolic domain, we have observed that updating constraints to reflect a concrete assignment might result in a corseting of the family of future paths that can be explored. Such constraints are marked in ~\cite{CKC-TOCS12} as {\em soft}, and whenever a branch in the symbolic domain is disabled because of a soft constraint, execution goes back and picks a value for the concrete call that would enable that branch.
 
 \subsection{Optimization strategies} \mynote{Provisionally placed here}
+\label{function-summaries}
 
 \subsubsection{Function caching} The same function $f$, but more in general any part of a program, may be called multiple times during the execution of a program. These invocations may occur always at the same calling context or at different calling contexts. The traditional symbolic execution approach requires to symbolic execute the function $f$ every time it is called. \cite{G-POPL07} proposes a compositional approach that dynamically generates {\em function summaries}, allowing the symbolic execution engine to effectively reuse prior discovered analysis' results. A similar idea has been also proposed by~\cite{BCE-TACAS08}. Their main intuition is that if two program states differ only for some program values that are not subsequently read, the executions generate by these two program states will produce the same subsequent side effects. For this reason, side effects of a portion of code can be cached and possibly later reused. Since the two techniques are almost equivalent, we further discuss function summaries as introduced by~\cite{G-POPL07}.
 
@@ -66,7 +67,7 @@ When execution returns to the symbolic domain, we have observed that updating co
 \section{Loops}
 \label{se:loops}
 
-Loops can easily lead to the path explosion problem: any iteration of a loop can be seen as a {\tt IF-GOTO} statement. Example taken from~\cite{CS-CACM13}:
+Loops are one of the main cause for path explosion in symbolic execution. Indeed, each iteration of a loop can be seen as a {\tt IF-GOTO} statement, thus producing a conditional branch in the execution tree. If the condition involves one or more symbolic values, the number of generated branches may even be infinite. For instance, consider the following example (taken from~\cite{CS-CACM13}):
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     1.  int N = sym_input(); // e.g., read
     2.  while (N > 0) {
@@ -77,12 +78,12 @@ The path constraint set of any final state will contain:
   \[ \left ( \bigwedge_{i \in [1, n]]} N_i > 0 \right ) \wedge (N_{n+1} \leq 0) \]
 where $N_i$ is the symbol introduced at the i-th iteration.\\
 
-For this reason, it is common to specifically deal with them:
+Many prior works have targeted the problem of mitigating the path explosion effect due to symbolic execution of loops. 
 \begin{itemize}
 
-  \item {\em preconditions}: a technique to make it easier to perform symbolic execution on loops is through imposing some preconditions, e.g., use static analysis techniques to understand number of iterations for a loop. See Section~\ref{precontioned-symbolic-execution} for more details.
+  \item {\em preconditions}: a technique to make it easier to perform symbolic execution on loops is through imposing some preconditions, e.g., using static analysis techniques to determine the number of iterations for a loop. Section~\ref{precontioned-symbolic-execution} explain how preconditions can help symbolic execution.
 
-  \item {\em fixed exploration}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
+  \item {\em fixed vs fully exploration}: depending on the goal, a symbolic engine may decide to fully explore a loop (e.g., see heuristics presented in~\cite{AEG-NDSS11} and discussed in Section~\ref{heuristics}) or explore only a fixed number of iterations (e.g., up to 3 iterations) in order to avoid path explosion.
 
   \item {\em approximations}: effects of a loop are often approximated using {\em fixpoints} (e.g., in~\cite{KKM-USEC05,BNS-SP06,CFB-ACSAC06}). A fixpoint F is an approximation of the effect of loop body on an execution state. F approximates the state after the execution of loop whenever the initial state before the loop was F (?). Transforming an execution state to a fixpoint state is defined as widening. Construction of the fixpoint:
   \begin{itemize}
@@ -92,6 +93,8 @@ For this reason, it is common to specifically deal with them:
     \item repeat until there is no difference between Si and Si+1
     \item if there is a branch inside the loop, then either the branch is known or its condition is on a symbol which has been assign to bottom. In this case, two parallel states are created and then compared.
   \end{itemize}
+
+  \item {\em loop summarization}: \cite{GL-ISSTA11} presents a technique that automatically derives partial summarizations for loop executions. A loop summarization is formalized similarly to a function summary (see Section~\ref{function-summaries}), using a set of preconditions $pre_{loop}$ and a set of postconditions $post_{loop}$. These are computed dynamically during the symbolic execution by reasoning on the dependency among loop conditions and symbolic variables. As soon as a loop summary is computed, it is cached for possibly subsequent reuse. This not only allows the symbolic engine to avoid redundant executions of the same loop under the same program state, but also make it possible to generalize the loop summary to cover even different executions of the same loop that run under different conditions. A main limitation of this approach is that it can generate summaries only for loops that interactively manipulate symbolic variable by a constant non-zero amount.
 
 \end{itemize}
 
