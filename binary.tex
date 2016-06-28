@@ -31,6 +31,12 @@ In general, not all the analyses based on CFGs require successor nodes to be acc
 
 ~\cite{ANGR-SP16} implements two algorithms for CFG recovery. An iterative algorithm starts from the entry point of the program and interleaves a number of techniques to achieve speed and completeness, including VSA, inter-procedural backward program slicing, and symbolic execution of blocks. This algorithm is however rather slow and may miss code portions reachable only through unresolved jump targets. The authors thus devise a fast secondary algorithm that uses a number of heuristics to identify functions based on prologue signatures, and performs simple analyses (e.g., a lightweight alias analysis) to solve a number of indirect jumps. The algorithm is context-insensitive, so it can be used to quickly recover a CFG without a concern for understanding the reachability of functions from one another. 
 
+\subsection{Other Aspects}
+
+Concurrency.\\
+Floting-point.
+
+
 \subsection{Other Techniques}
 
 \missing\mynote{Types, ...}

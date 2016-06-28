@@ -159,7 +159,7 @@ By isolating a function from the rest of the program, we can perform symbolic ex
 
 {\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function but clearly marks which symbols are {\em under-constrained} to distinguish them from the {\em exactly-constrained} symbols.
 
-Errors due to concrete values and exactly-constrained symbols are treated as true positives. Errors due to under-constrained are treated as true positives only if {\em all} solutions to the currently known constraints on the symbols cause the error to occur. Otherwise the negation of the error is added to the constraint set and the symbolic execution of the isolated function is continued. In other words, an error is reported if and only if it is {\em context-insensitive}. Notice that a symbol may initially be under-constrained and then become exactly constrained. For instance, consider the following piece of code:
+Errors due to concrete values and exactly-constrained symbols are treated as true positives. On the other end, errors due to under-constrained are treated as true positives only if {\em all} solutions to the currently known constraints on the symbols cause the error to occur. Otherwise the negation of the error is added to the constraint set and the symbolic execution of the isolated function is continued. In other words, an error is reported if and only if it is {\em context-insensitive}. Notice that a symbol may initially be under-constrained and then become exactly constrained. For instance, consider the following piece of code:
 
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     assert(a != 0); // no knowledge about this variable
@@ -167,14 +167,15 @@ Errors due to concrete values and exactly-constrained symbols are treated as tru
     assert(a != 0); // we always hit this error: context-insensitive! 
     \end{lstlisting}
 
-The first {\tt assert} will not trigger an error: indeed, there is at least one possible value for the symbol associated to {\tt a} that does not hit the error. Conversely, the second {\tt assert} will always trigger an error since {\tt a} has a concrete value and it's not under-constrained anymore.\\
+If {\tt a} is marked as under-constrained, then the first {\tt assert} will not trigger an error: indeed, there is at least one possible value for the symbol associated to {\tt a} that does not hit the error. Conversely, the second {\tt assert} will always trigger an error since {\tt a} has a concrete value and it's not anymore under-constrained.\\
 
 Although this technique is not able to find {\em all} the possible errors in a function, it still can find interesting bugs. Moreover, since symbolically executing a full program may be unfeasible, this technique can make it feasible to test tons of line of code in a reasonable amount of time. In particular, this technique allows an engine to skip code: if a function or any other construct (e.g., a loop) may be troublesome for symbolic execution, it can be skipped by just marking the locations affected by it as under-constrained. However, a possible implementation issue is given by the propagation of under-constrained symbols: given the line of code {\tt if (s < t)}, if {\tt t} is under-constrained while {\tt s} is exactly constrained then when the symbolic execution is proceeded into the two possible branches, {\tt s} must be marked as under-constrained. Some optimization may be needed in order to minimize this propagation effect.
 
+\begin{comment}
 \paragraph{Under-constrained KLEE}\mynote{I will revise this (emilio)} In~\cite{UCKLEE-USEC15}, KLEE~\cite{KLEE-OSDI08} has been extended in order to support under-constrained symbolic execution . In particular, these are some of the main improvements:
 \begin{itemize}
   \item {\em Lazy initialization.} Whenever there is a pointer that is not concrete and without any active constraint (i.e., it is unbound), its value is checked against {\tt NULL} then two path are analyzed: (a) where the pointer is {\tt NULL} and (b) where the pointer is pointing to a freshly allocated block of memory, whose content is marked as unbound.This means that pointer aliasing is assumed to not occur. In both paths, the pointer is not longer unbound.  In path (b), any test against the pointer is known and dereferences will be successfully resolved. Lazy initialization is common for data structure and thus it is common to bound its maximum length (i.e., {\em k-bounding}) in order to prevent the engine from allocating an unbounded number of objects.
-  \item {\em Patch checking.} The main goal of~\cite{UCKLEE-USEC15} is to detect if a patch has introduced new bugs. In order to do so, it symbolically executes two compiled versions of a function: $P$, the unpatched version, and $P'$, the patched version. If it finds any execution paths along which $P'$ crashes but $P$ does not (when given the same symbolic inputs), it reports a potential bug. Indeed, due to missing input preconditions, not all crashes are real bugs: if both $P$ and $P'$ crash on an input, then maybe the crash is given by the unknown preconditions. 
+  \item {\em Patch checking.} The main goal of~\cite{UCKLEE-USEC15} is to detect if a patch has introduced new bugs. In order to do so, it symbolically executes two compiled versions of a function: $P$, the unpatched version, and $P'$, the patched version. If it finds any execution paths along which $P'$ crashes but $P$ does not (when given the samce symbolic inputs), it reports a potential bug. Indeed, due to missing input preconditions, not all crashes are real bugs: if both $P$ and $P'$ crash on an input, then maybe the crash is given by the unknown preconditions. 
   \item {\em Pruning techniques.} Using a static cross-checker (that navigates the control-flow graph and marks differing basic block between $P$ and $P'$), \cite{UCKLEE-USEC15} prunes paths that have never executed a differing basic block and that cannot reach a differing basic block from their current program counter and call stack. Moreover, $P'$ is executed before executing $P$, allowing the system to prune paths that return from $P'$ without triggering an error, or that trigger an error without reaching different blocks.
   \item {Dealing with false positives.} Two approaches are pursued to limit false positives:
     \begin{itemize}
@@ -192,7 +193,7 @@ Although this technique is not able to find {\em all} the possible errors in a f
     \end{itemize}
 
 \end{itemize}
-
+\end{comment}
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{State merging}
