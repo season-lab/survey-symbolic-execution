@@ -18,7 +18,6 @@ Another way to tackle the problem is to create an abstract model that captures t
 %\item {\em environment failures}: \cite{KLEE-OSDI08} emulates failures (e.g., failures of {\tt write}). This is optional since some applications may be not sensitive to environment failure.
  %\item {\em re-running test cases}: inputs which may crash an application may depend on the environment failures. To force concrete execution towards failures, \cite{KLEE-OSDI08} exploits {\tt ptrace}.
 %\end{itemize}
-\fi
 
 \cite{AEG-NDSS11}:
 \begin{itemize}
@@ -27,7 +26,12 @@ Another way to tackle the problem is to create an abstract model that captures t
   \item {\em environment variables}: a complete summary of all possible results (concrete values, fully symbolic, and failures) of {\tt get\_env}.
   \item {\em library function calls and system calls}: emulation of more than 70 library routines and system calls. In particular, formatting functions (e.g., {\tt fprintf}) are emulated to capture buffer overflows.
 \end{itemize}
+\fi
 
-\cite{DART-PLDI05}: external interfaces are extracted by analyzing library and system calls, then random results are returned (compliant with the type).
+\cite{AEG-NDSS11} models most of the system environment that an attacker can possibly use as an input source, including the file system, network sockets, and environment variables. Additionally, more than 70 library and system calls are emulated, including thread- and process-related system calls, and common formatting functions to capture potential buffer overflows. Symbolic files are handled as in ~\cite{KLEE-OSDI08}, and symbolic socket are dealt with in a similar manner, with packets and their payloads being processed as in symbolic files and their contents.
 
 \cite{CKC-TOCS12} remarks that models, other than expensive to write, rarely achieve full accuracy, and also lose it as the modeled system evolves. It would be thus preferable to have analyzed programs to interact with the real environment while exploring multiple paths. In their \stwoe\ platform authors rely on virtualization to perform the desired analysis on the real software stack, preventing side effects from propagating across independent execution paths. 
+
+The approach followed in \cite{DART-PLDI05} is different, as the goal is to enable automated unit testing. DART deems as foreign interfaces all the external variables and functions referenced in a C program along with the arguments for a top-level function.
+%External interfaces are identified by parsing the source code, and a random test driver is generated accordingly.
+External functions are simulated by nondeterministically returning any value of their specified return type. Library functions are normally not considered external functions as they are controlled by the program, but in practice the user can adjust the boundary between library and external functions to simulate desired effects.
