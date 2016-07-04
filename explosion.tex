@@ -28,13 +28,13 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
   \begin{tabular}{| l || l || l |}
     \hline      
     Heuristic & Goal & Discussed by \\ \hline\hline
-    BFS & maximize coverage & \cite{CKC-TOCS12} \\
-    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12} \\
+    BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
+    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
+    low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
+    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} \\
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-    low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
     random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
-    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} \\
     pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
     memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
     fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13} \\
@@ -56,8 +56,11 @@ Another common approach is to limit the amount of resources symbolic execution i
 
 \subsubsection{Search heuristics}
 
-Table~\ref{tab:heuristics} provides a list of search heuristics that have been presented or discussed in prior works. Different heuristics can be used for deciding which execution state should be evaluated next:
+Given a set of unexplored paths, a search heuristics should select the most promising path to explore. Many prior works have introduced novel search strategies, showing their effectiveness in specific application contexts. These heuristics have often been tailored for helping the symbolic engine to achieve a specific goal (e.g., overflow detection). Finding a universally optimal strategy for prioritizing path exploration remains an open problem. Table~\ref{tab:heuristics} provides a sample of the most interesting search heuristics discussed in prior works. 
 
+The most common strategies are {\em depth-first search} and {\em breadth-first strategy}. The former continuously expands a path as much as possible, before backtracking to the last unexplored branch. The latter explores all unexplored path in parallel, repeatedly expanding each of them of a fixed slice. DFS is often adopted for minimizing the memory usage of the symbolic engine: since the chosen path will be sooner or later fully explored, the memory needed for keeping its state will be released as well. Unfortunately, paths containing loops and recursion can easily stall the symbolic engine. For this reason, some tools prefer to perform path prioritization using BFS. Although the memory pressure can be higher, this strategy may allow an engine to quickly explore diverse paths and possibly detecting interesting behaviors. On the other hand, if the ultimate goal requires to fully explore a set of paths, BFS may take a very long time.
+
+\begin{comment}
 \begin{itemize}
 
   \item \cite{AEG-NDSS11}:
@@ -95,6 +98,7 @@ Table~\ref{tab:heuristics} provides a list of search heuristics that have been p
     \end{itemize}
 
 \end{itemize}
+\end{comment}
 
 \subsubsection{Dynamic Test Generation}
 %\subsubsection{Generational Search}
