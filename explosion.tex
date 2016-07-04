@@ -28,17 +28,17 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
   \begin{tabular}{| l || l || l |}
     \hline      
     Heuristic & Goal & Discussed by \\ \hline\hline
-    BFS & maximize coverage & \cite{CKC-TOCS12} \\
-    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12} \\
+    BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
+    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
+    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
+    code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-    low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
-    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} \\
     pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
     memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
-    fitness function & prioritize paths based on a fitness function & \cite{CS-CACM13} \\
+    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13} \\
     kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
+    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
     \hline  
   \end{tabular}
   \end{small}
@@ -52,10 +52,19 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
 \subsection{Bounding computational resources}
 \label{heuristics}
 
-Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting the next path to be explored.
-%\paragraph{Path selection (aka state scheduling)}
-Table~\ref{tab:heuristics} provides a list of search heuristics that have been presented or discussed in prior works. Different heuristics can be used for deciding which execution state should be evaluated next:
+Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting or generating the next path to be explored. We now briefly overview some of the most interesting techniques that have been shown to be effective in prior works.
 
+\subsubsection{Search heuristics}
+
+Given a set of unexplored paths, a search heuristics should select the most promising path to explore. Many prior works have introduced novel search strategies, showing their effectiveness in specific application contexts. These heuristics have often been tailored for helping the symbolic engine to achieve a specific goal (e.g., overflow detection). Finding a universally optimal strategy for prioritizing path exploration remains an open problem. Table~\ref{tab:heuristics} provides a sample of the most interesting search heuristics discussed in prior works. 
+
+The most common strategies are {\em depth-first search} and {\em breadth-first strategy}. The former continuously expands a path as much as possible, before backtracking to the last unexplored branch. The latter explores all unexplored path in parallel, repeatedly expanding each of them of a fixed slice. DFS is often adopted for minimizing the memory usage of the symbolic engine: since the chosen path will be sooner or later fully explored, the memory needed for keeping its state will be released as well. Unfortunately, paths containing loops and recursion can easily stall the symbolic engine. For this reason, some tools prefer to perform path prioritization using BFS. Although the memory pressure can be higher, this strategy may allow an engine to quickly explore diverse paths and possibly detecting interesting behaviors. On the other hand, if the ultimate goal requires to fully explore a set of paths, BFS may take a very long time.
+
+Another very popular strategy is {\em random path selection} that, as its name would suggest, randomly picks a path for exploration. This kind of heuristic has been refined in several variants. For instance,~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and based on the branch arity. In other words, it favors paths that have been explored for fewer times, preventing starvation given by loops and other path explosion causes.
+
+Several works~\cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} have instead presented heuristics aimed at maximizing the code coverage. For instance, the {\em coverage optimize search} discussed in~\cite{KLEE-OSDI08} computes a weight for each state and then randomly selects a state according to these weights. The weight is obtained by taking into account the minimum distance to an uncovered instruction, the call stack of the state, and whether the state recently covered new code.
+
+\begin{comment}
 \begin{itemize}
 
   \item \cite{AEG-NDSS11}:
@@ -93,7 +102,35 @@ Table~\ref{tab:heuristics} provides a list of search heuristics that have been p
     \end{itemize}
 
 \end{itemize}
+\end{comment}
 
+\subsubsection{Dynamic Test Generation}
+%\subsubsection{Generational Search}
+%{\em Use concolic execution to generate useful (random) inputs.} 
+Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. \mynote{Add paper on hybrid concolic testing}In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
+
+\paragraph{An example}\mynote{Improve this discussion} Given a concrete input, an application will execute only a subsets of its basic blocks $B_i$. Moreover, they will be executed following a specific order. For instance, the program execution shown in Figure~\ref{fig:example-concrete-execution}a has executed the sequence of basic blocks $\{B_1, B_2, B_4, B_6\}$. Other blocks, such as $B_3$, have not been executed due to non-taken branches. Driven by the concrete execution, a symbolic execution engine may trace symbolic constraints on the taken branches and then generate an input that forces the execution to take a never-taken branch. For instance, if the symbolic execution engine may want to generate an input that executes basic block $B_5$, then it traces the constraints on the two taken branches and then negate the constraint on the branch that leads the execution toward $B_5$. Figure~\ref{fig:example-concrete-execution}b provides the logical steps performed by the engine.
+
+\begin{figure}[t]
+  \vspace{-3mm}
+  \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=0.9\columnwidth]{images/concrete-execution} 
+    %\label{fig:sub1}
+    \vspace{15mm}
+    \caption{}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/concolic-execution} 
+    %\label{fig:sub2}
+    \caption{}
+  \end{subfigure}
+  \caption{(a) a concrete execution of a program. Only a subset of basic blocks is executed. The sequence of executed basic blocks is $\{B_1, B_2, B_4, B_6\}$. (b) concolic execution for generating an input that executes $B_5$.}
+  \label{fig:example-concrete-execution}
+  \vspace{-3mm}
+\end{figure}
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Preconditioned symbolic execution}
