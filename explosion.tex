@@ -30,15 +30,15 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
     Heuristic & Goal & Discussed by \\ \hline\hline
     BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
     DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
-    low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    coverage optimize search & assign weights to paths based on amount of uncovered code & \cite{KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} \\
+    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
+    code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
     pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
     memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
     fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13} \\
     kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
+    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
     \hline  
   \end{tabular}
   \end{small}
@@ -59,6 +59,10 @@ Another common approach is to limit the amount of resources symbolic execution i
 Given a set of unexplored paths, a search heuristics should select the most promising path to explore. Many prior works have introduced novel search strategies, showing their effectiveness in specific application contexts. These heuristics have often been tailored for helping the symbolic engine to achieve a specific goal (e.g., overflow detection). Finding a universally optimal strategy for prioritizing path exploration remains an open problem. Table~\ref{tab:heuristics} provides a sample of the most interesting search heuristics discussed in prior works. 
 
 The most common strategies are {\em depth-first search} and {\em breadth-first strategy}. The former continuously expands a path as much as possible, before backtracking to the last unexplored branch. The latter explores all unexplored path in parallel, repeatedly expanding each of them of a fixed slice. DFS is often adopted for minimizing the memory usage of the symbolic engine: since the chosen path will be sooner or later fully explored, the memory needed for keeping its state will be released as well. Unfortunately, paths containing loops and recursion can easily stall the symbolic engine. For this reason, some tools prefer to perform path prioritization using BFS. Although the memory pressure can be higher, this strategy may allow an engine to quickly explore diverse paths and possibly detecting interesting behaviors. On the other hand, if the ultimate goal requires to fully explore a set of paths, BFS may take a very long time.
+
+Another very popular strategy is {\em random path selection} that, as its name would suggest, randomly picks a path for exploration. This kind of heuristic has been refined in several variants. For instance,~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and based on the branch arity. In other words, it favors paths that have been explored for fewer times, preventing starvation given by loops and other path explosion causes.
+
+Several works~\cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} have instead presented heuristics aimed at maximizing the code coverage. For instance, the {\em coverage optimize search} discussed in~\cite{KLEE-OSDI08} computes a weight for each state and then randomly selects a state according to these weights. The weight is obtained by taking into account the minimum distance to an uncovered instruction, the call stack of the state, and whether the state recently covered new code.
 
 \begin{comment}
 \begin{itemize}
