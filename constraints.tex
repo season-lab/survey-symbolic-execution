@@ -73,15 +73,29 @@ They thus implemented a solution that works as follow: when the executor encount
 Compared to the {\em eager} approach of checking the feasibility of a branch before taking it, this strategy may in principle lead to a larger number of active states, and thus to more solver queries. However, the authors report that the delayed queries are in many cases more efficient than their eager counterparts: additional path constraints added after a lazy one can narrow down the solution space considered by the solver.
 
 \subsubsection{Concretization}
+~\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers.
+    \begin{lstlisting}[basicstyle=\ttfamily\small]
+    int non_linear(int v) {
+      return (v*v) % 50;
+    }
+    
+    void test(int x, int y) {
+      z = non_linear(y);
+      if (z == x) {
+        if (x > y + 10) ERROR;  
+      }
+    \end{lstlisting}
 
+\noindent In the code fragment above, the engine will generate a constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the true branch in the first {\tt if} statement in {\tt test}. A solver that does not support nonlinear arithmetic will fail to generate any input for the program.
+
+A concolic executor will generate some random input for the program and execute it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing completeness in the exploration.
+
+%~\cite{CKC-TOCS12} 
+%Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
+%of constraints that might be hard or impossible to reason on for a solver. For instance, 
 
 %A significant amount of the execution time of a symbolic engine is spent invoking the constraint solver.
 
-% ---------------------------------------------------------------------------------------------------
-\iffalse
-\subsection{Lazy evaluation}\mynote{citations?}
-\mynote{[D] original text starts here} A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid checking for contradictions at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
-\fi
 
 \subsection{[OLD] Dealing with unsolvable constraints} 
 
@@ -118,6 +132,12 @@ A list of constraint solvers\mynote{Table?}:
 % ---------------------------------------------------------------------------------------------------
 
 % ---------------------------------------------------------------------------------------------------
+\iffalse
+\subsection{Lazy evaluation}\mynote{citations?}
+\mynote{[D] original text starts here} A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid checking for contradictions at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
+\fi
+
+% ---------------------------------------------------------------------------------------------------
 \subsection{[OLD] Constraint optimizations}
 \label{constraint-optimizations}
 
@@ -144,7 +164,7 @@ Many optimization can be applied to constraints in order to make it more solver-
 
 \fi
 
-\subsubsection{Page boundings on pointers} Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
+\mynote{[D] TOCS page 24}\subsubsection{Page boundings on pointers} Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
 
 %{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
 
