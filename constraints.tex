@@ -34,7 +34,7 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 \end{figure}
 \fi
 
-However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check, so to avoid scalability problems arising when too large queries result in blowing the solver up. We discuss a number of such techniques in the remainder of this section.
+However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check, so to avoid scalability problems arising when too large queries result in blowing the solver up. We discuss a number of such techniques in the upcoming section. We will then present other optimizations that become possible in the setting of symbolic execution.
 
 \subsection{Constraint Optimization}
 
@@ -63,14 +63,27 @@ The idea of reusing previously computed results to speed constraint solving up c
 
 The Green framework~\cite{GREEN-FSE12} explore constraint solution reuse across runs of not only the same program, but also similar programs, different programs, and different analyses. Constraints are distilled into their essential parts through a {\em slicing} transformation and represented in a canonical form to achieve good reuse, even within a single analysis run. ~\cite{JGY-ISSTA15} presents an extension to the Green framework that supports constraint reuse based on the logical implication relations among constraints, leading to better reuse and faster execution time for the symbolic analysis.
 
+\subsection{Other Optimizations in Symbolic Executors}
+In this section we present a number of optimization that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
+
+\subsubsection{Lazy constraints}
+~\cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
+They thus implemented a solution that works as follow: when the executor encounters a branch statement involving an expensive symbolic operation, it will take both the true and false branches and add a {\em lazy} constraint on the result of the expensive operation to the path conditions. When the exploration reaches a state that satisfies some goal (e.g., an error is found), ~\cite{UCKLEE-USEC15} will check for the feasibility of the path, and suppress it if deemed as unreachable in a real execution.
+
+Compared to the {\em eager} approach of checking the feasibility of a branch before taking it, this strategy may in principle lead to a larger number of active states, and thus to more solver queries. However, the authors report that the delayed queries are in many cases more efficient than their eager counterparts: additional path constraints added after a lazy one can narrow down the solution space considered by the solver.
+
+\subsubsection{Concretization}
+
 
 %A significant amount of the execution time of a symbolic engine is spent invoking the constraint solver.
 
 % ---------------------------------------------------------------------------------------------------
+\iffalse
 \subsection{Lazy evaluation}\mynote{citations?}
 \mynote{[D] original text starts here} A technique used in practice to avoid frequent invocation of the constraint solver is {\em lazy evaluation}. The main idea is to avoid checking for contradictions at each branch condition, exploring both branches. This means that some of the states that the engine will later explore may be non-reachable during a real program execution. This allows a symbolic engine to quickly explore paths but forces it to check their consistency before using them for drawing some conclusions. The main disadvantages of this techniques are: (a) this strategy may lead to a large number of active states, (b) the time spent for checking the consistency of many states may be similar to the time spent for performing pruning in the first place.
+\fi
 
-\subsection{Dealing with unsolvable constraints} 
+\subsection{[OLD] Dealing with unsolvable constraints} 
 
 Assume to start a concrete execution with a concrete input and in parallel symbolically execute the same program. Whenever a set of constraints cannot be solved by the constraint solver, then use the concrete value to proceed into at least one branch. Example taken from~\cite{CS-CACM13}:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
