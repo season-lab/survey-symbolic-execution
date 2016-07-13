@@ -30,15 +30,16 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
     Heuristic & Goal & Discussed by \\ \hline\hline
     BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
     DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
+    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
     %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
     code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
     buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
     loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-    pointer resolver & prioritize paths that have resolved symbolic pointers & \cite{MAYHEM-SP12} \\
-    memory resolver & prioritize paths that have identified symbolic accesses & \cite{MAYHEM-SP12} \\ 
-    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13} \\
+    symbolic instruction pointers & prioritize paths with symbolic instruction pointers & \cite{MAYHEM-SP12} \\
+    symbolic memory accesses & prioritize paths with symbolic memory accesses & \cite{MAYHEM-SP12} \\ 
+    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
     kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
-    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
+    
     \hline  
   \end{tabular}
   \end{small}
@@ -63,6 +64,10 @@ The most common strategies are {\em depth-first search} and {\em breadth-first s
 Another very popular strategy is {\em random path selection} that, as its name would suggest, randomly picks a path for exploration. This kind of heuristic has been refined in several variants. For instance,~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and based on the branch arity. In other words, it favors paths that have been explored for fewer times, preventing starvation given by loops and other path explosion causes.
 
 Several works~\cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12} have instead presented heuristics aimed at maximizing the code coverage. For instance, the {\em coverage optimize search} discussed in~\cite{KLEE-OSDI08} computes a weight for each state and then randomly selects a state according to these weights. The weight is obtained by taking into account the minimum distance to an uncovered instruction, the call stack of the state, and whether the state recently covered new code.
+
+Other search heuristics try to prioritize paths that may likely reach an interesting state. For instance, the {\em buggy-path first} strategy in~\cite{AEG-NDSS11} picks paths whose past states have contained small but unexploitable bugs. Indeed, if a path contains some small errors then it is likely that it has not been properly tested. As a consequence, there is a good chance that future states may contain some interesting, and hopefully exploitable, bugs. Similarly, the {\em loop exhaustion} strategy~\cite{AEG-NDSS11} explores paths that are visiting loops. This approach is inspired by the practical observation that common programming mistakes in loops may lead to buffer overflows or to other memory related errors. \cite{MAYHEM-SP12} instead gives priority to paths where symbolic memory accesses are identified or to paths where symbolic instruction pointers are detected. 
+
+Fitness functions have been extensively used in the context of search-based test generation~\cite{M-STVR04}. A fitness function measures how close an explored path is in achieving test target coverage. Several papers~\cite{XTD-DSN09,CS-CACM13,XTD-DSN09} have applied this idea in the context of symbolic execution. As an example,~\cite{XTD-DSN09} introduced {\em fitnex}, a strategy for concolic execution that prioritize paths that are {\em closer} to take a specific branch. In more detail, given a branch condition of the form $|a - c| == 0$ and a path that has reached the branch, fitnex computes a closeness equal to $|a - c|$. Analogous fitness values can be computed for other kinds of branch conditions. The path with the lower fitness value for a branch is selected by the symbolic engine. Paths that have yet reached the branch, get the worst-case fitness value.
 
 \begin{comment}
 \begin{itemize}
