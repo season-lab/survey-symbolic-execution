@@ -110,6 +110,7 @@ Any arbitrarily complex object can be regarded as an array of bytes and each byt
 Choosing the number of loop iterations to analyze is critical for the symbolic engine, especially when this number cannot be determined in advance (since, e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to $k$, thus trading speed for soundness. Another approach is to infer loop invariants through static analysis  and use them to merge equivalent states (\mynote{Recuperare citazione}e.g., when differences are not observable outside the loop body).
 \vspace{1mm}
 
+\iffalse
   \item {\em Subroutines and recursion}: how does the symbolic engine handle subroutines and recursive calls?
 In order to support subroutines, the execution state is typically provided with an execution stack. Consider the following recursive example:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -122,6 +123,7 @@ Note that each distinct value of {\tt n} leads to a distinct control flow path. 
 %This code can easily lead to a very large number of states: a new state would be indeed created each time the branch at line 2 is not taken. Since variable {\tt n} can assume up to  $2^{31} - 1$ positive values, the symbolic engine would create as many execution states to cover all the possible paths.
  %Indeed, the number of executions states is related to the number of times that the conditional branch on line 2 is not taken. 
  \vspace{1mm}
+ \fi
 
   \item {\em Environment}: how does the symbolic engine handle interaction with the environment?
   Real-world applications constantly interact with the environment (e.g., with the file system or the network) through libraries and system calls. These interactions may cause side-effects
