@@ -38,7 +38,7 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
     symbolic instruction pointers & prioritize paths with symbolic instruction pointers & \cite{MAYHEM-SP12} \\
     symbolic memory accesses & prioritize paths with symbolic memory accesses & \cite{MAYHEM-SP12} \\ 
     fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
-    kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
+    %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
     
     \hline  
   \end{tabular}
@@ -111,31 +111,36 @@ Fitness functions have been extensively used in the context of search-based test
 
 \subsubsection{Dynamic Test Generation}
 %\subsubsection{Generational Search}
-%{\em Use concolic execution to generate useful (random) inputs.} 
-Starts concrete execution using a random (concrete) input and for each taken branch tracks the input constraints by observing the branch condition. When the execution is completed, restart another concrete execution using a different concrete random input that is compliant with the constraints but explore a new path. It is sufficient to negate a single constraint given by a conditional branch, to explore a different path. Keep track of taken branches with binary values. An algorithm for maximizing coverage is proposed in~\cite{DART-PLDI05}. Notice that the symbolic execution is performed in parallel with the concrete execution. Related examples are~\cite{SAGE-NDSS08,DRILLER-NDSS16}. \mynote{Add paper on hybrid concolic testing}In particular,~\cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
-
-\paragraph{An example}\mynote{Improve this discussion} Given a concrete input, an application will execute only a subsets of its basic blocks $B_i$. Moreover, they will be executed following a specific order. For instance, the program execution shown in Figure~\ref{fig:example-concrete-execution}a has executed the sequence of basic blocks $\{B_1, B_2, B_4, B_6\}$. Other blocks, such as $B_3$, have not been executed due to non-taken branches. Driven by the concrete execution, a symbolic execution engine may trace symbolic constraints on the taken branches and then generate an input that forces the execution to take a never-taken branch. For instance, if the symbolic execution engine may want to generate an input that executes basic block $B_5$, then it traces the constraints on the two taken branches and then negate the constraint on the branch that leads the execution toward $B_5$. Figure~\ref{fig:example-concrete-execution}b provides the logical steps performed by the engine.
+Traditional symbolic execution does not scale over large programs. Although search heuristics may help prioritize some interesting paths, the symbolic execution may still proceed extremely slow. Indeed, the engine must simulate any instruction of the program and heavily relies on the constraint solver in order to make any progress in the execution. {\em Dynamic test generation}~\cite{DART-PLDI05} is a technique that can help symbolic execution to scale over large programs. The main idea is to execute both concretely and symbolically a program. This kind of execution is often referred as concolic execution (see Section XXX for a more general discussion). Initially, a random input is generated and a concrete execution is started. In parallel, a symbolic execution is also started. Whenever the concrete execute takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraint. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. Other paths of the program execution can be then explored by selecting a previously taken branch and by negating its constraints. Using a constraint solver, the symbolic engine can generate a new (random) input that drives the concrete execution toward a new path. This strategy can be repeated as much as needed in order to achieve the desired coverage.
 
 \begin{figure}[t]
   \vspace{-3mm}
   \centering
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=0.9\columnwidth]{images/concrete-execution} 
+    \includegraphics[width=0.7\columnwidth]{images/concrete-execution} 
     %\label{fig:sub1}
     \vspace{15mm}
     \caption{}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[width=1.0\columnwidth]{images/concolic-execution} 
+    \includegraphics[width=0.8\columnwidth]{images/concolic-execution} 
     %\label{fig:sub2}
     \caption{}
   \end{subfigure}
-  \caption{(a) a concrete execution of a program. Only a subset of basic blocks is executed. The sequence of executed basic blocks is $\{B_1, B_2, B_4, B_6\}$. (b) concolic execution for generating an input that executes $B_5$.}
+  \caption{(a) A concrete execution of a program over random inputs. Only a subset of basic blocks is executed. The sequence of executed basic blocks is $\{B_1, B_2, B_4, B_6\}$. (b) Concolic execution for generating an input that executes $B_5$.}
   \label{fig:example-concrete-execution}
   \vspace{-3mm}
 \end{figure}
+
+An example of dynamic test generation is shown in Figure~\ref{fig:example-concrete-execution}. Assuming to have a program that takes two integer inputs {\tt x} and {\tt y}, a symbolic engine may initially randomly picks the values {\tt x = 2} and {\tt y = 6}, respectively. The concrete execution induced by these input values is presented in Figure~\ref{fig:example-concrete-execution}a: only a subset of program basic blocks $B_i$ are actually executed by the induced path. Basic blocks $(B_3, B5, B_7, B8)$  are skipped since their branch conditions are not met by the current input values. For instance, basic block $B_5$ is not executed since the condition $x > 1$ directs the path towards the basic block $B_4$. An engine that desires to symbolically execute a path containing the basic block $B_5$ must track the constraints during the concrete execution over {\tt x = 2} and {\tt y = 6} and then negate the branch condition $x > 1$. To generate a new (random) input, the engine can then invoke a solver over the constraints $\neg(\alpha_x > 1) \wedge (\alpha_x  < 5 \wedge \alpha_y > 5)$, possibly getting a valid solution. In our example, {\tt x = 1} and {\tt y = 6} are the chosen input values by the constrain solver. Notice that since {\tt y} is not involved in the branch condition that is currently negated, the engine may even reuse its value and include an additional constraint $\alpha_y = 6$. This optimization may drastically reduce the solving time required for obtaining a solution from the constraint solver.
+
+Although dynamic test generation uses concrete inputs to drive the symbolic execution toward a specific path, it still needs to pick a branch to negate whenever a new path have to be explored. Notice that each concrete execution may add new branches that still needs to be visited. Since the set of non-taken branches across all the performed concrete executions can be very large, the search heuristics discussed in Section~\ref{heuristics} still plays a crucial role. For instance, \cite{DART-PLDI05} choses the next branch to negate using a depth-first strategy. Additional strategies for picking the next branch to negate have been presented in literature. For instance, The {\em generational search} algorithm discussed in~\cite{SAGE-NDSS08} systematically yet partially explore the state spaces, maximizing the number of new tests generated while also avoiding any redundancy in the search. This is achieved by negating constraints following a specific order and by limiting the backtracking of the search algorithm.
+
+%\mynote{Add paper on hybrid concolic testing}In particular,
+
+
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Preconditioned symbolic execution}
@@ -290,5 +295,6 @@ Other static or dynamic techniques can be used to help a symbolic engine to focu
   \item {\em compositional techniques}: caching and reusing the analysis of lower-level function in subsequent computations. The main idea is to compute function summaries. See, e.g.,~\cite{G-POPL07,G-PLDI11,MS-TR07}.
   \item {\em abstraction}~\cite{C-SEFM07} is a technique that may be used for computing {\em under-approximations} or {\em over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
   \item {\em type-checking}: \cite{KCF-PLDI10} shows how symbolic analysis can be effectively mixed with type-checking analysis. For instance, type-checking analysis can help a symbolic execution engine by detecting the type of an object (e.g., the type of a value returned by a {\em hard to reason} function). Although no assumption can be made on the value of the returned type, this information may still be useful for the symbolic engine (e.g., if the type has a fixed size, some preconditions can be set, possibly pruning some paths). Similarly, symbolic analysis can help a type checker. For instance, the symbolic engine may provide context-sensitive properties over a variable that clearly rules out type errors, reducing the number of false positive given by a traditional context-insensitive type checker.
+  \item~\c te{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
 \end{itemize}
 
