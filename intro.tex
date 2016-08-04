@@ -18,7 +18,9 @@ In this article, we survey the main aspects of symbolic execution and discuss it
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Suppose that we want to characterize the inputs of the C function shown in Figure~\ref{fig:example-1} for which the {\tt assert} at line 8 fails. Each of the two input parameters {\tt a} and {\tt b} can be assigned with $2^{32}$ distinct integer values. Hence, while techniques such as random testing could generate bottomless input tests for this function, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
+Our example considers the C example of Figure~\ref{fig:example-1}, analyzing for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Each input parameter {\tt a} and {\tt b} can take $2^{32}$ distinct integer values. A possible approach is to concretely execute the function on randomly generated inputs.
+%Techniques such as random testing could generate bottomless input tests for this function. 
+However, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 Symbolic execution overcomes these limitations by evaluating a piece of code using {\em symbols}, instead of concrete values, for its inputs. This makes it possible to reason on {\em classes of input values}, instead of single input instances. 
 
 \begin{figure}[t]
@@ -37,15 +39,15 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 \label{fig:example-1}
 \end{figure}
 
-In more details, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$.  At any point of the execution, the symbolic engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+In more detail, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. The analysis is carried out by a symbolic execution engine, which explores several computation paths simultaneously. At any point of the symbolic execution, the engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
 \begin{itemize}
 
-\item $stmt$ is the next statement to evaluate. For the time being we assume that $stmt$ can be an assignment, a conditional branch or a jump (a discussion of more complex constructs such as iteration and function calls will be provided in later sections).
+\item $stmt$ is the next statement to evaluate. For the time being, we assume that $stmt$ can be an assignment, a conditional branch, or a jump (a discussion of more complex constructs such as function calls will be provided in later sections).
 
 \item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over concrete and symbolic values $\alpha_i$.
 
-  \item $\pi$ is {\em path constraint}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. The path constraint is trivially true at the beginning of the analysis.
+\item $\pi$ is {\em path constraint}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. At the beginning of the analysis, the path constraint is the constant $true$ formula.
 
 \end{itemize}
 
