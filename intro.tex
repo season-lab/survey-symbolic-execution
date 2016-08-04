@@ -18,7 +18,7 @@ In this article, we survey the main aspects of symbolic execution and discuss it
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Our example considers the C example of Figure~\ref{fig:example-1}, analyzing for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Each input parameter {\tt a} and {\tt b} can take $2^{32}$ distinct integer values. A possible approach is to concretely execute the function on randomly generated inputs.
+We consider the C example of Figure~\ref{fig:example-1}, analyzing for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Each input parameter {\tt a} and {\tt b} can take $2^{32}$ distinct integer values. A possible approach is to concretely execute the function on randomly generated inputs.
 %Techniques such as random testing could generate bottomless input tests for this function. 
 However, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 Symbolic execution overcomes these limitations by evaluating a piece of code using {\em symbols}, instead of concrete values, for its inputs. This makes it possible to reason on {\em classes of input values}, instead of single input instances. 
@@ -39,7 +39,9 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 \label{fig:example-1}
 \end{figure}
 
-In more detail, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. The analysis is carried out by a symbolic execution engine, which explores several computation paths simultaneously. At any point of the symbolic execution, the engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+In more detail, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. The analysis is carried out by a {\em symbolic execution engine}, which explores several computation paths simultaneously and checks the desired property along the way. 
+
+To discuss our example, we first briefly recall how a generic symbolic execution engine works. At any time, the engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
 \begin{itemize}
 
@@ -52,6 +54,7 @@ In more detail, every value that cannot be statically determined, such as an act
 \end{itemize}
 
 \noindent Depending on $stmt$, the symbolic engine changes the state as follows:
+
 \begin{itemize}
   \item The evaluation of an assignment $x=e$ changes the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and constant values over a concrete domain.
   
