@@ -132,7 +132,7 @@ Note that each distinct value of {\tt n} leads to a distinct control flow path. 
 
   \item {\em Environment}: how does the symbolic engine handle interaction with the environment?
   Real-world applications constantly interact with the environment (e.g., with the file system or the network) through libraries and system calls. These interactions may cause side-effects
-(such as the creation of a file) that could later affect the execution and must be thus taken into account. Evaluating any possible interaction outcome is typically not feasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and to create models that can help the symbolic engine analyze only significant outcomes.
+(such as the creation of a file) that could later affect the execution and must be thus taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and to create models that can help the symbolic engine analyze only significant outcomes.
 \vspace{1mm}
 
   \item {\em State space explosion, path selection}: how does symbolic execution deal with path explosion?
@@ -157,7 +157,7 @@ Depending on the specific context in which symbolic execution is used, different
 
 \subsection{Organization of the Article}
 
-The remainder of this article is organized as follows. [...]
+The remainder of this article is organized as follows. In section .
 
 %\vspace{2cm}
 %\subsection{Removed stuff}
