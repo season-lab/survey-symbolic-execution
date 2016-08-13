@@ -57,6 +57,7 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
 Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting or generating the next path to be explored. We now briefly overview some of the most interesting techniques that have been shown to be effective in prior works.
 
 \subsubsection{Search heuristics}
+\label{sss:search-heuristics}
 
 Given a set of unexplored paths, a search heuristics should select the most promising path to explore. Many prior works have introduced novel search strategies, showing their effectiveness in specific application contexts. These heuristics have often been tailored for helping the symbolic engine to achieve a specific goal (e.g., overflow detection). Finding a universally optimal strategy for prioritizing path exploration remains an open problem. Table~\ref{tab:heuristics} provides a sample of the most interesting search heuristics discussed in prior works. 
 
