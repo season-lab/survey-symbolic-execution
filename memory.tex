@@ -25,7 +25,7 @@ STP reduces formulas over array to an equisatisfiable form that contains no $rea
 
 \subsection{Partial memory modeling}
 \label{ss:index-based-memory}
-Motivated by the observation that concretizing all memory indices might not work well in some scenarios, while fully symbolic memory would not scale\mynote{[D] Add note from Driller}, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model, where writes are always concretized, but symbolic reads can be modeled symbolically.
+Motivated by the observation that concretizing all memory indices might not work well in some scenarios, while fully symbolic memory would not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model, where writes are always concretized, but reads can be modeled symbolically. This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
 
 Global memory is defined as a map $\mu$ from 32-bit indices to expressions. To model symbolic reads, the authors introduce immutable {\em memory objects}. When a symbolic index is used to read memory, a memory object $M$ containing all values that could be accessed by the index is generated. The evaluation of a $load(\mu,i)$ operation is thus reduced to $M[i]$, where $M$ will be in most cases orders of magnitude smaller than the entire memory $\mu$.
 
