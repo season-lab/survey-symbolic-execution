@@ -1,39 +1,16 @@
 % !TEX root = main.tex
 
-\section{Complex objects}
+\subsection{Complex objects}
+\label{ss:complex-objects}
 
 \cite{KPV-TACAS03} introduces a generalization of traditional symbolic execution to advanced\mynote{OO?} constructs of programming languages such as Java and C++. The authors describe a verification framework that combines symbolic execution and model checking to handle dynamically allocated data structures (such as lists and trees), primitive data types, and concurrency.
 
 In particular, they generalize symbolic execution by introducing {\em lazy initialization} to effectively handle heap-allocated objects. Symbolic execution of a method starts on inputs with uninitialized fields, and assigns values to them in a lazy fashion, i.e., they are initialized when first accessed during the symbolic execution. For uninitialized reference fields, the algorithm nondeterministically initializes the field with {\tt null}, with a reference to a new object with all symbolic attributes, or to a previously introduced concrete object of the desired type\footnote{This choice also results into a systematic treatment for aliasing}. Additional optimizations are presented in~\cite{DLR-ASE12}, which also provides a complete formalization of this approach for the Java language.
 
-This on-demand concretization allows symbolic execution of methods without requiring an a priori bound on the number of input objects. Another nice property of lazy initialization is produced symbolic heaps are pairwise non-isomorphic: eliminating symmetric structures can greatly reduce the number of heaps that a symbolic executor must explore, while guaranteeing that no relevant states are missed~\cite{BLISS-TSE15}. 
+This on-demand concretization allows symbolic execution of methods without requiring an a priori bound on the number of input objects. Another nice property of lazy initialization is that produced symbolic heaps are pairwise non-isomorphic: eliminating symmetric structures can greatly reduce the number of heaps that a symbolic executor must explore, while guaranteeing that no relevant states are missed~\cite{BLISS-TSE15}. 
 
 ~\cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Such conditions are used to characterize those input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative method preconditions are used to ensure that incorrect structures are eliminated during initialization, speeding the symbolic execution process up.
 
-Further refinements to lazy initialization are described in a number of works. \cite{BLI-NFM13} introduces {\em bounded lazy initialization} (BLI) to reduce the number of alternatives to explore using available field bounds expressed in TACO, a tool for SAT-based bounded verification of JML-annotated Java code. ~\cite{BLISS-TSE15} presents two novel techniques that build upon BLI. The first technique refines field bounds by leveraging information from already-concretized fields; the technique is then extended through auxiliary satisfiability checks to determine the feasibility of partially symbolic structure.
+Further refinements to lazy initialization are described in a number of works. \cite{BLI-NFM13} introduces {\em bounded lazy initialization} (BLI) to reduce the number of alternatives to explore using available field bounds expressed in TACO, a tool for SAT-based bounded verification of JML-annotated Java code. ~\cite{BLISS-TSE15} presents two novel techniques that build upon BLI. The first technique refines field bounds by leveraging information from already-concretized fields; the technique is then extended by  auxiliary satisfiability checks to determine the feasibility of partially symbolic structure.
 
 Of a different flavor is the technique presented in ~\cite{SHZ-TAIC07} for symbolic execution over objects instantiated from commonly used libraries. The authors argue that performing symbolic execution at the representation level might be redundant if the aim is to only check the client code, thus trusting the correctness of the library implementation. They discuss the idea of symbolically executing methods of the Java {\tt String} class using a finite-state automata that abstracts away the implementation details. They present a case study of an application that dynamically generates SQL queries: symbolic execution is used to check whether the statements conform to the SQL grammar and possibly match injection patterns. The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps. It is worth mentioning that symbolic execution is used to detect SQL injection vulnerabilities also in ~\cite{FLP-COMPSAC07}.
-
-\mynote{[D] Original text}\vspace{2em}
-
-\iffalse
-It is common to use {\em lazy initialization} for handling complex memory objects. Notice that if lazy initialization is not used by the symbolic engine, then it is likely that it has to treat complex objects completely symbolically, requiring a constraint solver that is able to solve the resulting constraints. In other words, the solver must support some form of theory of data structures or arrays.
-
-\paragraph{Recursive data structures} Lazy initialization over recursive data structure works~\cite{PV-JSTTT09} as follows:
-\begin{itemize}
-  \item whenever an instance method is called over a symbolic object, the object is created with uninitialized fields
-  \item whenever an uninitialized field of a non-native type is accessed, the symbolic engine non deterministically initialize it with: (a) a {\tt null} reference, (b) a reference to a previously created object, (c) a reference to a new object with uninitialized fields. 
-  \item whenever an uninitialized field of a native type\mynote{this is my guess, it's not clear explained in~\cite{PV-JSTTT09} - [D] correct, see KPV-TACAS03}) is accessed, a new symbolic value is introduced. 
-\end{itemize}
-
-\mynote{Merge discussion of {\em lazy initialization} done in Section~\ref{under-constrinained}.}
-
-Notice that if some input preconditions~\ref{precontioned-symbolic-execution} has been set, lazy evaluation should consider and exploit them. For instance, the object may have been marked as acyclic and thus fewer possible alternatives should be considered when initializing a uninitialized field. Further complication~\cite{PV-JSTTT09} may arise for programs that perform destructive updates. 
-
-\paragraph{Native code} Several programming languages provide data types that can be very complex. For instance, Java provides the {\tt String} type. Prior works (see, e.g.,~\cite{SHZ-TAIC07}) has presented some approaches for addressing these issues.
-\fi
-
-
-
-\paragraph{Input arrays}
-\mynote{Which paper???}It is common that programs may have loops bounded by the length of some input arrays. If this length cannot be statically determined then the symbolic engine may non-deterministically choose when to stop a loop. This means that the number of entries in a symbolic array does not need to be chosen as soon as the symbolic array is created, but this choice can be postponed.

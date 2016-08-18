@@ -6,12 +6,12 @@
 A crucial aspect of symbolic execution is how the memory should be modeled. When executing load or store instructions on concrete addresses, a symbolic engine can maintain a map between addresses and corresponding values, which can be either symbolic expressions or concrete values. The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
 
 \subsection{Fully symbolic memory}
-On the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indices is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11,TS-ATVA14}) offer capabilities to handle fully symbolic memory. An engine can ask the solver the range of possible values for an address in order to restrict the exploration. \mynote{Cite VSA and aliasing as possible refinements?} When obtained ranges are too large, ~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size, although most symbolic memory accesses are typically already constrained to small ranges in practices, making this unnecessary.
+At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indexes is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11,TS-ATVA14}) offer capabilities to handle fully symbolic memory. \mynote{Cite VSA and aliasing as refinements?} An engine can ask the solver the range of possible values for an address in order to restrict the exploration.  When obtained ranges are too large, \cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practices, making it unnecessary.
 
 \subsection{Address concretization}
-On the other end of the spectrum, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indices. 
+At the other end of the spectrum, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indexes. 
 
-Concretization is a natural choice for offline executors \mynote{DART is also mentioned in CS-CACM13 as one using theories of arrays}(Section \missing) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be efficiently solved, and resort to concretization for general symbolic references.
+Concretization is a natural choice for offline executors \mynote{DART is mentioned in CS-CACM13 as  using theories of arrays}(Section~\ref{ss:principles}) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
 
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
@@ -25,80 +25,11 @@ STP reduces formulas over array to an equisatisfiable form that contains no $rea
 
 \subsection{Partial memory modeling}
 \label{ss:index-based-memory}
-Motivated by the observation that concretizing all memory indices might not work well in some scenarios, while fully symbolic memory would not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model, where writes are always concretized, but reads can be modeled symbolically. This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
+Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which writes are always concretized, but reads can be modeled symbolically. This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
 
-Global memory is defined as a map $\mu$ from 32-bit indices to expressions. To model symbolic reads, the authors introduce immutable {\em memory objects}. When a symbolic index is used to read memory, a memory object $M$ containing all values that could be accessed by the index is generated. The evaluation of a $load(\mu,i)$ operation is thus reduced to $M[i]$, where $M$ will be in most cases orders of magnitude smaller than the entire memory $\mu$.
+Global memory is defined as a map $\mu$ from 32-bit indexes to expressions. To model symbolic reads, the authors introduce immutable {\em memory objects}. When a symbolic index is used to read memory, a memory object $M$ containing all values that could be accessed by the index is generated. The evaluation of a $load(\mu,i)$ operation is thus reduced to $M[i]$, where $M$ will be in most cases orders of magnitude smaller than the entire memory $\mu$.
 
-Instantiating a memory object still requires finding all possible values for a symbolic index $i$. The underlying solver is used to conservatively refine the range for the value of the index using binary search in the context of the current path constraints. This simple algorithm comes with a number of caveats: for instance, querying the solver on each symbolic dereference is expensive, the memory region may not be continuous, and the values within the memory object might have structure. A number of optimizations are thus performed, including Value Set Analysis (VSA) and query caching (Section \missing). \mynote{ptr may also be redirected to symbolic data}When the size of a range for a memory object exceeds a threshold, the index will be concretized.
+Instantiating a memory object still requires finding all possible values for a symbolic index $i$. The underlying solver is used to conservatively refine the range for the value of the index using binary search in the context of the current path constraints. This simple algorithm comes with a number of caveats: for instance, querying the solver on each symbolic dereference is expensive, the memory region may not be continuous, and the values within the memory object might have structure. A number of optimizations are thus performed, including \mynote{[D] Define or cite VSA} Value Set Analysis (VSA) and query caching (Section~\ref{ss:constraint-reuse}). \mynote{ptr may also be redirected to symbolic data}When the size of a range for a memory object exceeds a threshold, the index will be concretized.
 
-\iffalse
-\vspace{2em}\mynote{[D] Previous text starts here}In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
-
-% ---------------------------------------------------------------------------------------------------
-\subsection{Index-based memory}
-
-\begin{itemize}
-  \item memory is a map $\pi : I \to E$ from 32-bit indices ($i \in I$) to expressions ($e \in E$)
-  \item load expressions $e = load(\pi, i)$: $i$ indixes $\pi$ and the loaded value $e$ represents the contents of the $i$-th memory cell
-  \item store expressions $store(\pi, i, e)$: a new memory $\pi'$ where $i$ is mapped to $e$, i.e., $\pi' = \pi[i \gets e]$
-\end{itemize}
-When using this memory model, handling of arbitrary symbolic indices is notoriously hard, since a symbolic index may reference any cell in memory. Two approaches can be pursued: (a) concretization of the index where only a single value is evaluated for the index (see Section~\ref{concolic-execution} for more details), (b) fully symbolic memory where any possible value for the index is evaluated (e.g., \cite{BAP-CAV11}). The former is often excessively limiting (many paths are pruned away), while the latter is hard to make scalable. To overcome the limitations of both approaches, \cite{MAYHEM-SP12} models memory {\em partially}: symbolic writes are always concretized, while symbolic reads are allowed to be modeled symbolically.
-
-\paragraph{Memory objects} Whenever there is a symbolic read, an immutable memory object $\mathcal{M}$ is generated:  it contains all values that could be accessed by the index, i.e., $\mathcal{M}$ is a partial snapshot of the global memory $\pi$. In practice, \cite{MAYHEM-SP12} reasons on $\mathcal{M}[i]$ instead of reasoning on $\pi[i]$, since the former is typically smaller than the latter.
-
-\paragraph{Memory object bounds resolution}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} \cite{MAYHEM-SP12} trades accuracy with scalability by resolving the bounds $[\mathcal{L}, \mathcal{U}]$ of the memory region, where $\mathcal{L}$ is lower and $\mathcal{U}$ is the upper bound for the index $i$. Initially, $\mathcal{L} \in [0, 2^{32}-1]$. The solver is used to test if $i < \frac{2^{32}-1}{2}$ makes the path constrains unsatisfiable. If satisfiable then $\mathcal{L} \in [0, \frac{2^{32}-1}{2}]$, otherwise $\mathcal{L} \in [\frac{2^{32}-1}{2}, 2^{32}-1]$. The same strategy is repeated as much as possible. This is akin to a binary search algorithm. Whenever the bounds become reasonable, a memory object is generated. Unfortunately, there several cases where the bounds cannot be narrowed down drastically and thus other techniques can be used:
-\begin{itemize}
-  \item {\em value set analysis (VSA)}
-  \item {\em refinement cache}
-  \item {\em lemma cache}
-  \item {\em index search trees (IST)}
-  \item {\em bucketization with linear functions}
-\end{itemize}
-Whenever the size of the memory object exceeds a threshold (e.g., $|\mathcal{M}| \geq 1024$), then~\cite{MAYHEM-SP12} concretizes the index. However, instead of choosing a random value for the index, it tries to assign some {\em interesting} value (e.g., test it if it makes sense for it to be equal to an invalid memory address which can be exploited for security purposes).
-
-% ---------------------------------------------------------------------------------------------------
-\subsection{Object-based memory}
-
-\cite{STP-TR07} is a decision procedure for bitvectors and arrays. Memory is seen as untyped bytes. Three data types are available:
-\begin{itemize}
-  \item {\em booleans}
-  \item {\em bitvectors}: a fixed-length sequence of bits
-  \item {\em arrays of bitvectors}
-\end{itemize}
-Most linear and non-linear operations are mapped to bitvector constraints. Conditional branches are transformaed into {\em multiplexers}, which are similar to C ternary operator. Bitvector operations are translated into operations to individual bits. Floating-points data types are not supported. Expresions types:
-\begin{itemize}
-  \item {\em formulas}, which have boolean values. They are converted into DAGs of single bit operations, where expressions with identical structure are represented uniquely (an hash table is maintain to track of existing expressions and lookups are performed on it when a new expression is created).
-  \item {\em terms}, which have bitvectors values. They are converted into vectors of boolean formulas consisting entirely of single bit operations.
-\end{itemize}
-
-\paragraph{Mapping C code to STP primitives} Each C data block is represented symbolically as an array of 8-bit bitvectors. Typed operations in C generated constraints on the symbolic data (i.e., typeness is not actually known to~\cite{STP-TR07}). A mapping table is maintained to track symbolic data:
-\begin{itemize}
-  \item each input array $b$ is associated to a symbolic identically-size array $b_{sym}$ (i.e., the address of the C variable $b$ is mapped to the symbolic array $b_{sym}$ that is composed by $|b|$ 8-bit elements)
-  \item $v = e$: an assignment expression, where $e$ is an expression that involves one or more symbolic data, adds a mapping between the address of $v$ and the generated symbolic expression $e_{sym}$. If $v$ is overwritten with a constant value or deallocated then this mapping is removed.
-  \item $b[e]$: $b_{sym}$ is allocated, initializing it with the (constant) contents of $b$ (only if $b$ is actually initialized by a previous C statement). A mapping is added until $b$ is not deallocated.
-\end{itemize}
-
-\paragraph{Expression evaluation} An expression $e$ that contains some symbolic data can be seen as:
-\[ l_1~~op_1~~l_2~~op_2~~l_3~~... \]
-Each $l_i$ is evaluated in the following way:
-\begin{itemize}
-  \item if $l_i$ is concrete: the concrete value is used in the expression (e.g., if 4-byte $b$ is equal to 4 then the constant $000000...0100$ is used)
-  \item otherwise: a concatenation of all the symbolic bytes of $l_i$ is used (e.g., $b_{sym}[0] @b_{sym}[1] @ $ $b_{sym}[2] @ b_{sym}[3] @ ...$)
-\end{itemize}
-Pointers are seen as array reference at some offset. This means that allocation sites as well as pointer arithmetic expressions must be instrumented in order to track where a pointer can point to. Notice that double dereferences ({\tt **p}) force~\cite{STP-TR07} to concretize the first dereference ({\tt *p}). 
-
-\paragraph{Fast array transformations}\mynote{Move paragraphs to Section~\ref{constraint-optimizations}?} Some transformations are needed to make\cite{STP-TR07} reason only on a purely functional language. In particular:
-\begin{itemize}
-  \item {\em read-over-write}: eliminates all write operations
-    \[ read(write(A, i, v), j) \implies ite(i = j, v, read(A, j)) \]
-    where $ite(a,b,c)$ is a ternary operator (i.e., if $a$ then $b$ else $c$). Notice that a write of a location without a subsequent read of the same location can be ignored.
-  \item {\em read elimination}:
-    \[ (read(A, i) = e_1) \wedge (read(A, j) = e_2) \]
-    will be transformed in:
-    \[ (v_1 = e_1) \wedge (v_2 = e_2) \wedge (i=j \implies v_1 = v_2) \]
-  \item {\em array substitution optimization}
-  \item {\em array-based refinement}
-  \item {\em simplifications}: boolean or mathematical identities
-\end{itemize} 
-
-\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\myinput{complex}
