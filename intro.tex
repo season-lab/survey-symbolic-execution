@@ -2,14 +2,9 @@
 
 \section{Introduction}
 
-Symbolic execution is a powerful program analysis technique first introduced in the mid 70's in the context of software testing to check if a certain property $\phi$ is violated by a program~\cite{K-ICRS75,SELECT-ICRS75,K-CACM76,H-TSE77}.
-\mynote{
-[D] added two references from '75, check what they cite
-%IF: are references appropriate? Should we give more credits? It seems several groups introduced independently this technique
-}
-For instance, $\phi$ could be: ``no division by zero is ever performed'', ``no {\tt NULL} pointer is ever dereferenced'', or ``no backdoor exists that can bypass authentication''. While in general there is no automated way to decide some properties, e.g., ``does a program always terminate?'', often decidable approximations exist that can prove useful in practice in a variety of applications including mission-critical and security applications, e.g., ``does a program always terminate within a certain amount of time?''
+Symbolic execution is a powerful program analysis technique first introduced in the mid '70s in the context of software testing to check if a certain property $\phi$ is violated by a program~\cite{K-ICRS75,SELECT-ICRS75,K-CACM76,H-TSE77}. For instance, $\phi$ could be: ``no division by zero is ever performed'', ``no {\tt NULL} pointer is ever dereferenced'', or ``no backdoor exists that can bypass authentication''. While in general there is no automated way to decide some properties, e.g., ``does a program always terminate?'', often decidable approximations exist that can prove useful in practice in a variety of applications including mission-critical and security applications, e.g., ``does a program always terminate within a certain amount of time?''
 
-A concrete execution can only underapproximate the analysis of a property under a given workload by exploring a single control flow path. In contrast, symbolic execution can simultaneously explore multiple paths that a program could take under different inputs. This paves the road to sound analyses that can yield strong guarantees on the checked property. Symbolic execution may answer useful questions on concrete programs like: ``does function {\tt foo(x)} always return a positive value for any possible value of {\tt x}?'' The key idea behind symbolic execution is to allow a program to take on ``symbolic'' -- rather than concrete -- input values. Execution is performed by an {\em abstract machine}, which maintains for each explored control flow path: (i) a first-order Boolean {\em formula} that describes the conditions satisfied by the branches taken on that path, and (ii) a {\em symbolic store} that maps variables to symbolic expressions. Branch execution updates the formula, while assignments update the symbolic store. A model checker, typically based on a SMT solver\mynote{add citation}, is used to verify if there are any violations of property $\phi$ along each explored path and if the path itself is realizable, i.e., its formula is satisfied by some assignment of concrete values to the program's symbolic arguments.
+A concrete execution can only underapproximate the analysis of a property under a given workload by exploring a single control flow path. In contrast, symbolic execution can simultaneously explore multiple paths that a program could take under different inputs. This paves the road to sound analyses that can yield strong guarantees on the checked property. Symbolic execution may answer useful questions on concrete programs like: ``does function {\tt foo(x)} always return a positive value for any possible value of {\tt x}?'' The key idea behind symbolic execution is to allow a program to take on ``symbolic'' -- rather than concrete -- input values. Execution is performed by an {\em abstract machine}, which maintains for each explored control flow path: (i) a first-order Boolean {\em formula} that describes the conditions satisfied by the branches taken along that path, and (ii) a {\em symbolic store} that maps variables to symbolic expressions. Branch execution updates the formula, while assignments update the symbolic store. A model checker, typically based on an SMT solver\mynote{add citation}, is used to verify if there are any violations of the property $\phi$ along each explored path and if the path itself is realizable, i.e., its formula is satisfied by some assignment of concrete values to the program's symbolic arguments.
 
 %Variables and control flow paths are associated with expressions and constraints in terms of those symbols during a symbolic execution of the program, and constraints are eventually solved via SMT (satisfiability modulo theories) solvers.
 
@@ -41,28 +36,30 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
 
 In more detail, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. The analysis is carried out by a {\em symbolic execution engine}, which explores several computation paths simultaneously and checks the desired property along the way. 
 
-To discuss our example, we first briefly recall how a generic symbolic execution engine works. At any time, the engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+To discuss our example, we first briefly recall how a generic symbolic execution engine works. At any time, an engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
 \begin{itemize}
 
-\item $stmt$ is the next statement to evaluate. For the time being, we assume that $stmt$ can be an assignment, a conditional branch, or a jump (a discussion of more complex constructs such as function calls will be provided in later sections).
+\item $stmt$ is the next statement to evaluate. For the time being, we assume that $stmt$ can be an assignment, a conditional branch, or a jump \mynote{[D] Where?}(a discussion of more complex constructs such as function calls will be provided in later sections).
 
-\item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over concrete and symbolic values $\alpha_i$.
+%\item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over \mynote{[D] $\alpha_i$ also concrete?} concrete and symbolic values $\alpha_i$.
 
-\item $\pi$ is {\em path constraint}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. At the beginning of the analysis, the path constraint is the constant $true$ formula.
+\item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over  symbolic values $\alpha_i$ and concrete values.
+
+\item $\pi$ are the {\em path constraints}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. At the beginning of the analysis, the path constraints are the constant $true$ formula.
 
 \end{itemize}
 
 \noindent Depending on $stmt$, the symbolic engine changes the state as follows:
 
 \begin{itemize}
-  \item The evaluation of an assignment $x=e$ changes the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and constant values over a concrete domain.
+  \item The evaluation of an assignment $x=e$ updates the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and constant values over a concrete domain.
   
 %   $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
 %    \[ pc \gets pc \wedge \alpha_i = e\]
 %  where $e$ can be any expression, involving unary or binary operators, over symbols and constants.
 
-  \item The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint $\pi$. Namely, the symbolic execution is forked by creating two execution states with path constraints $\pi_{true}$ and $\pi_{false}$, respectively, corresponding to the two {\tt if} branches: $\pi_{true}=\pi \wedge e_s$ and $\pi_{false}=\pi \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
+  \item The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraints $\pi$. Namely, the symbolic execution is forked by creating two execution states with path constraints $\pi_{true}$ and $\pi_{false}$, respectively, corresponding to the two {\tt if} branches: $\pi_{true}=\pi \wedge e_s$ and $\pi_{false}=\pi \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
 %        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
 %        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
     Symbolic execution proceeds on both states in parallel.
@@ -83,24 +80,24 @@ To discuss our example, we first briefly recall how a generic symbolic execution
 \begin{figure}[t]
   \centering
   \includegraphics[width=1.0\columnwidth]{images/execution-tree.eps} 
-  \caption{Symbolic execution tree of function {\tt foobar} given in Figure~\ref{fig:example-1}. Each execution state, labeled with an upper case letter, shows statement, symbolic store $\sigma$, and path constraint $\pi$. Leaves are evaluated against the condition in the {\tt assert} statement. }
+  \caption{Symbolic execution tree of function {\tt foobar} given in Figure~\ref{fig:example-1}. Each execution state, labeled with an upper case letter, shows statement, symbolic store $\sigma$, and path constraints $\pi$. Leaves are evaluated against the condition in the {\tt assert} statement. }
 %For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
 \end{figure}
 
-\noindent A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraint is {\tt true} and input arguments {\tt a} and {\tt b} are associated with symbolic values. 
+\noindent A symbolic execution of function {\tt foobar} is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraints are {\tt true} and input arguments {\tt a} and {\tt b} are associated with symbolic values. 
 After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic store is updated by associating {\tt x} and {\tt y} with concrete values 1 and 0, respectively (execution state $B$). Line 3 contains a conditional branch and the execution is forked: depending on the branch taken, a different statement is evaluated next and different assumptions are made on symbol $\alpha_a$ (execution states $C$ and $D$, respectively). In the branch where $\alpha_a\neq 0$, variable {\tt y} is assigned with ${\tt x}+3$, obtaining $y\mapsto 4$ in state $E$ because $x\mapsto 1$ in state $C$. In general, arithmetic expression evaluation simply manipulates the symbolic values.
-After expanding every execution state until the {\tt assert} at line 8 is reached on all branches, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make {\tt x-y = 0} true. The path constraint set for $H$ at this point implicitly defines the set of inputs that are unsafe for {\tt foobar}. 
+After expanding every execution state until the {\tt assert} at line 8 is reached on all branches, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make {\tt x-y = 0} true. The path constraints for $H$ at this point implicitly defines the set of inputs that are unsafe for {\tt foobar}. 
 In particular, any input values such that:
  \[ 2(\alpha_a+\alpha_b)-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b = 0 \]
-will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a model checker to solves the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
+will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a model checker to solve the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
 \subsection{Challenges in Symbolic Execution}
 \label{example-discussion}
 
-As shown in Section~\ref{symbolic-execution-example}, symbolic execution can identify {\em all} possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
+In the example discussed in Section~\ref{symbolic-execution-example} symbolic execution can identify {\em all} the possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
@@ -112,7 +109,7 @@ Any arbitrarily complex object can be regarded as an array of bytes and each byt
 
   \item {\em Loops}: how does the symbolic engine handle loops?
 %A loop\mynote{IF: rimuoverei la prima frase, perche' va detto?} can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. 
-Choosing the number of loop iterations to analyze is critical for the symbolic engine, especially when this number cannot be determined in advance (since, e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to $k$, thus trading speed for soundness. Another approach is to infer loop invariants through static analysis  and use them to merge equivalent states (\mynote{Recuperare citazione}e.g., when differences are not observable outside the loop body).
+Choosing the number of loop iterations to analyze is critical for the symbolic engine, especially when this number cannot be determined in advance (e.g., it depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to $k$, thus trading speed for soundness. \mynote{Add citation; i.e. or e.g.?} Another approach is to infer loop invariants through static analysis  and use them to merge equivalent states (e.g., when differences are not observable outside the loop body).
 \vspace{1mm}
 
 \iffalse
@@ -130,34 +127,36 @@ Note that each distinct value of {\tt n} leads to a distinct control flow path. 
  \vspace{1mm}
  \fi
 
-  \item {\em Environment}: how does the symbolic engine handle interaction with the environment?
+  \item {\em Environment}: how does the symbolic engine handle interactions with the environment?
   Real-world applications constantly interact with the environment (e.g., with the file system or the network) through libraries and system calls. These interactions may cause side-effects
-(such as the creation of a file) that could later affect the execution and must be thus taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and to create models that can help the symbolic engine analyze only significant outcomes.
+(such as the creation of a file) that could later affect the execution and must be thus taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
 \vspace{1mm}
 
   \item {\em State space explosion, path selection}: how does symbolic execution deal with path explosion?
-  A relatively simple code such as function {\tt foobar}, which is composed by less 12 lines of code, has generated 16 execution states, where $5$ out of $16$ are independent\mynote{Independent?} and must be checked to determine possible unsafe input values. Although this could seem a reasonable number of states, language constructs such as loops may contribute to increase the number of states exponentially. For this reason, it is unlikely that a symbolic execution engine is able to exhaustively explore all the possible execution states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage), hoping this would lead to interesting discoveries. Also, a symbolic execution engine should implement efficient mechanism for evaluating multiple execution states in parallel without running out of resources.
+  A relatively simple code such as function {\tt foobar}, which is composed of less 12 lines of code, has generated 16 execution states, where $5$ out of $16$ are independent\mynote{Independent?} and must be checked to determine possible unsafe input values. Although this could seem a reasonable number of states, language constructs such as loops may contribute to increase the number of states exponentially. For this reason, it is unlikely that a symbolic execution engine is able to exhaustively explore all the possible execution states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage), hoping this would lead to interesting discoveries. Also, a symbolic execution engine should implement efficient mechanisms for evaluating multiple execution states in parallel without running out of resources.
   %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 \vspace{1mm}
 
   \item {\em Constraint solver}: what can a constraint solver do in practice?
   %{\em What is a constraint solver in practice}? \\
- Constraint solvers suffer from a number of limitations. Typically, they can handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents. Symbolic execution engines typically implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries in independent components to process separately or by performing algebraic simplifications.
+ Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents. Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to process separately or by performing algebraic simplifications.
 \vspace{1mm}
 
-  \item {\em Binary code}: what are the disadvantages of symbolically executing binary code?
-  The example presented in Section~\ref{symbolic-execution-example} is written in C. This does not imply that symbolic execution cannot be performed directly on binary code, which in several scenarios is the only available representation of a program. However, having the source code of an application makes symbolic execution significantly easier, as it can exploit high-level properties (e.g., object shapes) that can be inferred by statically analyzing the source code.
+  \item {\em Binary code}: what issues can arise when symbolically executing binary code?
+  %what are the disadvantages of symbolically executing binary code?
+  The example presented in Section~\ref{symbolic-execution-example} is written in C. This does not imply that symbolic execution cannot be performed directly on binary code, which in several scenarios is the only available representation of a program. However, having the source code of an application can make symbolic execution\mynote{Significantly?} easier, as it can exploit high-level properties (e.g., object shapes) that can be inferred statically by analyzing the source code.
   %(e.g., the maximum size of a buffer or the number of iterations for a loop).
+% makes symbolic execution \mynote{Significantly?} significantly easier
    
 \end{itemize}
 %Depending on the specific application context of symbolic execution
-Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although they typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states is typically sufficient to reach the goal\mynote{Better example?} (e.g., identify a crashing input for an application) with a limited time budget.
+Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although they typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states is typically sufficient to reach the goal\mynote{Better example?} (e.g., identify a crashing input for an application) within a limited time budget.
 
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
 \subsection{Organization of the Article}
 
-The remainder of this article is organized as follows. In section .
+The remainder of this article is organized as follows. In Section \missing\ [...].
 
 %\vspace{2cm}
 %\subsection{Removed stuff}
