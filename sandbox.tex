@@ -87,3 +87,24 @@ Notice that if some input preconditions~\ref{precontioned-symbolic-execution} ha
 
 \paragraph{Input arrays}
 \mynote{Which paper???}It is common that programs may have loops bounded by the length of some input arrays. If this length cannot be statically determined then the symbolic engine may non-deterministically choose when to stop a loop. This means that the number of entries in a symbolic array does not need to be chosen as soon as the symbolic array is created, but this choice can be postponed.
+
+%%% ENVIRONMENT
+
+%In order to analyze a program, a symbolic executor has typically to take into account the whole environment surrounding it, including system libraries, devices etc.
+%Environment can be seen as an input source. Since it can be unfeasible to analyze all possible interactions with the environment, it is common to model these interactions, emulating their behaviors and their side-effects. The main intuition is that models understand the semantics of the desired actions well enough to generate the required constraints.\\
+
+\iffalse
+%\cite{KLEE-OSDI08}: \begin{itemize}
+%\item {\em file system}: operations on concrete files are actually performed. Operations on symbolic files are emulated modeling a simple symbolic file system, which is private for each execution state. Symbolic file system is a directory with $N$ symbolic files. Users specify both the number of files and their sizes. Any operation on a unconstrained symbolic file will generate $N+1$ branches: one for each symbolic file, plus one for a failing scenario. Emulation done at library level, not system call level. This make symbolic execution simpler (no need to symbolically execute library code) but assumption that library code is correct. If needed, library code is tested separately.
+%\item {\em environment failures}: \cite{KLEE-OSDI08} emulates failures (e.g., failures of {\tt write}). This is optional since some applications may be not sensitive to environment failure.
+ %\item {\em re-running test cases}: inputs which may crash an application may depend on the environment failures. To force concrete execution towards failures, \cite{KLEE-OSDI08} exploits {\tt ptrace}.
+%\end{itemize}
+
+\cite{AEG-NDSS11}:
+\begin{itemize}
+  \item {\em symbolic files}: emulation of {\tt open}, {\tt read}, {\tt write}, and similar other system calls. Similar to~\cite{KLEE-OSDI08}.
+  \item {\em symbolic sockets}: emulation of {\tt socket}, {\tt bind}, {\tt accept}, {\tt send}, and similar other system calls. 
+  \item {\em environment variables}: a complete summary of all possible results (concrete values, fully symbolic, and failures) of {\tt get\_env}.
+  \item {\em library function calls and system calls}: emulation of more than 70 library routines and system calls. In particular, formatting functions (e.g., {\tt fprintf}) are emulated to capture buffer overflows.
+\end{itemize}
+\fi
