@@ -28,7 +28,7 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
   \begin{small}
   \begin{tabular}{| l || l || l |}
     \hline      
-    Heuristic & Goal & Discussed by \\ \hline\hline
+    Heuristic & Goal & Discussed in \\ \hline\hline
     BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
     DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
     random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
@@ -115,7 +115,7 @@ Fitness functions have been extensively used in the context of search-based test
 
 \subsubsection{Dynamic Test Generation}
 %\subsubsection{Generational Search}
-Traditional symbolic execution does not scale over large programs. Although search heuristics may help prioritize some interesting paths, the symbolic execution may still proceed extremely slow. Indeed, the engine must simulate any instruction of the program and heavily relies on the constraint solver in order to make any progress in the execution. {\em Dynamic test generation}~\cite{DART-PLDI05} is a technique that can help symbolic execution scale over large programs. The main idea is to execute both concretely and symbolically a program. This kind of execution is often referred to as concolic execution (Section~\ref{ss:concrete-concolic-symbolic}). Initially, a random input is generated and a concrete execution is started. In parallel, a symbolic execution is also started. Whenever the concrete execute takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraint. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. Other paths of the program execution can be then explored by selecting a previously taken branch and by negating its constraints. Using a constraint solver, the symbolic engine can generate a new (random) input that drives the concrete execution toward a new path. This strategy can be repeated as much as needed in order to achieve the desired coverage.
+Traditional symbolic execution does not scale over large programs. Although search heuristics may help prioritize some interesting paths, the symbolic execution may still proceed extremely slow. Indeed, the engine must simulate any instruction of the program and heavily relies on the constraint solver in order to make any progress in the execution. {\em Dynamic test generation}~\cite{DART-PLDI05} is a technique that can help symbolic execution scale over large programs. The main idea is to execute both concretely and symbolically a program. This kind of execution is often referred to as concolic execution (Section~\ref{ss:concrete-concolic-symbolic}). Initially, a random input is generated and a concrete execution is started. In parallel, a symbolic execution is also started. Whenever the concrete execute takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraint. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. Other paths of the program execution can be then explored by selecting a previously taken branch and by negating its constraints. Using a constraint solver, the symbolic engine can generate a new (random) input that drives the concrete execution toward a new path. This strategy can be repeated as much as needed to achieve the desired coverage.
 
 \begin{figure}[t]
   \vspace{-3mm}
@@ -152,9 +152,11 @@ Although dynamic test generation uses concrete inputs to drive the symbolic exec
 \label{precontioned-symbolic-execution}
 
 \cite{AEG-NDSS11} has proposed {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subsets of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
-Note that preconditions cannot be selected at random. If a precondition is too specific, we will detect no bugs or exploits; if it is too general, we will have to explore almost the entire state space. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
+Note that preconditions need to be selected carefully. If a precondition is too specific, we will detect no bugs or exploits; if it is too general, we will have to explore almost the entire state space. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
+% Note that preconditions cannot be selected at random
 
-Preconditioned symbolic execution enforces the precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the shrinking of the state space -- imposed by the precondition constraints -- outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do no further checks and do not fork off an interpreter at all for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
+% Preconditioned symbolic execution enforces the precondition
+This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the shrinking of the state space -- imposed by the precondition constraints -- outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do no further checks and do not fork off an interpreter at all for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
 
 \paragraph{Preconditions} Kinds of preconditions:
 \begin{itemize}
@@ -250,9 +252,9 @@ Although this technique is not able to find {\em all} the possible errors in a f
 % ---------------------------------------------------------------------------------------------------
 \subsection{State merging}
 
-Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would described the individual states if they were kept separate.
+Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate.
 
-\paragraph{An example} Let's consider the following piece of code (taken from~\cite{VERITESTING-ICSE14}):\mynote{customize example and improve discussion}
+\paragraph{Example} Let's consider the following piece of code (taken from~\cite{VERITESTING-ICSE14}):\mynote{customize example and improve discussion}
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     B1: if (x > 1) 
     B2:   y = 42;
@@ -269,7 +271,7 @@ Then a symbolic execution engine may perform state merging in the following way:
   \vspace{-3mm}
   %\label{fig:example-symbolic-execution}
 \end{figure}
-where {\em ite} statements represents {\tt if-then-else} statements and $\bot$ stands for a non-taken branch.
+\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
 
 \paragraph{Trade-off} Early work~\cite{G-POPL07,HSS-RV09} has shown that merging techniques effectively decrease the number of paths to explore, but also put a burden on constraints solvers, which typically encounter difficulties when dealing with disjunction. Merging can also introduce new symbolic expressions in the code, for instance when merging different concrete values from a conditional assignment into a symbolic expression over the condition. \cite{KKB-PLDI12} provides an excellent discussion of the design space of state merging techniques. At one end of the spectrum, search-based symbolic execution (as implemented, e.g., in~\cite{KLEE-OSDI08}) does not perform any merge. The other extreme is complete static state merging, implemented by verification condition generators, e.g, ~\cite{SATURN-POPL05,CALYSTO-ICSE08}), that combines states at join points after all the subpaths have been encoded.
 
