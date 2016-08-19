@@ -8,6 +8,9 @@
 
 [...]
 
+\paragraph{Execution-Generated Testing (EGT)} 
+\mynote{[D] This belongs here} Approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
+
 \subsection{Principles of Symbolic Executors}\mynote{[D] Entirely rewritten}
 \label{ss:principles}
 
