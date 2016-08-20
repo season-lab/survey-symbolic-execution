@@ -148,61 +148,61 @@ Although dynamic test generation uses concrete inputs to drive the symbolic exec
 
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Preconditioned symbolic execution}
+\subsection{Preconditioned symbolic execution}\mynote{[D] Entirely rewritten}
 \label{precontioned-symbolic-execution}
 
-\cite{AEG-NDSS11} has proposed {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subsets of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
+\cite{AEG-NDSS11} proposes {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subsets of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit from preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
 Note that preconditions need to be selected carefully. If a precondition is too specific, we will detect no bugs or exploits; if it is too general, we will have to explore almost the entire state space. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
 % Note that preconditions cannot be selected at random
 
 % Preconditioned symbolic execution enforces the precondition
-This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the shrinking of the state space -- imposed by the precondition constraints -- outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do no further checks and do not fork off an interpreter at all for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
+This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem strange since there are more checks to perform at branch points during symbolic execution. However, the state space shrink caused by the precondition constraints outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, we do not make further checks, nor we fork an execution engine instance for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
 
-\paragraph{Preconditions} Kinds of preconditions:
+\paragraph{Preconditions} The authors identify 4 different categories of preconditions:
 \begin{itemize}
-\item {\em None}. There is no precondition and the state space is explored as normal.
-\item {\em Known Length}. The precondition is that inputs are of known maximum length, e.g., a network packet has a fixed size.
+\item {\em None}: there is no precondition, thus space exploration proceeds as normal;
+\item {\em Known length}: symbolic inputs are of known maximum length, e.g., a network packet has a fixed size, or static analysis can determine the input length;
 %Static analysis techniques can be used to automatically determine this precondition.
-\item {\em Known Prefix}. The precondition is that the symbolic inputs have a known prefix, e.g., a fixed header string such as the initial {\em magic code} of a binary input file, or a network packet header.
-\item {\em Fully Known}. 
-%Concolic execution [24] can be viewed as a specific form of preconditioned symbolic execution where the precondition is specified by 
- %a single program path as realized by 
-%a concrete example input. For instance, we may already have an input that crashes the program, and we use it as a precondition to determine if the executed path is exploitable. %See Section~\ref{concolic-execution} for a more detailed discussion of this technique.
+\item {\em Known prefix}: symbolic inputs have a known prefix, e.g., a fixed header string such as the initial {\em magic code} in a binary, or a network packet header.
+\item {\em Concolic execution}: all input bytes are concrete, as in a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
 \end{itemize}
 
-\paragraph{An example} Consider the example\mynote{citation to example source, if any?}:
-
-\begin{figure}[t]
+\begin{figure}[!ht]
 \begin{small}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
     // N symbolic branches 
     if (input[0] < 42) [...]
     [...]
-    if (input[N - 1] < 42) [...]
+    if (input[N-1] < 42) [...]
 
     // symbolic loop
     strcpy(dest, input); 
 
     // M symbolic branches
-    if (input[N + 1] < 42) [...]
+    if (input[N] < 42) [...]
     [...]
-    if (input[N + M - 1] < 42) [...]
+    if (input[N+M-1] < 42) [...]
 \end{lstlisting}
 \end{small}
-\caption{State space size.}
-\label{fig:state-space-size}
+\caption{\label{fig:preconditioned} Advantages of preconditioned symbolic execution - taken from~\protect\cite{AEG-NDSS11}.}
 \end{figure}
 
-where {\tt input} is an array of $S\ge N+M$ bytes. Impact of preconditions:
+\paragraph{Example} Consider the example in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $S\ge N+M$ bytes. The impact of preconditions on the state space size is as follows:
+
+
 \begin{itemize}
-  \item {\em None}. No constraint is added. State space size is $2^N \cdot S \cdot 2^M$.
-  \item {\em Known Length}. For instance, we add constraint that $(S - 1)$ bytes of {\tt input} are not equal to \textbackslash0. Since the symbolic loop is known, then the state space size is reduced to $2^N \cdot 2^M$.
-  \item {\em Known Prefix}. For instance, we add constraint that the $P$ bytes of {\tt input} are known ($P < N < S$). Since first $P$ branches and first $P$ iterations are concrete, then state space is $S \cdot 2^{N-P} \cdot 2^M$.
-  \item {\em Concolic Execution}. We decide the exact values for all bytes of {\tt input}. The state space size is $1$.
+  \item {\em None}: the input space size is $256^S$, and up to $2^N\cdot S\cdot 2^M$ execution engine instances are needed, due to $N+M$ symbolic branches and up to $S$ loop iterations;
+  \item {\em Known length}: if we assume a string length $S$, i.e., the first $(S-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{N+M}$;
+  \item {\em Known prefix}: if a prefix of $P<N$ bytes is known for {\tt input}, the first $P$ branches and $P$ loop iterations are concrete, and the state space size becomes $2^{N-P}\cdot S\cdot 2^M$;
+  \item {\em Concolic execution}: as all input bytes are concrete, the state space size is trivially $1$.
 \end{itemize}
 
-%\subsection{Dynamic symbolic execution}
+% [D] shall we mention that for prefixes also inequalities can be used, and that prefixes while they reduce the space size, they can lead to missing interesting states, e.g., malformed headers? I think it would be a bit too much detailed
 
+
+% ---------------------------------------------------------------------------------------------------
+
+%\subsection{Dynamic symbolic execution}
 %Dynamic symbolic execution refers to a body of techniques that exploit execution with concrete values to explore [...].
 
 % ---------------------------------------------------------------------------------------------------
