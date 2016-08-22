@@ -30,7 +30,7 @@ Symbolic execution overcomes these limitations by evaluating a piece of code usi
               8.     assert (x-y != 0);
               9.  }
 \end{lstlisting}
-\caption{Simple C function used in the warm-up example.}
+\caption{Simple C function used as a warm-up example.}
 \label{fig:example-1}
 \end{figure}
 
@@ -44,9 +44,9 @@ To discuss our example, we first briefly recall how a generic symbolic execution
 
 %\item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over \mynote{[D] $\alpha_i$ also concrete?} concrete and symbolic values $\alpha_i$.
 
-\item $\sigma$ is a {\em symbolic store} that associates program variables with expressions over  symbolic values $\alpha_i$ and concrete values.
+\item $\sigma$ is a {\em symbolic store} that associates program variables with either expressions over symbolic values $\alpha_i$, or concrete values.
 
-\item $\pi$ are the {\em path constraints}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. At the beginning of the analysis, the path constraints are the constant $true$ formula.
+\item $\pi$ is the {\em path constraints formula}, i.e., a formula that expresses a set of assumptions on the symbols $\alpha_i$ due to branches taken in the execution to reach $stmt$. At the beginning of the analysis, $\pi$ is the constant $true$ formula.
 
 \end{itemize}
 
@@ -90,14 +90,14 @@ After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic s
 After expanding every execution state until the {\tt assert} at line 8 is reached on all branches, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make {\tt x-y = 0} true. The path constraints for $H$ at this point implicitly defines the set of inputs that are unsafe for {\tt foobar}. 
 In particular, any input values such that:
  \[ 2(\alpha_a+\alpha_b)-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b = 0 \]
-will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a model checker to solve the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
+will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a {\em model checker}~\cite{} to solve the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
 \subsection{Challenges in Symbolic Execution}
 \label{example-discussion}
 
-In the example discussed in Section~\ref{symbolic-execution-example} symbolic execution can identify {\em all} the possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. 
+In the example discussed in Section~\ref{symbolic-execution-example} symbolic execution can identify {\em all} the possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, exhaustive symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. As we will discuss later on, exhaustive symbolic execution is unlikely to scale beyond small applications. Hence, often in practice we settle for less ambitious goals, e.g., by trading soundness for performance.
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
@@ -133,7 +133,7 @@ Note that each distinct value of {\tt n} leads to a distinct control flow path. 
 \vspace{1mm}
 
   \item {\em State space explosion, path selection}: how does symbolic execution deal with path explosion?
-  A relatively simple code such as function {\tt foobar}, which is composed of less 12 lines of code, has generated 16 execution states, where $5$ out of $16$ are independent\mynote{Independent?} and must be checked to determine possible unsafe input values. Although this could seem a reasonable number of states, language constructs such as loops may contribute to increase the number of states exponentially. For this reason, it is unlikely that a symbolic execution engine is able to exhaustively explore all the possible execution states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage), hoping this would lead to interesting discoveries. Also, a symbolic execution engine should implement efficient mechanisms for evaluating multiple execution states in parallel without running out of resources.
+  A relatively simple code such as function {\tt foobar}, which is composed of less 12 lines of code, has generated 16 execution states, where $5$ out of $16$ are independent\mynote{Independent?} and must be checked to determine possible unsafe input values. Although this could seem a reasonable number of states, language constructs such as loops may contribute to increase the number of states exponentially. For this reason, it is unlikely that a symbolic execution engine is able to exhaustively explore all the possible execution states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage), hoping that this would lead to interesting discoveries. Also, a symbolic execution engine should implement efficient mechanisms for evaluating multiple execution states in parallel without running out of resources.
   %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 \vspace{1mm}
 
