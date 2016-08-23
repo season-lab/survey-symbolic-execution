@@ -13,7 +13,7 @@ In this article, we survey the main aspects of symbolic execution and discuss it
 \subsection{Warm-up example}
 \label{symbolic-execution-example}
 
-Consider the C code of Figure~\ref{fig:example-1} and assume that we want to determine for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Each input parameter {\tt a} and {\tt b} can take $2^{32}$ distinct integer values. A possible approach is to concretely execute the function on randomly generated inputs.
+Consider the C code of Figure~\ref{fig:example-1} and assume that we want to determine for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Each input parameter {\tt a} and {\tt b} can take $2^{32}$ distinct integer values. A possible approach is to concretely execute function \texttt{foobar} on randomly generated inputs.
 %Techniques such as random testing could generate bottomless input tests for this function. 
 However, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 By evaluating a piece of code using symbols for its inputs, instead of concrete values, symbolic execution overcomes these limitations and makes it possible to reason on {\em classes of inputs}, rather than single input values. 
