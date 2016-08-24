@@ -1,8 +1,32 @@
 % !TEX root = main.tex
 
 \section{Path explosion}
+\label{se:path-explosion}
 
 One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches of the program. This impacts both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+\mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
+
+\begin{itemize}
+
+\item Exponential in branching structure: in the example, 3 variables, 8 paths (can we generalize? $t$ variables, $2^t$ paths?)
+
+\begin{verbatim}
+1. int a = ?, b = ?, c = ?; // symbolic
+2. if (a) ... else ...;
+3. if (b) ... else ...;
+4. if (c) ... else ...;
+\end{verbatim}
+
+\item Loops on symbolic variables even worse
+
+\begin{verbatim}
+1. int a = ?; // symbolic
+2. while (a) do ...;
+3.
+\end{verbatim}
+- Potentially $2^{31}$ paths through loop!
+
+\end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Pruning unrealizable paths}

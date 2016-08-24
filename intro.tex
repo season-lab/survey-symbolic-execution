@@ -10,7 +10,7 @@ In a concrete execution, the program is run on a specific input and a single con
 
 In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in software testing and computer security applications, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
 
-\subsection{Warm-up example}
+\subsection{A Warm-up Example}
 \label{symbolic-execution-example}
 
 Consider the C code of Figure~\ref{fig:example-1} and assume that we want to determine for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Since each input parameter can take as many as $2^{32}$ distinct integer values, the approach of running concretely function \texttt{foobar} on randomly generated inputs will unlikely pick up exactly the assert-failing inputs.

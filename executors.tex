@@ -1,12 +1,29 @@
 % !TEX root = main.tex
 
-\section{Symbolic Executors}
+\section{Symbolic Execution Engines}
 \label{se:executors}
 
-\subsection{Concrete, Concolic, and Symbolic Execution}
+In this section we describe some important principles for the design of symbolic executors as well as crucial tradeoffs that arise in their implementation. Moving from the concepts of concrete and symbolic runs, we also introduce the idea of {\em concolic execution}.
+
+\subsection{Concrete, Symbolic, and Concolic Execution}
 \label{ss:concrete-concolic-symbolic}
 
+As shown in the warm-up example of Section~\ref{symbolic-execution-example}, a symbolic execution of a program can generate -- in theory -- all possible control flow paths that the program could take during a concrete execution on a specific input. While modelling all possible runs allows for very interesting analyses, it is typically unfeasible in practice, especially on real-world software, for a variety of reasons.
+
+First, as extensively discussed in Section~\ref{se:path-explosion}, the number of control flow paths to be generated and analyzed could be prohibitively large, due to branch instructions and loops. In the worst case, if the code contains an unbounded loop, the symbolic execution could keep running forever, generating a potentially infinite number of paths (see also Section~\ref{se:loops} for loop handling strategies).
+
+Moreover, symbolic engines are clients of SMT constraint solvers, which are continuously invoked during the analysis. Even if powerful SMT solvers are currently available, the time spent in constraint solving is still one of the main performance barriers for symbolic execution. Moreover, while an SMT solver should support as many decidable logical fragments as possible and some symbolic executors use even more than one solver, it may happen that the program yields constraints that the solver does not handle well (e.g., non-linear constraints).
+%An SMT instance is a formula in first-order logic, where some function and predicate symbols have additional meaning. This meaning depends on the theory being used: for instance, with linear inequalities symbols with extra meaning include the integers, $+$, $-$, $x$, $\le$. Path constraints are typically expressed in a decidable logical fragment without quantifiers
+
+{\bf Irene:  STOPPED HERE, MUST CONTINUE FROM THIS POINT}
+ 
+A standard approach to handle non-linear constraints and external environment is to mix concrete and symbolic execution.\\
+-- leads to under-approximation
 [...]
+
+Concolic Execution: combines both symbolic execution and concrete (normal) execution.
+The basic idea is to have the concrete execution drive the symbolic execution.
+
 
 \paragraph{Execution-Generated Testing (EGT)} 
 \mynote{[D] This belongs here} Approach used by some papers (e.g.,~\cite{KLEE-OSDI08,EXE-CCS06}) that works by making a distinction between the concrete and symbolic state of a program: if an operation involves only concrete values, then the symbolic engine concretely execute it. This can allow symbolic execution to reason even over complex operation (e.g., non linear operations) if they involve only concrete values. EGT is often seen (\cite{CS-CACM13}) as a form of dynamic symbolic execution: this can be seen as more general term than concolic execution.
