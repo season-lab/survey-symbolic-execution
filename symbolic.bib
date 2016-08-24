@@ -91,6 +91,15 @@
  numpages = {10},
 }
 
+@inproceedings{SA-CAV06,
+  author="Sen, Koushik and Agha, Gul",
+  title="CUTE and jCUTE: Concolic Unit Testing and Explicit Path Model-Checking Tools",
+  bookTitle="Computer Aided Verification: 18th International Conference",
+  series = {CAV06}
+  year="2006",
+  pages="419--423",
+}
+
 @article{FIRMALICE-NDSS15,
   title={Firmalice - Automatic Detection of Authentication Bypass Vulnerabilities
          in Binary Firmware},
@@ -273,7 +282,7 @@
 
 @article{CKC-TOCS12,
  author = {Chipounov, Vitaly and Kuznetsov, Volodymyr and Candea, George},
- title = {The S2E Platform: Design, Implementation, and Applications},
+ title = {{The S2E Platform: Design, Implementation, and Applications}},
  journal = {ACM Trans. Comput. Syst.},
  issue_date = {February 2012},
  volume = {30},
@@ -1732,12 +1741,117 @@ pages={135-140},
  booktitle = {Proceedings of the Third International Conference on NASA Formal Methods},
  series = {NFM'11},
  year = {2011},
- isbn = {978-3-642-20397-8},
- location = {Pasadena, CA},
  pages = {359--374},
  numpages = {16},
- url = {http://dl.acm.org/citation.cfm?id=1986308.1986337},
- acmid = {1986337},
- publisher = {Springer-Verlag},
- address = {Berlin, Heidelberg},
+}
+
+@inproceedings{MMP-ASPLOS12,
+ author = {Martignoni, Lorenzo and McCamant, Stephen and Poosankam, Pongsin and Song, Dawn and Maniatis, Petros},
+ title = {Path-exploration Lifting: Hi-fi Tests for Lo-fi Emulators},
+ booktitle = {Proceedings of the Seventeenth International Conference on Architectural Support for Programming Languages and Operating Systems},
+ series = {ASPLOS XVII},
+ year = {2012},
+ pages = {337--348},
+ numpages = {12},
+} 
+
+@TechReport{CIVL-TECH14,
+  author = {Stephen F. Siegel and Matthew B. Dwyer and Ganesh Gopalakrishnan 
+            and Ziqing Luo and Zvonimir Rakamaric and Rajeev Thakur 
+            and Manchun Zheng and Timothy K. Zirkel},
+  title = {{CIVL}: The Concurrency Intermediate Verification Language},
+  institution = {Department of Computer and Information Sciences,
+  University of Delaware},
+  year = {2014},
+  number = {UD-CIS-2014/001}
+}
+
+@inproceedings{HBR-RV14,
+  author = {Martin Hentschel and Richard Bubel and Reiner H{\"a}hnle},
+  title = {Symbolic Execution Debugger (SED)},
+  month = sep,
+  year = {2014},
+  publisher = {Springer},
+  booktitle = {Proceedings of Runtime Verification 2014},
+  editor = {Borzoo Bonakdarpour and Scott A. Smolka},
+  pages = {255--262},
+  series = {LNCS},
+  pubkey = {TUD-CS-2014-0835},
+}
+
+@inproceedings{S-ICSE04,
+ author = {Sharma, Asankhaya},
+ title = {Exploiting Undefined Behaviors for Efficient Symbolic Execution},
+ booktitle = {Companion Proceedings of the 36th International Conference on Software Engineering},
+ series = {ICSE Companion 2014},
+ year = {2014},
+ isbn = {978-1-4503-2768-8},
+ pages = {727--729},
+ numpages = {3},
+} 
+
+@inproceedings{RSM-ICSE10,
+ author = {Reisner, Elnatan and Song, Charles and Ma, Kin-Keung and Foster, Jeffrey S. and Porter, Adam},
+ title = {{Using Symbolic Evaluation to Understand Behavior in Configurable Software Systems}},
+ booktitle = {Proceedings of the 32Nd ACM/IEEE International Conference on Software Engineering - Volume 1},
+ series = {ICSE '10},
+ year = {2010},
+ isbn = {978-1-60558-719-6},
+ pages = {445--454},
+ numpages = {10},
+} 
+
+@TechReport{JMF-TECH12,
+  author = {Jinseong Jeon, and Kristopher K. Micinski, and Jeffrey S. Foster},
+  title = {{SymDroid: Symbolic Execution for Dalvik Bytecode}},
+  institution = {Department of Computer Science, University of Maryland, College Park},
+  year = {2012},
+  number = {CS-TR-5022}
+}
+
+@inproceedings{CF-CCS10,
+ author = {Chaudhuri, Avik and Foster, Jeffrey S.},
+ title = {Symbolic Security Analysis of Ruby-on-rails Web Applications},
+ booktitle = {Proceedings of the 17th ACM Conference on Computer and Communications Security},
+ series = {CCS '10},
+ year = {2010},
+ pages = {585--594},
+ numpages = {10},
+} 
+
+@inproceedings{LAG-FSE14,
+ author = {Li, Guodong and Andreasen, Esben and Ghosh, Indradeep},
+ title = {{SymJS}: Automatic Symbolic Testing of JavaScript Web Applications},
+ booktitle = {Proceedings of the 22Nd ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+ series = {FSE 2014},
+ year = {2014},
+ pages = {449--459},
+ numpages = {11},
+} 
+
+@inproceedings{SKB-FSE13,
+ author = {Sen, Koushik and Kalasapur, Swaroop and Brutch, Tasneem and Gibbs, Simon},
+ title = {Jalangi: A Selective Record-replay and Dynamic Analysis Framework for JavaScript},
+ booktitle = {Proceedings of the 2013 9th Joint Meeting on Foundations of Software Engineering},
+ series = {ESEC/FSE 2013},
+ year = {2013},
+ pages = {488--498},
+ numpages = {11},
+} 
+
+@mastersthesis{V-THESIS14,
+    author = {Celina Gomes do Val},
+    title = {Conflict-Driven Symbolic Execution: How to Learn to Get Better},
+    school = {University of British Columbia},
+    type = {{MSc} Thesis},
+    year = {2014},
+}
+
+@inproceedings{ANGR-SSP16,
+  title={{SoK: (State of) The Art of War: Offensive Techniques in Binary Analysis}},
+  author={Shoshitaishvili, Yan and Wang, Ruoyu and Salls, Christopher and
+          Stephens, Nick and Polino, Mario and Dutcher, Andrew and Grosen, John and
+          Feng, Siji and Hauser, Christophe and Kruegel, Christopher and Vigna, Giovanni},
+  booktitle={IEEE Symposium on Security and Privacy},
+  year={2016}
 }

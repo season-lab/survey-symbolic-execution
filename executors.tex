@@ -62,6 +62,48 @@ Constraints updated to account for concrete values are marked as {\em soft}, and
 
 %When execution returns to the symbolic domain, we have observed that updating constraints to reflect a concrete assignment might result in a corseting of the family of future paths that can be explored. Such constraints are marked in ~\cite{CKC-TOCS12} as {\em soft}, and whenever a branch in the symbolic domain is disabled because of a soft constraint, execution goes back and picks a value for the concrete call that would enable that branch.
 
-\subsection{Tradeoffs with constraint solvers}
+\subsection{Tools}
+A list of symbolic execution engines is presented in Table~\ref{tab:symbolic-engines}.
 
+\begin{figure}[t]
+  \centering
+  \begin{adjustbox}{width=1\columnwidth}
+  %\begin{small}
+  \begin{tabular}{| l || c || l |}
+    \hline      
+    Symbolic engine & Paper(s) & Project URL  \\ \hline\hline
+    {\tt Check \textsc{\char13}n\textsc{\char13} Crash} & \cite{CS-ICSE05} & \url{http://ranger.uta.edu/~csallner/cnc/}\\
+    {\tt CUTE} & \cite{CUTE-FSE13} & -- \\
+    {\tt DART} & \cite{DART-PLDI05} & -- \\
+    {\tt jCUTE} & \cite{SA-CAV06} & \url{https://github.com/osl/jcute} \\ % : Java Concolic Unit Testing Engine
+    {\tt KLEE} & \cite{EXE-CCS06,KLEE-OSDI08} & \url{https://klee.github.io/} \\ % : a LLVM Execution Engine
+    {\tt SAGE} & \cite{SAGE-NDSS08} & -- \\
+    {\tt CREST} & \cite{CREST-ASE08} & \url{https://github.com/jburnim/crest} \\ % : a concolic test generation tool for C
+    {\tt PEX} & \cite{PEX-TAP08} & \url{http://research.microsoft.com/en-us/projects/pex/} \\
+    {\tt Rubyx} & \cite{CF-CCS10} & -- \\
+    {\tt Java PathFinder} & \cite{PATHFINDER-ASE10} & \url{http://babelfish.arc.nasa.gov/trac/jpf}\\
+    {\tt Otter} & \cite{RSM-ICSE10} & \url{https://bitbucket.org/khooyp/otter/} \\
+    {\tt BAP} & \cite{BAP-CAV11} & \url{https://github.com/BinaryAnalysisPlatform/bap} \\
+    {\tt Mayhem} & \cite{MAYHEM-SP12} & -- \\
+    {\tt SymDroid} & \cite{JMF-TECH12} & -- \\
+    {\tt \stwoe} & \cite{CKC-TOCS12} & \url{http://s2e.epfl.ch/} \\
+    {\tt FuzzBALL} & \cite{MMP-ASPLOS12,FUZZBALL-ESORICS13} & \url{http://bitblaze.cs.berkeley.edu/fuzzball.html} \\
+    {\tt Jalangi} & \cite{SKB-FSE13} & \url{https://github.com/Samsung/jalangi2} \\
+    {\tt Pathgrind} & \cite{S-ICSE04} & \url{https://github.com/codelion/pathgrind} \\
+    {\tt Kite} & \cite{V-THESIS14} & \url{http://www.cs.ubc.ca/labs/isd/Projects/Kite} \\
+    {\tt SymJS} & \cite{LAG-FSE14} & -- \\
+    {\tt CIVL} & \cite{CIVL-TECH14} & \url{http://vsl.cis.udel.edu/civl/}\\ % : The Concurrency Intermediate Verification Language 
+	{\tt KeY} & \cite{HBR-RV14} & \url{http://www.key-project.org/} \\
+    {\tt angr} & \cite{FIRMALICE-NDSS15,ANGR-SSP16} & \url{http://angr.io/} \\
+
+    {\tt CATG} & -- & \url{https://github.com/ksen007/janala2} \\
+    {\tt PySymEmu} & -- & \url{https://github.com/feliam/pysymemu/} \\
+    {\tt Triton} & -- & \url{http://triton.quarkslab.com/} \\
+    \hline  
+  \end{tabular}
+  %\end{small}
+  \end{adjustbox}
+  \caption{List of tools.}
+  \label{tab:symbolic-engines}
+\end{figure}
 
