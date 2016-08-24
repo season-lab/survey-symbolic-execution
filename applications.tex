@@ -23,30 +23,3 @@ Bugs are a consequence of the nature of human factors in software development an
 
 \cite{MAYHEM-SP12} takes another step forward by presenting the first end-to-end exploitable bug finding system working on programs in binary form. It adopts a hybrid execution model based on checkpoints and two components: a concrete executor that injects taint-analysis instrumentation in the code and a symbolic executor that takes over when a tainted branch or jump instruction is met. Exploitability constraints for symbolic instruction pointers and format strings are generated, targeting a wide range of exploits, e.g., SEH-based and jump-to-register ones. Three path selection heuristics help prioritizing paths that are most likely to contain a bug (e.g., those containing symbolic memory accesses or instruction pointers). A virtualization layer intercepts and emulates all the system calls to the host OS, while preconditioned symbolic execution can be used to reduce the range of the search space. Also, restricting symbolic execution to tainted basic blocks only gives very good speedups in this setting, as in the reported experiments more than $95\%$ of the instructions were not tainted. Although the goal in ~\cite{MAYHEM-SP12} is informing the user that an exploitable bug exists, the generated simple exploits can be likely transformed in an automated fashion to work in the presence of OS defenses such as address space layout randomization and data execution prevention~\cite{Q-SEC11}. 
 
-
-\subsection{Tools}
-A list of symbolic execution engines is presented in Table~\ref{tab:symbolic-engines}.
-
-\begin{figure}[t]
-  \centering
-  \begin{adjustbox}{width=1\columnwidth}
-  \begin{small}
-  \begin{tabular}{| l || c || l |}
-    \hline      
-    Symbolic engine & Paper(s) & Project URL  \\ \hline\hline
-    {\tt angr} & \cite{FIRMALICE-NDSS15} & \url{http://angr.io/} \\
-    {\tt KLEE}: a LLVM Execution Engine & \cite{KLEE-OSDI08} & \url{https://klee.github.io/} \\
-    {\tt jCUTE}: Java Concolic Unit Testing Engine & -- & \url{https://github.com/osl/jcute} \\
-    {\tt Java PathFinder} & \cite{PATHFINDER-ASE10} & \url{http://babelfish.arc.nasa.gov/trac/jpf}\\
-    {\tt CIVIL}: The Concurrency Intermediate Verification Language & add technical report & \url{http://vsl.cis.udel.edu/civl/}\\
-    {\tt CREST}: a concolic test generation tool for C & \cite{CREST-ASE08} & \url{https://github.com/jburnim/crest} \\
-    {\tt PEX} & \cite{PEX-TAP08} & \url{http://research.microsoft.com/en-us/projects/pex/} \\
-    {\tt Check 'n' Crash} & \cite{CS-ICSE05} & \url{http://ranger.uta.edu/~csallner/cnc/}\\
-    \hline  
-  \end{tabular}
-  \end{small}
-  \end{adjustbox}
-  \caption{List of tools.}
-  \label{tab:symbolic-engines}
-\end{figure}
-
