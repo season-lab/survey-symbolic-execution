@@ -14,7 +14,7 @@ In this article, we survey the main aspects of symbolic execution and discuss it
 \subsection{A Warm-up Example}
 \label{symbolic-execution-example}
 
-Consider the C code of Figure~\ref{fig:example-1} and assume that we want to determine for which inputs the  {\tt assert} at line 8 of function \texttt{foobar} fails. Since each input parameter can take as many as $2^{32}$ distinct integer values, the approach of running concretely function \texttt{foobar} on randomly generated inputs will unlikely pick up exactly the assert-failing inputs.
+Consider the C code of Figure~\ref{fig:example-1} and assume that our goal is to determine which inputs make the  {\tt assert} at line 8 of function \texttt{foobar} fail. Since each input parameter can take as many as $2^{32}$ distinct integer values, the approach of running concretely function \texttt{foobar} on randomly generated inputs will unlikely pick up exactly the assert-failing inputs.
 %Techniques such as random testing could generate bottomless input tests for this function. 
 %However, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 By evaluating the code using symbols for its inputs, instead of concrete values, symbolic execution overcomes this limitation and makes it possible to reason on {\em classes of inputs}, rather than single input values. 
@@ -35,7 +35,7 @@ By evaluating the code using symbols for its inputs, instead of concrete values,
 \label{fig:example-1}
 \end{figure}
 
-In more details, every value that cannot be statically determined, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+In more detail, every value that cannot be determined by a static analysis of the code, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
 \begin{itemize}
 
