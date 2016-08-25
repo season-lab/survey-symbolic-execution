@@ -289,8 +289,19 @@ Several static program analysis techniques such as abstract interpretation merge
     6.    return y;
     7.  }
     \end{lstlisting}
+The symbolic execution of this function is shown in Figure~\ref{fig:example-state-merging}a. Initially (execution state $A$) the path constraints are {\tt true} and input arguments {\tt x} and {\tt y} are associated with symbolic values $\alpha_x$ and $\alpha_y$, respectively. Line 2 contains a conditional branch and the execution is forked: depending on the branch taken, a different statement is evaluated next and different assumptions are made on symbol $\alpha_x$ (execution states $C$ and $D$, respectively). After expanding every execution state until the {\tt return} at line 6 is reached on all branches, the symbolic execution gets populated with two additional execution states D and E. If a symbolic execution engine desires to reduce the number of active states, then state merging can be performed. For instance, Figure~\ref{fig:example-state-merging}b shows the symbolic execution tree for the same piece of code when a state merging operation is performed before evaluating the {\tt return} statement at line 6: D$'$ is now a merged state that fully captures the former execution states D and E. Indeed, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression introduced in the symbolic store $\pi$ is a short term for an {\tt if-then-else} expression and means that if the condition {\tt c} is verified then {\tt t} holds, otherwise {\tt f} must be assumed as true. Nonetheless, $ite$ expressions are often just syntactic sugar for disjunctive formulas and are commonly supported by most prominent constraint solvers. Fro instance, in the context of propositional logic the $ite$ expression shown in execution state D$'$ could be replaced with the formula $(\alpha_x < 5 \wedge 2 * \alpha_y) \vee (\neg(\alpha_x < 5) \wedge 3 * \alpha_y)$. However, since the symbolic store should return an integer value for variable $y$ rather than a boolean value, following the idea presented in~\cite{KP-PP05}, the $ite$ expression can be translated into the expression $((\alpha_x < 5) * (2 * \alpha_y)) + (\neg(\alpha_x < 5) * (3 * \alpha_y))$. On the other hand, the path constraints of the execution states C and D has been just merged into the disjunction formula $\alpha_x < 5 \vee \alpha_x \geq 5$ and then simplified to $true$ value.
 
-\noindent A symbolic execution engine may perform state merging in the following way:\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
+
+
+
+% Constructing Efficient Formal Models from High-Level Descriptions Using Symbolic Simulation
+
+%As depicted by the symbolic execution tree shown in Figure~\ref{fig:example-state-merging}, when {\tt foo} is symbolically executed, the two input parameters {\tt x} and {\tt y} are mapped to the symbols  Whenever the branch condition on line 2 is evaluated, the two parallel execution states B and C are generated. Accordingly to taken branch, a different line of code is then evaluated, leading to execution states D and E. 
+
+
+%In the branch where $\alpha_a\neq 0$, variable {\tt y} is assigned with ${\tt x}+3$, obtaining $y\mapsto 4$ in state $E$ because $x\mapsto 1$ in state $C$. In general, arithmetic expression evaluation simply manipulates the symbolic values.
+
+%\noindent A symbolic execution engine may perform state merging in the following way:\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
 
 \begin{figure}[t]
   \vspace{-3mm}
@@ -308,9 +319,8 @@ Several static program analysis techniques such as abstract interpretation merge
     %\label{fig:sub2}
     \caption{}
   \end{subfigure}
-  \caption{(a) Symbolic execution tree of the function {\tt foo} without state merging (b)Symbolic execution tree of the function {\tt foo} with state merging.}
-  \label{fig:example-concrete-execution}
-  \vspace{-3mm}
+  \caption{(a) Symbolic execution tree of the function {\tt foo} without state merging; (b) Symbolic execution tree of the function {\tt foo} with state merging.}
+  \label{fig:example-state-merging}
 \end{figure}
 
 
