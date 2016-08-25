@@ -8,7 +8,7 @@ In this section we describe some important principles for the design of symbolic
 \subsection{Concrete, Symbolic, and Concolic Execution}
 \label{ss:concrete-concolic-symbolic}
 
-As shown in the warm-up example of Section~\ref{symbolic-execution-example}, a symbolic execution of a program can generate -- in theory -- all possible control flow paths that the program could take during a concrete execution on a specific input. While modelling all possible runs allows for very interesting analyses, it is typically unfeasible in practice, especially on real-world software, for a variety of reasons.
+As shown in the warm-up example of Section~\ref{symbolic-execution-example}, a symbolic execution of a program can generate -- in theory -- all possible control flow paths that the program could take during concrete executions on specific inputs. While modelling all possible runs allows for very interesting analyses, it is typically unfeasible in practice, especially on real-world software, for a variety of reasons.
 
 First, as extensively discussed in Section~\ref{se:path-explosion}, the number of control flow paths to be generated and analyzed could be prohibitively large, due to branch instructions and loops. In the worst case, if the code contains an unbounded loop, the symbolic execution could keep running forever, generating a potentially infinite number of paths (see also Section~\ref{se:loops} for loop handling strategies).
 
