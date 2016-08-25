@@ -279,25 +279,40 @@ Although this technique is not able to find {\em all} the possible errors in a f
 
 Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate.
 
-\paragraph{Example} Consider the following piece of code (taken from~\cite{VERITESTING-ICSE14}):\mynote{customize example and improve discussion}
+\paragraph{Example} Consider the following piece of code:
     \begin{lstlisting}[basicstyle=\ttfamily\small]
-    B1: if (x > 1) 
-    B2:   y = 42;
-    B3: else if (x < 42) 
-    B4:    y = 17;
-    B5: else ;
-    B6: ;
+    1.  void foo(int x, int y) {
+    2.    if (x < 5)
+    3.      y = y * 2;
+    4.    else
+    5.      y = y * 3;
+    6.    return y;
+    7.  }
     \end{lstlisting}
 
-\noindent A symbolic execution engine may perform state merging in the following way:
-\begin{figure}[H]
+\noindent A symbolic execution engine may perform state merging in the following way:\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
+
+\begin{figure}[t]
+  \vspace{-3mm}
   \centering
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \hspace{-5mm}
+    \includegraphics[width=1.05\columnwidth]{images/state-merging} 
+    %\label{fig:sub1}
+    \caption{}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=1.05\columnwidth]{images/state-merging-2} 
+    %\label{fig:sub2}
+    \caption{}
+  \end{subfigure}
+  \caption{(a) Symbolic execution tree of the function {\tt foo} without state merging (b)Symbolic execution tree of the function {\tt foo} with state merging.}
+  \label{fig:example-concrete-execution}
   \vspace{-3mm}
-  \includegraphics[width=0.65\columnwidth]{images/state-merging} 
-  \vspace{-3mm}
-  %\label{fig:example-symbolic-execution}
 \end{figure}
-\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
+
 
 \paragraph{Trade-off} Early works~\cite{G-POPL07,HSS-RV09} have shown that merging techniques effectively decrease the number of paths to explore, but also put a burden on constraints solvers, which typically encounter difficulties when dealing with disjunction. Merging can also introduce new symbolic expressions in the code, for instance when merging different concrete values from a conditional assignment into a symbolic expression over the condition. \cite{KKB-PLDI12} provides an excellent discussion of the design space of state merging techniques. At one end of the spectrum, search-based symbolic execution (as implemented, e.g., in~\cite{KLEE-OSDI08}) does not perform any merge. At the other end, complete static state merging - implemented by verification condition generators, e.g, ~\cite{SATURN-POPL05,CALYSTO-ICSE08}) - combines states at join points after all the subpaths have been encoded.
 
