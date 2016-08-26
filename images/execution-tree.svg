@@ -1301,8 +1301,8 @@
      id="namedview5609"
      showgrid="true"
      inkscape:zoom="2"
-     inkscape:cx="288.34907"
-     inkscape:cy="201.09702"
+     inkscape:cx="345.84907"
+     inkscape:cy="461.09702"
      inkscape:window-x="0"
      inkscape:window-y="1"
      inkscape:window-maximized="1"
@@ -1649,7 +1649,7 @@
            width="100%"
            height="100%" /></g></g><g
        id="g8398"
-       transform="translate(-92.233614,-118.66492)"><use
+       transform="translate(-71.593694,-118.66492)"><use
          transform="matrix(1,0,0,-1,107.06558,556.10557)"
          height="100%"
          width="100%"
@@ -2256,7 +2256,7 @@
        sodipodi:nodetypes="cc" /><rect
        transform="scale(1,-1)"
        y="-424"
-       x="148.00003"
+       x="168.64"
        height="31.68"
        width="19.679996"
        id="rect10561"
@@ -2265,11 +2265,11 @@
        id="rect10563"
        width="235.84001"
        height="31.68"
-       x="167.99995"
+       x="188.63992"
        y="-424"
        transform="scale(1,-1)" /><path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.31999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 167.84044,408.16044 c 236.15956,0 236.15956,0 236.15956,0"
+       d="m 188.48036,408.16044 c 236.15956,0 236.15956,0 236.15956,0"
        id="path10565"
        inkscape:connector-curvature="0" /><rect
        style="opacity:1;fill:#dddddd;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.31999999;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -2297,7 +2297,7 @@
        xlink:href="#glyph0-7"
        width="100%"
        height="100%"
-       transform="matrix(1,0,0,-1,15.058657,445.60628)" /><path
+       transform="matrix(1,0,0,-1,35.698577,445.60628)" /><path
        inkscape:connector-curvature="0"
        id="path10581"
        d="m 276,464 0,-40"
@@ -3823,7 +3823,7 @@
            width="100%"
            height="100%" /></g></g><g
        id="g10084"
-       transform="translate(-604.09813,-218.21113)"><g
+       transform="translate(-583.45821,-218.21113)"><g
          transform="matrix(1.0565653,0,0,-1.0565653,410.31869,828.37594)"
          id="g4985"
          style="fill:#000000;fill-opacity:1"><use
@@ -4038,7 +4038,7 @@
            width="100%"
            height="100%" /></g></g><g
        id="g10132"
-       transform="translate(-608.89813,-218.21113)"><g
+       transform="translate(-588.25821,-218.21113)"><g
          transform="matrix(1.0565653,0,0,-1.0565653,410.31869,828.37594)"
          id="g5077"
          style="fill:#000000;fill-opacity:1"><use
