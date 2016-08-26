@@ -29,7 +29,7 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Pruning unrealizable paths}
+\subsection{Pruning Unrealizable Paths}
 \label{ss:unrealizable-paths}
 
 \mynote{TODO}A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. 
@@ -75,12 +75,12 @@ The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else
 
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Bounding computational resources}
+\subsection{Bounding Computational Resources}
 \label{heuristics}
 
 Another common approach is to limit the amount of resources symbolic execution is allowed to use. For instance, the computation may time out after a certain amount of time. Since only a fraction of paths may be explored, the search should be prioritized by looking at the most promising paths first. There are several strategies for selecting or generating the next path to be explored. We now briefly overview some of the most interesting techniques that have been shown to be effective in the literature. %in prior works.
 
-\subsubsection{Search heuristics}
+\subsubsection{Search Heuristics}
 \label{sss:search-heuristics}
 
 % many prior works
@@ -187,7 +187,7 @@ Although dynamic test generation uses concrete inputs to drive the symbolic exec
 
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Preconditioned symbolic execution}\mynote{[D] Entirely rewritten}
+\subsection{Preconditioned Symbolic Execution}\mynote{[D] Entirely rewritten}
 \label{precontioned-symbolic-execution}
 
 \cite{AEG-NDSS11} proposes {\em preconditional symbolic execution} as a novel method to target symbolic execution towards certain subsets of the input state space. The state space subset is determined by the precondition predicate $\Pi_{prec}$: inputs that do not satisfy $\Pi_{prec}$ will not be explored. The intuition for preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying exploitability conditions as a precondition, e.g., all symbolic inputs should have the maximum size to trigger buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before symbolic execution begins, we can prune program paths and therefore explore the target program more efficiently.
@@ -245,7 +245,7 @@ This technique enforces a precondition by adding the precondition constraints to
 %Dynamic symbolic execution refers to a body of techniques that exploit execution with concrete values to explore [...].
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Under-constrained symbolic execution} 
+\subsection{Under-constrained Symbolic Execution} 
 \label{under-constrained}
 
 A possible approach to avoid path explosion is to cut the code to check, say a function, out of its encolosing system and check it in isolation. Lazy initialization with user-specified preconditions (Section~\ref{ss:complex-objects}) follows this principle in order to automatically reconstruct complex  data structures. However, cutting a code region out of an application has proven to be quite difficult due to the entanglements with the surrounding environment~\cite{ED-ISSTA07}.
@@ -278,7 +278,7 @@ Although this technique is not able to find {\em all} the possible errors in a f
 \fi
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{State merging}
+\subsection{State Merging}
 
 Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate.
 
@@ -347,7 +347,7 @@ Recent works have thus introduced novel techniques to tackle these issues:
 \end{itemize}
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{Limiting state space through other program analysis techniques}
+\subsection{Limiting State Space through other Program Analysis Techniques}
 
 Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
 \begin{itemize}
