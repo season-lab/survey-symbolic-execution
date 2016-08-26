@@ -4,16 +4,16 @@
 \usepackage{amsmath} %maths
 \usepackage[utf8]{inputenc} %useful to type directly diacritic characters
 \begin{document}
-\begin{align*}\mbox{A} ~~~~ 2.~~\texttt{int x = 1, y = 0} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b \} ~~~~ true \\
-\mbox{B} ~~~~ 3.~~\texttt{if (a != 0)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ true \\
-\mbox{C} ~~~~ 4.~~\texttt{y = 3+x} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ \alpha_a\neq 0 \\
-\mbox{D} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ \alpha_a= 0 \\
+\begin{align*}\mbox{A} ~~~~ 2.~~\texttt{int x = 1, y = 0} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b \} ~~~~ \pi=true \\
+\mbox{B} ~~~~ 3.~~\texttt{if (a != 0)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ \pi=true \\
+\mbox{C} ~~~~ 4.~~\texttt{y = 3+x} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ \pi=\alpha_a\neq 0 \\
+\mbox{D} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 0 \} ~~~~ \pi=\alpha_a= 0 \\
 1-0 = 0 \wedge \alpha_a = 0\Longleftrightarrow false ~~~~ \mbox{OK} \\
-\mbox{E} ~~~~ 5.~~\texttt{if (b == 0)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \alpha_a\neq 0 \\
-\mbox{F} ~~~~ 6.~~\texttt{x = 2*(a+b)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \alpha_a\neq 0 \wedge \alpha_b = 0 \\
-\mbox{G} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \alpha_a \neq 0 \wedge \alpha_b \neq 0 \\
+\mbox{E} ~~~~ 5.~~\texttt{if (b == 0)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \pi=\alpha_a\neq 0 \\
+\mbox{F} ~~~~ 6.~~\texttt{x = 2*(a+b)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \pi=\alpha_a\neq 0 \wedge \alpha_b = 0 \\
+\mbox{G} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 1, y\mapsto 4 \} ~~~~ \pi=\alpha_a \neq 0 \wedge \alpha_b \neq 0 \\
 1-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b \neq 0\Longleftrightarrow false ~~~~ \mbox{OK} \\
-\mbox{H} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 2(\alpha_a+\alpha_b), y\mapsto 4 \} ~~~~ \alpha_a \neq 0 \wedge \alpha_b = 0 \\
+\mbox{H} ~~~~ 8.~~\texttt{assert(x-y != 0)} ~~~~ \sigma=\{ a\mapsto \alpha_a, b\mapsto \alpha_b, x\mapsto 2(\alpha_a+\alpha_b), y\mapsto 4 \} ~~~~ \pi=\alpha_a \neq 0 \wedge \alpha_b = 0 \\
 2(\alpha_a+\alpha_b)-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b = 0~~\mbox{if}~~\alpha_a=2\wedge\alpha_b=0 ~~~~ \mbox{ERROR} \\
 \end{align*}
 \end{document}
