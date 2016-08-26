@@ -11,6 +11,7 @@ In a concrete execution, the program is run on a specific input and a single con
 
 In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in software testing and computer security applications, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
 
+% --------------------------------------------------------------------------------------------------------------------
 \subsection{A Warm-up Example}
 \label{symbolic-execution-example}
 
@@ -93,6 +94,7 @@ will make {\tt assert} fail. An instance of unsafe input parameters can be event
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
+% --------------------------------------------------------------------------------------------------------------------
 \subsection{Challenges in Symbolic Execution}
 \label{example-discussion}
 
@@ -152,9 +154,10 @@ Depending on the specific context in which symbolic execution is used, different
 
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
+% --------------------------------------------------------------------------------------------------------------------
 \subsection{Organization of the Article}
 
-The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{} address the key challenges we listed in Section~\ref{}.
+The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}.
 
 %\vspace{2cm}
 %\subsection{Removed stuff}
