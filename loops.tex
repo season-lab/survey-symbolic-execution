@@ -5,7 +5,7 @@
 
 Loops are one of the main cause of path explosion: each iteration of a loop can be seen as a {\tt IF-GOTO} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite. For instance, consider the following example (taken from~\cite{CS-CACM13}):
     \begin{lstlisting}[basicstyle=\ttfamily\small]
-    1.  int N = sym_input(); // e.g., read
+    1.  int N = sym_input(); // e.g., read from file
     2.  while (N > 0) {
     3.    N = sym_input();  
     4.  }
