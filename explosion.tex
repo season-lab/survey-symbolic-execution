@@ -146,14 +146,16 @@ Traditional symbolic execution does not scale over large programs. Although sear
   %\centering
   \hspace{-3mm}
   \begin{subfigure}{.29\textwidth}
+    \vspace{5mm}
     \begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
-int bar (int x, int y) {
- if (x < 5 && y > 6) 
+int bar(int x, int y) {
+ if (x < 5 && y >= 6) 
    if (x > 1) return 1;
-  else return 2;
+   else return 2;
  else return 3;
 }
     \end{lstlisting}
+    \vspace{2.5mm}
     \caption{}
   \end{subfigure}%
   \hspace{-0mm}
