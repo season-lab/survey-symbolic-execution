@@ -199,6 +199,33 @@ A list of constraint solvers\mynote{Table?}:
 
 \fi
 
+%%%%%% Under-constrained symbolic execution
+
+\begin{comment}
+\paragraph{Under-constrained KLEE}\mynote{I will revise this (emilio)} In~\cite{UCKLEE-USEC15}, KLEE~\cite{KLEE-OSDI08} has been extended in order to support under-constrained symbolic execution . In particular, these are some of the main improvements:
+\begin{itemize}
+  \item {\em Lazy initialization.} Whenever there is a pointer that is not concrete and without any active constraint (i.e., it is unbound), its value is checked against {\tt NULL} then two path are analyzed: (a) where the pointer is {\tt NULL} and (b) where the pointer is pointing to a freshly allocated block of memory, whose content is marked as unbound.This means that pointer aliasing is assumed to not occur. In both paths, the pointer is not longer unbound.  In path (b), any test against the pointer is known and dereferences will be successfully resolved. Lazy initialization is common for data structure and thus it is common to bound its maximum length (i.e., {\em k-bounding}) in order to prevent the engine from allocating an unbounded number of objects.
+  \item {\em Patch checking.} The main goal of~\cite{UCKLEE-USEC15} is to detect if a patch has introduced new bugs. In order to do so, it symbolically executes two compiled versions of a function: $P$, the unpatched version, and $P'$, the patched version. If it finds any execution paths along which $P'$ crashes but $P$ does not (when given the samce symbolic inputs), it reports a potential bug. Indeed, due to missing input preconditions, not all crashes are real bugs: if both $P$ and $P'$ crash on an input, then maybe the crash is given by the unknown preconditions. 
+  \item {\em Pruning techniques.} Using a static cross-checker (that navigates the control-flow graph and marks differing basic block between $P$ and $P'$), \cite{UCKLEE-USEC15} prunes paths that have never executed a differing basic block and that cannot reach a differing basic block from their current program counter and call stack. Moreover, $P'$ is executed before executing $P$, allowing the system to prune paths that return from $P'$ without triggering an error, or that trigger an error without reaching different blocks.
+  \item {Dealing with false positives.} Two approaches are pursued to limit false positives:
+    \begin{itemize}
+      \item {\em manual annotations}: examples are data types invariants or preconditions upon function calls.
+      \item {\em automated heuristics}: {\em must-fail} heuristics identify errors that must occur for all input values following that execution path. For instance, {\em belief-fail} heuristic checks if a function contradicts itself (e.g., a code checks that a pointer is {\tt NULL} and then dereferences it). Another variation of must-fail heuristic is {\em concrete-fail} that an assertion failure or memory errors was triggered by a concrete condition or pointer.
+    \end{itemize}
+  \item {\em Rule-based checkers.} Several rule-based checkers have been built on top of UCKLEE. They do a similar job such as other dynamic tools (e.g., {\em memcheck} for memory leaks and uninitialized data) but reasoning on all possible paths, not just the concrete ones. Moreover, user inputs can be considered as fully constrained (i.e., no assumption is valid on it since the code should sanitize it). 
+  \item {\em Optimizations.} Some optimizations:
+    \begin{itemize}
+      \item Symbolic objects have a symbolic size: whenever there is an access to the object content, the system verifies if the offset could exceed the object's symbolic size. whenever path is considered where the offset does not exceed the symbolic size, then a lower bound on the symbolic size is set.
+      \item Some library functions (e.g., {\tt strlen}) have been replaced with variants that do not lead to path explosion
+      \item Scores of rules to simplify symbolic expressions
+      \item {\em lazy constraints}: defer evaluation of constraints using a solver as much as possible. For instance, if there is an hard constraint on branch, take both branches and if an error is found check if that branch was actually valid.
+      \item function pointers should be made concrete by the user.
+    \end{itemize}
+
+\end{itemize}
+\end{comment}
+
+
 % ---------------------------------------------------------------------------------------------------
 \subsection{Constraint optimizations}
 \label{constraint-optimizations}
