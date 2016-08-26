@@ -3,21 +3,27 @@
 \section{Memory model}
 \label{memory-model}
 
-A crucial aspect of symbolic execution is how the memory should be modeled. When executing load or store instructions on concrete addresses, a symbolic engine can maintain a map between addresses and corresponding values, which can be either symbolic expressions or concrete values. The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in variables, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+
+The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. In the remainder of this section, we discuss a number of possible solutions.
 
 \subsection{Fully symbolic memory}
-At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indexes is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11,TS-ATVA14}) offer capabilities to handle fully symbolic memory. \mynote{Cite VSA \& aliasing as refinements?} An engine can ask the solver the range of possible values for an address in order to restrict the exploration.  When obtained ranges are too large, \cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practices, making it unnecessary.
+\label{ss:fully-symbolic-memory}
+
+At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indexes is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11,TS-ATVA14}) offer capabilities to handle fully symbolic memory. \mynote{Cite VSA \& aliasing as refinements?} An engine can ask the solver for the range of possible values for an address in order to restrict the exploration.  When obtained ranges are too large, \cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practices, making it unnecessary.
 
 \subsection{Address concretization}
+\label{ss:address-concretization}
+
 At the other end of the spectrum, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indexes. 
 
 Concretization is a natural choice for offline executors \mynote{DART is mentioned in CS-CACM13 as  using theories of arrays}(Section~\ref{ss:principles}) such as ~\cite{DART-PLDI05,SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as ~\cite{CREST-ASE08,CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
-
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
 \subsection{Theory of arrays}
 \label{ss:theory-arrays}
+
 A number of works (e.g., ~\cite{EXE-CCS06,KLEE-OSDI08,SAGE-NDSS08} model pointers using the theory of arrays available from SMT decision procedures. In this section we provide a description of its implementation in the popular STP solver~\cite{STP-CAV07}.
 
 The design of STP has been mainly driven by the demands of research projects on software analysis. Its input language supports one-dimensional arrays that are indexed by bitvectors and contain bitvectors. Given an array $A$, a $read(A,i)$ operation returns the value $A[i]$ at the location expressed by the index $i$, while a $write(A,i,v)$ returns a new array with the same values as $A$ at all indexes except $i$, where it contains the value $v$. Array reads and write typically appear as subexpressions of an $ite(c,a,b)$ expression, which is syntactic sugar for $(if\,c\;then\,b\;else\,a)$.
@@ -26,6 +32,7 @@ STP reduces formulas over array to an equisatisfiable form that contains no $rea
 
 \subsection{Partial memory modeling}
 \label{ss:index-based-memory}
+
 Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
 
 %This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
