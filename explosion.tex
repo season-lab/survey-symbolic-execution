@@ -146,26 +146,28 @@ Traditional symbolic execution does not scale over large programs. Although sear
   %\centering
   \hspace{-3mm}
   \begin{subfigure}{.29\textwidth}
-    \begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
-int bar (int x, int y) {
- if (x < 5 && y > 6) 
+    \vspace{5mm}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+int bar(int x, int y) {
+ if (x < 5 && y >= 6) 
    if (x > 1) return 1;
-  else return 2;
+   else return 2;
  else return 3;
 }
     \end{lstlisting}
+    \vspace{5mm}
     \caption{}
   \end{subfigure}%
   \hspace{-0mm}
   \begin{subfigure}{.37\textwidth}
     \centering
-
     \includegraphics[width=1.0\columnwidth]{images/concolic-execution} 
     %\label{fig:sub1}
     \caption{}
   \end{subfigure}%
   \begin{subfigure}{.33\textwidth}
     \centering
+    \vspace{0.05mm}
     \includegraphics[width=1.1\columnwidth]{images/concolic-execution-2} 
     %\label{fig:sub2}
     \caption{}
