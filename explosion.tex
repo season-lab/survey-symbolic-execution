@@ -172,7 +172,7 @@ int bar(int x, int y) {
     %\label{fig:sub2}
     \caption{}
   \end{subfigure}
-  \caption{(a) Source code of function {\tt bar}. (b) CFG for the function {\tt bar}. Solid edges and nodes shows the path taken by the concolic execution for {\tt x = 2} and {\tt y = 6}. These input values have been randomly chosen. (c) Concolic execution for {\tt x = 1} and {\tt y = 6}. These input values have been obtained using a constraint solver, after negating the path constraints of node B in the function {\tt bar}.}
+  \caption{(a) Source code of function {\tt bar}. (b) CFG for the function {\tt bar}. Solid edges and nodes shows the path taken by the concolic execution when {\tt x = 2} and {\tt y = 6}. These input values have been randomly chosen. (c) Concolic execution when {\tt x = 1} and {\tt y = 6}. These input values have been obtained using a constraint solver, after negating the path constraints of node B in the function {\tt bar}.}
   \label{fig:example-concrete-execution}
   \vspace{-3mm}
 \end{figure}
@@ -323,7 +323,7 @@ The symbolic execution of this function is shown in Figure~\ref{fig:example-stat
     %\label{fig:sub2}
     \caption{}
   \end{subfigure}
-  \caption{(a) Symbolic execution tree of the function {\tt foo} without state merging; (b) Symbolic execution tree of the function {\tt foo} with state merging.}
+  \caption{(a) Symbolic execution tree of the function {\tt foo} without state merging; (b) Symbolic execution DAG of the function {\tt foo} with state merging.}
   \label{fig:example-state-merging}
 \end{figure}
 
