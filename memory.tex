@@ -7,12 +7,12 @@ Our warm-up example of Section~\ref{symbolic-execution-example} presented a simp
 
 The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. In the remainder of this section, we discuss a number of possible solutions.
 
-\subsection{Fully symbolic memory}
+\subsection{Fully Symbolic Memory}
 \label{ss:fully-symbolic-memory}
 
 At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. Reasoning about all possible indexes is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. A number of works (e.g., ~\cite{BITBLAZE-ICISS08,TLL-CAV10,BAP-CAV11,TS-ATVA14}) offer capabilities to handle fully symbolic memory. \mynote{Cite VSA \& aliasing as refinements?} An engine can ask the solver for the range of possible values for an address in order to restrict the exploration.  When obtained ranges are too large, \cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
-\subsection{Address concretization}
+\subsection{Address Concretization}
 \label{ss:address-concretization}
 
 At the other end of the spectrum, an engine may decide to concretize an index to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some indexes. 
@@ -21,7 +21,7 @@ Concretization is a natural choice for offline executors \mynote{DART is mention
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
-\subsection{Theory of arrays}
+\subsection{Theory of Arrays}
 \label{ss:theory-arrays}
 
 A number of works (e.g., ~\cite{EXE-CCS06,KLEE-OSDI08,SAGE-NDSS08} model pointers using the theory of arrays available from SMT decision procedures. In this section we provide a description of its implementation in the popular STP solver~\cite{STP-CAV07}.
@@ -30,7 +30,7 @@ The design of STP has been mainly driven by the demands of research projects on 
 
 STP reduces formulas over array to an equisatisfiable form that contains no $read$ or $write$ operations by applying three standard transformations and introducing fresh bitvector variables. Generated formulas are then amenable to SAT solving. However, transformations can also introduce bottlenecks, for instance by destroying sharing of subterms, and thus are typically procrastinated using refinement algorithms. SMT attempts also to eliminate variables through linear solving~\cite{STP-CAV07}.
 
-\subsection{Partial memory modeling}
+\subsection{Partial Memory Modeling}
 \label{ss:index-based-memory}
 
 Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, ~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
@@ -42,4 +42,26 @@ Global memory is defined as a map $\mu$ from 32-bit addresses ({\em indexes}) to
 Instantiating a memory object still requires finding all the possible values for a symbolic index. A naive algorithm would employ the constraint solver to refine the range of an index using binary search under the current path constraints. This algorithm comes with a number of caveats: for instance, querying the solver on each symbolic dereference is expensive, the memory region may not be continuous, and the values within the memory object might have structure. ~\cite{MAYHEM-SP12} thus performs a number of optimizations, including Value Set Analysis~\cite{VSA-CC04} and forms of query caching (Section~\ref{ss:constraint-reuse}), to refine ranges efficiently. If at the end of the process the range size exceeds a threshold, the index will be concretized. % [D] ptr may also be redirected to symbolic data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\myinput{complex}
+\subsection{Complex objects}
+\label{ss:complex-objects}
+
+\cite{KPV-TACAS03} introduces a generalization of traditional symbolic execution to advanced constructs of object-oriented languages such as Java and C++. The authors describe a verification framework that combines symbolic execution and model checking to handle dynamically allocated data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
+
+In particular, they generalize symbolic execution by introducing {\em lazy initialization} to effectively handle dynamically allocated objects. Compared to our warm-up example (Section~\ref{symbolic-execution-example}), the state representation is extended with a {\em heap configuration} used to maintain such objects. Symbolic execution of a method taking complex objects as inputs starts with uninitialized fields, and assigns values to them in a lazy fashion, i.e., they are initialized when first accessed during the execution.
+
+When an uninitialized reference field is accessed, the algorithm forks the current state with three different heap configurations, in which the field is initialized with: (1) {\tt null}, (2) a reference to a new object with all symbolic attributes, and (3) a previously introduced concrete object of the desired type, respectively. This on-demand concretization allows symbolic execution of methods without requiring an a priori bound on the number of input objects. Also, forking the state as in (2) results into a systematic treatment for aliasing, i.e., when an object can be accessed through multiple references.
+
+\cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Preconditions are used to characterize those input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative preconditions are used to ensure that incorrect heap configurations are eliminated during initialization, speeding the symbolic execution process up.
+
+Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}, which all share the goal of reducing the number of heap configurations to generate when forking the state.~\cite{DLR-ASE12} also provides a formal treatment of lazy initialization in Java.
+
+Of a different flavor is the technique presented in~\cite{SHZ-TAIC07} for symbolic execution over objects instantiated from commonly used libraries. The authors argue that performing symbolic execution at the representation level might be redundant if the aim is to only check the client code, thus trusting the correctness of the library implementation. They discuss the idea of symbolically executing methods of the Java {\tt String} class using a finite-state automata that abstracts away the implementation details. They present a case study of an application that dynamically generates SQL queries: symbolic execution is used to check whether the statements conform to the SQL grammar and possibly match injection patterns. The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps. It is worth mentioning that symbolic execution is used to detect SQL injection vulnerabilities also in~\cite{FLP-COMPSAC07}.
+
+% Additional optimizations are presented in~\cite{DLR-ASE12}, which also provides a complete formalization of this approach for the Java language.
+
+% [D] this is related to input test generation
+%Also, generated heap configurations are pairwise non-isomorphic: eliminating symmetric structures can greatly reduce the number of heaps that a symbolic executor must explore, while guaranteeing that no relevant states are missed~\cite{BLISS-TSE15}. 
+
+%~\cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Such conditions are used to characterize those input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative method preconditions are used to ensure that incorrect structures are eliminated during initialization, speeding the symbolic execution process up.
+
+%Further refinements to lazy initialization are described in a number of works. \cite{BLI-NFM13} introduces {\em bounded lazy initialization} (BLI) to reduce the number of alternatives to explore using available field bounds expressed in TACO, a tool for SAT-based bounded verification of JML-annotated Java code. ~\cite{BLISS-TSE15} presents two novel techniques that build upon BLI. The first technique refines field bounds by leveraging information from already-concretized fields; the technique is then extended by  auxiliary satisfiability checks to determine the feasibility of partially symbolic structure.
