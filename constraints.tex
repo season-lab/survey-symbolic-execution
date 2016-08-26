@@ -68,7 +68,7 @@ The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across
 \subsection{Other Optimizations in Symbolic Executors}
 In this section we present a number of optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
 
-\subsubsection{Lazy constraints}
+\subsubsection{Lazy Constraints}
 ~\cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
 They thus implemented a solution that works as follow: when the executor encounters a branch statement involving an expensive symbolic operation, it will take both the true and false branches and add a {\em lazy} constraint on the result of the expensive operation to the path conditions. When the exploration reaches a state that satisfies some goal (e.g., an error is found), the algorithm will check for the feasibility of the path, and suppress it if deemed as unreachable in a real execution.
 
@@ -93,5 +93,5 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 
 A concolic executor will generate some random input for the program and execute it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing completeness in the exploration. For instance, in the presence of three nested branches with only one being nonlinear,~\cite{DART-PLDI05} will start from a random\mynote{[D] Emilio please check aliasing} valid input for the function, and then alter it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
 
-\subsubsection{Memory page size}
+\subsubsection{Memory Page Size}
 In \stwoe~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, they use small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
