@@ -15,7 +15,7 @@ First, as extensively discussed in Section~\ref{se:path-explosion}, the number o
 Moreover, as observed in Section~\ref{se:intro}, symbolic engines are clients of SMT solvers, which are continuously invoked during the analysis. Although powerful SMT solvers are currently available, the time spent in constraint solving is still one of the main performance barriers for symbolic engines. It may also happen that the program yields constraints that the solver cannot handle well (e.g., non-linear constraints), in spite of the fact that symbolic executors often use more than one solver in order to support as many decidable logical fragments as possible.
 %An SMT instance is a formula in first-order logic, where some function and predicate symbols have additional meaning. This meaning depends on the theory being used: for instance, with linear inequalities symbols with extra meaning include the integers, $+$, $-$, $x$, $\le$. Path constraints are typically expressed in a decidable logical fragment without quantifiers
  
-A standard approach to limit the resources (running time and space usage) required by the execution engine and to handle complex constraints is to mix concrete and symbolic execution: this is dubbed {\em concolic execution}, where the term concolic is a portmanteau of the words concrete and symbolic. The basic idea is to have the concrete execution drive the symbolic execution. Besides the symbolic store and the path constraints, a concolic execution engine also maintains a concrete store. After choosing an arbitrary input to begin with, it executes the program both concretely and symbolically by simultaneously updating the two stores and the path constraints. In order to explore different paths, the last path condition can be negated and the SMT solver invoked to find a satisfying assignment of the new constraints, i.e., to generate a new input.
+A standard approach to limit the resources (running time and space usage) required by the execution engine and to handle complex constraints is to mix concrete and symbolic execution: this is dubbed {\em concolic execution}, where the term concolic is a portmanteau of the words concrete and symbolic. The basic idea is to have the concrete execution drive the symbolic execution. Besides the symbolic store and the path constraints, a concolic execution engine also maintains a concrete store $\sigma_c$. After choosing an arbitrary input to begin with, it executes the program both concretely and symbolically by simultaneously updating the two stores and the path constraints. In order to explore different paths, the last path condition can be negated and the SMT solver invoked to find a satisfying assignment of the new constraints, i.e., to generate a new input.
 
 %\begin{figure}[t]
 %  \centering
@@ -32,9 +32,9 @@ A standard approach to limit the resources (running time and space usage) requir
   {\em Example.}  Consider the C function in Figure~\ref{fig:example-1} and suppose to choose $a = 1$ and $b = 1$ as input parameters. Under these conditions, the concrete execution takes path $A\leadsto B\leadsto C\leadsto E\leadsto G$ in the symbolic tree of Figure~\ref{fig:example-symbolic-execution}. Besides the symbolic stores shown in Figure~\ref{fig:example-symbolic-execution}, the concrete stores maintained in the traversed states are the following:
   \begin{enumerate}
   
-  \item[]$-$~~$\{a\mapsto 1,~b\mapsto 1\}$ in state $A$;
-  \item[]$-$~~$\{a\mapsto 1,~b\mapsto 1,~x\mapsto 1,~y\mapsto 0\}$ in states $B$ and $C$;
-  \item[]$-$~~$\{a\mapsto 1,~b\mapsto 1,~x\mapsto 1,~y\mapsto 4\}$ in states $E$ and $G$.
+  \item[]$-$~~$\sigma_c=\{a\mapsto 1,~b\mapsto 1\}$ in state $A$;
+  \item[]$-$~~$\sigma_c=\{a\mapsto 1,~b\mapsto 1,~x\mapsto 1,~y\mapsto 0\}$ in states $B$ and $C$;
+  \item[]$-$~~$\sigma_c=\{a\mapsto 1,~b\mapsto 1,~x\mapsto 1,~y\mapsto 4\}$ in states $E$ and $G$.
   
   \end{enumerate}  
 %Stores and path constraints maintained by the concolic run are shown in Figure~\ref{fig:example-concolic-execution}. 
@@ -96,7 +96,7 @@ A list of symbolic execution engines is presented in Table~\ref{tab:symbolic-eng
   %\begin{small}
   \begin{tabular}{| l || c || l |}
     \hline      
-    Symbolic engine & Paper(s) & Project URL  \\ \hline\hline
+    Symbolic engine & Paper(s) & Project URL (retrieved August 2016)  \\ \hline\hline
     {\tt Check \textsc{\char13}n\textsc{\char13} Crash} & \cite{CS-ICSE05} & \url{http://ranger.uta.edu/~csallner/cnc/}\\
     {\tt CUTE} & \cite{CUTE-FSE13} & -- \\
     {\tt DART} & \cite{DART-PLDI05} & -- \\
