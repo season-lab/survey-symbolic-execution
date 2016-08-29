@@ -3,11 +3,11 @@
 \section{Sample Applications}
 \label{se:applications}
 
-\subsection{Authentication bypass}
+\subsection{Authentication Bypass}
 \label{ss:auth-bypass}
 \cite{FIRMALICE-NDSS15}
 
-\subsection{Bug detection}
+\subsection{Bug Detection}
 \label{ss:bug-detection}
 
 Software testing strategies typical attempt to execute a program with the intent of finding bugs. As manual test input generation is an error-prone and usually not exhaustive process, automated testing technique have drawn a lot of attention over the years. Random testing techniques such as fuzzing are cheap in terms of run-time overhead, but fail to obtain a wide exploration of a program state space. Symbolic and concolic execution techniques on the other hand achieve a more exhaustive exploration, but they become expensive as the length of the execution grows: for this reason, they usually reveal shallow bugs only.
@@ -16,7 +16,7 @@ Software testing strategies typical attempt to execute a program with the intent
 
 \cite{DRILLER-NDSS16} refines this idea and devises a vulnerability excavation tool, Driller, that interleaves fuzzing and concolic execution to discover memory corruption vulnerabilities. The authors remark that user inputs can be categorized as {\em general} input, which has a wide range of valid values, and {\em specific} input: a check for particular values of a specific input then splits an application into {\em compartments}. Driller offloads the majority of unique path discovery to a fuzzy engine, and relies on concolic execution to move across compartments. During the fuzzy phase, Driller marks a number of inputs as interesting (for instance, when it was the first to trigger some state transition) and once it gets stuck in the exploration, it passes the set of such paths to a concolic engine, which uses preconstraining on the program states to ensure consistency with the results of the native execution. Driller uses an index-based memory model as in Section~\ref{ss:index-based-memory} where reads can be symbolic and writes are always concretized. % read/write addresses
 
-\subsection{Bug exploitation}
+\subsection{Bug Exploitation}
 \label{ss:bug-exploitation}
 Bugs are a consequence of the nature of human factors in software development and are everywhere. Those can be exploited by an attacker should normally be fixed first, thus systems to automatically and effectively identify them are very valuable.
 
