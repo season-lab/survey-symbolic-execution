@@ -5,7 +5,10 @@
 
 \subsection{Authentication Bypass}
 \label{ss:auth-bypass}
-\cite{FIRMALICE-NDSS15}
+Software backdoors are a method of bypassing authentication in an algorithm, a software product, or even in a full computer system. Although sometimes these software flaws are injected by external attackers using subtle tricks such as compiler tampering~\cite{KRS-TR74}, there are reported cases of backdoors that have been surreptitiously installed by the hardware and/or software manufacturers~\cite{CZF-USEC14}, or even by governments~\cite{NSA-BACKDOOR}. 
+
+Different works~\cite{ZBF-NDSS14,DMR-USEC13,FIRMALICE-NDSS15} have exploited symbolic execution for analyzing the behavior of binary firmwares. Indeed, an advantage of this technique is that it can used even in environments, such as embedded systems, where the documentation and the source code that are publicly released by the manufacturer are typically very limited or none at all. For instance,~\cite{FIRMALICE-NDSS15} proposes {\em firmalice}, a binary analysis framework based on {\sc Angr}~\cite{ANGR-SSP16} that can be effectively used for identifying authentication bypass flaws inside firmwares running on devices such as routers and printers. Given a user-provided description of a privileged operation in the device, {\em firmalice} identifies a set of program points that, if executed, forces the privileged operation to be performed. Exploiting {\sc Angr}, the program slice that involves the privileged program points is symbolically analyzed. If any of the program points can be reached by the engine, a set of concrete inputs is generated using a SMT solver. These values can be then used to effectively bypass authentication inside the device.
+
 
 \subsection{Bug Detection}
 \label{ss:bug-detection}
