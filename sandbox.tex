@@ -109,6 +109,21 @@ Notice that if some input preconditions~\ref{precontioned-symbolic-execution} ha
 \end{itemize}
 \fi
 
+%%% STATE MERGING
+\paragraph{Selective state merging} Intermediate merging solutions can adopt heuristics for driving both merging decisions and CFG exploration. Generating larger symbolic expressions and possibly extra solvers invocations can outweigh the benefit of having fewer states, leading to poorer overall performance~\cite{HSS-RV09,KKB-PLDI12}. Moreover, in order to maximize the opportunities for merging a symbolic execution engine should traverse the CFG in a topological order, which prevents search exploration strategies aiming at prioritizing more ``interesting'' states over others. % denies search exploration
+%(e.g., \cite{KKB-PLDI12} and \cite{VERITESTING-ICSE14}) 
+Recent works have thus introduced novel techniques to tackle these issues: 
+\begin{itemize}
+
+\item {\em query count estimation}~\cite{KKB-PLDI12} identifies state merges that can reduce exploration time. This technique relies on a simple form of static analysis to identify how often each variable is used in branch conditions past any given point in the CFG. The estimate is used as a proxy for the number of solver queries that a given variable is likely to be part of. When two states are sufficiently similar, the overhead from solving more complex queries is likely to be outweighed by the savings from exploring fewer paths;
+
+  \item {\em dynamic state merging}~\cite{KKB-PLDI12} efficiently combines static state merging with common search heuristics. This technique allows merging of states that do not share the same program location. This is useful, for instance, for unbounded loops for which search-based symbolic execution engines would employ search strategies that prioritize exploring new code over unrolling, while static state merging would require a depth-first exploration and thus fully unroll the possibly infinitely many iterations of the loop. Dynamic state merging can consider for merging states that are likely to become similar in a small number of execution steps: this is likely to happen if one state is similar to one of the predecessors of the other. The intuition behind the algorithm is that if two states are similar, then also their respective successors are likely to be similar after a few steps;
+
+  \item {\em veritesting}~\cite{VERITESTING-ICSE14} dynamically identifies statements that generate formulas that are easy for a solver. Using a dynamically recovered CFG, it detects pieces of code that do not contain system calls, indirect jumps, or other statements that are difficult for static analysis. In particular, frontiers of hard-to-analyze statements are identified. Easy-to-analyze statements are analyzed maintaining a single formula describing all the merged states, while hard-to-analyze statements are evaluated using separate states as in traditional symbolic execution.
+%Easy-to-analyze set of statements are then analyzed maintaining a single formula that describe all the merged states, while hard to analyze set of statements are evaluated using separate states pursuing the traditional symbolic execution approach.
+
+\end{itemize}
+
 %%% BINARY
 \iffalse
 \vspace{4em}
