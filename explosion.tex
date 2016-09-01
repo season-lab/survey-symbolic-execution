@@ -32,7 +32,7 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 \subsection{Pruning Unrealizable Paths}
 \label{ss:unrealizable-paths}
 
-\mynote{TODO}A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. 
+A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. This is often referred as {\em eager evaluation} of path constraints and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}.
 
 From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
 
