@@ -32,18 +32,18 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 \subsection{Pruning Unrealizable Paths}
 \label{ss:unrealizable-paths}
 
-A common technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. This is often referred as {\em eager evaluation} of path constraints and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}.
+A first natural technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. Indeed, if the constraint solver is able to prove that the logical formula given by the path constraints of a given branch is not satisfiable, then there exists no assignment of the program input values that would drive a real execution towards that branch. For this reason, the symbolic engine can safely discard the path involving that branch. \mynote{E: aggiungiamo un piccolo esempio?}This approach is commonly referred as {\em eager evaluation} of path constraints and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion og the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}.
 
-From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
+% From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
 
-The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint. Two scenarios are possible:
-    \begin{enumerate}
-      \item {\em Non-forking}: if $e$ is evaluated as always true (resp., false) under the assumptions in the current state, the proper branch is taken and the symbolic execution advances to $s_{true}$ (resp., $s_{false}$);
-      \item {\em Forking}: if $e$ cannot be evaluated without instantiating values for one or more of its symbols, the symbolic execution is forked by creating two execution states with path constraints $pct_{true}$ and $pct_{false}$, respectively, corresponding to the two {\tt if} branches. Namely, $pct_{true}=pct \wedge e_s$ and $pct_{false}=pct \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
-%        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
-%        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
-    Symbolic execution proceeds on both states in parallel.
-    \end{enumerate}
+% The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint. Two scenarios are possible:
+%     \begin{enumerate}
+%       \item {\em Non-forking}: if $e$ is evaluated as always true (resp., false) under the assumptions in the current state, the proper branch is taken and the symbolic execution advances to $s_{true}$ (resp., $s_{false}$);
+%       \item {\em Forking}: if $e$ cannot be evaluated without instantiating values for one or more of its symbols, the symbolic execution is forked by creating two execution states with path constraints $pct_{true}$ and $pct_{false}$, respectively, corresponding to the two {\tt if} branches. Namely, $pct_{true}=pct \wedge e_s$ and $pct_{false}=pct \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
+% %        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
+% %        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
+%     Symbolic execution proceeds on both states in parallel.
+%     \end{enumerate}
 
 
 \begin{figure}[t]
