@@ -203,7 +203,7 @@ This technique enforces a precondition by adding the precondition constraints to
 \item {\em Known length}: symbolic inputs are of known maximum length, e.g., a network packet has a fixed size, or static analysis can determine the input length;
 %Static analysis techniques can be used to automatically determine this precondition.
 \item {\em Known prefix}: symbolic inputs have a known prefix, e.g., a fixed header string such as the initial {\em magic code} in a binary, or a network packet header.
-\item {\em Concolic execution}: all input bytes are concrete, as in a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
+\item {\em Fully known}: all input bytes are concrete, as in a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
 \end{itemize}
 
 \begin{figure}[!ht]
@@ -233,7 +233,7 @@ This technique enforces a precondition by adding the precondition constraints to
   \item {\em None}: the input space size is $256^S$, and up to $2^N\cdot S\cdot 2^M$ execution engine instances are needed, due to $N+M$ symbolic branches and up to $S$ loop iterations;
   \item {\em Known length}: if we assume a string length $S$, i.e., the first $(S-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{N+M}$;
   \item {\em Known prefix}: if a prefix of $P<N$ bytes is known for {\tt input}, the first $P$ branches and $P$ loop iterations are concrete, and the state space size becomes $2^{N-P}\cdot S\cdot 2^M$;
-  \item {\em Concolic execution}: as all input bytes are concrete, the state space size is trivially $1$.
+  \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
 \end{itemize}
 
 % [D] shall we mention that for prefixes also inequalities can be used, and that prefixes while they reduce the space size, they can lead to missing interesting states, e.g., malformed headers? I think it would be a bit too much detailed
