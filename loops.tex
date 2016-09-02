@@ -10,7 +10,7 @@ Loops are one of the main cause of path explosion: each iteration of a loop can 
     3.    N = sym_input();  
     4.  }
     \end{lstlisting}
-where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., a read from the network) and returns a fresh symbolic input (i.e., an interaction with the environment. The path constraint set $\pi$ at any final state has the form:
+where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., a read from the network) and returns a fresh symbolic input. The path constraint set $\pi$ at any final state has the form:
   \[ \left ( \bigwedge_{i \in [1, k]]} N_i > 0 \right ) \wedge (N_{k+1} \leq 0) \]
 where  $k$ is the number of iterations and $N_i$ is the symbol introduced at the $i$-th iteration.\\
 
