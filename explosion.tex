@@ -64,30 +64,14 @@ A first natural technique for reducing the path space is invoking the constraint
     Loop exhaustion & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
     Symbolic instruction pointers & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
     Symbolic memory accesses & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
-    Fitness function & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
+    Fitness function & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
+    Subpath-guided search & {\em Use frequency distributions of explored subpaths to prioritize less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
     %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
     \hline  
   \end{tabular}
-%  \begin{tabular}{| l || l || l |}
-%    \hline      
-%    Heuristic & Goal & Discussed in \\ \hline\hline
-%    BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
-%    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
-%    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
-%    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-%    code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
-%    buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
-%    loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-%    symbolic instruction pointers & prioritize paths with symbolic instruction pointers & \cite{MAYHEM-SP12} \\
-%    symbolic memory accesses & prioritize paths with symbolic memory accesses & \cite{MAYHEM-SP12} \\ 
-%    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
-%    %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
-%    
-%    \hline  
-%  \end{tabular}
   \end{small}
   \end{adjustbox}
-  \caption{List of path selection heuristics.}
+  \caption{A representative list of path selection heuristics discussed in literature.}
   \label{tab:heuristics}
 \end{figure}
 
@@ -109,7 +93,7 @@ The most common strategies are {\em depth-first search} (DFS) and {\em breadth-f
 Another very popular strategy is {\em random path selection} that, as its name would suggest, randomly picks a path for exploration. This heuristic has been refined in several variants. For instance, {\sc KLEE}~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and on the branch arity. Namely, it favors paths that have been explored fewer times, preventing starvation caused by loops and other path explosion factors.
 
 % have instead presented
-Several works, such as {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc Mayhem}~\cite{MAYHEM-SP12}, and {\sc \stwoe}~\cite{CKC-TOCS12}, have presented heuristics aimed at maximizing code coverage. For instance, the {\em coverage optimize search} discussed in {\sc KLEE}~\cite{KLEE-OSDI08} computes a weight for each state and then randomly selects a state according to these weights. The weight is obtained by taking into account the minimum distance to an uncovered instruction, the call stack of the state, and whether the state has recently covered new code.
+Several works, such as {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc Mayhem}~\cite{MAYHEM-SP12}, and {\sc \stwoe}~\cite{CKC-TOCS12}, have discussed heuristics aimed at maximizing code coverage. For instance, the {\em coverage optimize search} discussed in {\sc KLEE}~\cite{KLEE-OSDI08} computes a weight for each state and then randomly selects a state according to these weights. The weight is obtained by taking into account the minimum distance to an uncovered instruction, the call stack of the state, and whether the state has recently covered new code. Of a similar flavor is the heuristic proposed in~\cite{LZL-OOPSLA13}, called {\em subpath-guided search}, that attempts to explore {\it less traveled} parts of a program by selecting the subpath that have been explored fewer times. This is achieved by maintaining a frequency distribution of explored subpaths, where a subpath is defined as a postfix of length $n$ of a path. Interestingly, the value $n$ plays a crucial role with respect to code coverage achieved by a symbolic engine exploiting this heuristic and no specific value has been shown to be universally optimal.
 
 Other search heuristics try to prioritize paths likely leading to states that are {\em interesting} according to some goal. For instance, the {\em buggy-path first} strategy in~\cite{AEG-NDSS11} picks paths whose past states have contained small but unexploitable bugs. The intuition is that if a path contains some small errors, it is likely that it has not been properly tested. There is thus a good chance that future states may contain interesting, and hopefully exploitable, bugs. Similarly, the {\em loop exhaustion} strategy~\cite{AEG-NDSS11} explores paths that are visiting loops. This approach is inspired by the practical observation that common programming mistakes in loops may lead to buffer overflows or to other memory-related errors. In order to find exploitable bugs, {\sc Mayhem}~\cite{MAYHEM-SP12} instead gives priority to paths where symbolic memory accesses are identified or symbolic instruction pointers are detected. 
 
