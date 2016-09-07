@@ -6,6 +6,7 @@
 One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches of the program. This impacts both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
 \mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
 
+\iffalse
 \begin{itemize}
 
 \item Exponential in branching structure: in the example, 3 variables, 8 paths (can we generalize? $t$ variables, $2^t$ paths?)
@@ -24,9 +25,10 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 2. while (a) do ...;
 3.
 \end{verbatim}
-- Potentially $2^{31}$ paths through loop!
+\item Potentially $2^{31}$ paths through loop!
 
 \end{itemize}
+\fi
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Pruning Unrealizable Paths}
@@ -50,23 +52,39 @@ A first natural technique for reducing the path space is invoking the constraint
   \centering
   \begin{adjustbox}{width=1\columnwidth}
   \begin{small}
-  \begin{tabular}{| l || l || l |}
+  \begin{tabular}{| l || l |}
     \hline      
-    Heuristic & Goal & Discussed in \\ \hline\hline
-    BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
-    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
-    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
+    {\bf Heuristic} & {\bf Goal} \\ \hline\hline
+    BFS & {\em Maximize coverage} \\ & \cite{CKC-TOCS12,PEX-TAP08} \\\hline
+    DFS & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\\hline
+    Random path selection & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
     %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
-    buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
-    loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
-    symbolic instruction pointers & prioritize paths with symbolic instruction pointers & \cite{MAYHEM-SP12} \\
-    symbolic memory accesses & prioritize paths with symbolic memory accesses & \cite{MAYHEM-SP12} \\ 
-    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
+    Code coverage search & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\\hline
+    Buggy-path-first & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
+    Loop exhaustion & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
+    Symbolic instruction pointers & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
+    Symbolic memory accesses & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
+    Fitness function & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
     %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
-    
     \hline  
   \end{tabular}
+%  \begin{tabular}{| l || l || l |}
+%    \hline      
+%    Heuristic & Goal & Discussed in \\ \hline\hline
+%    BFS & maximize coverage & \cite{CKC-TOCS12,PEX-TAP08} \\
+%    DFS & exhaust paths, minimize memory usage & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\
+%    random path selection & randomly pick a path with probability based on its length & \cite{KLEE-OSDI08} \\
+%    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
+%    code coverage search & prioritize paths that may explore unexplored code & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\
+%    buggy-path-first & prioritize bug-friendly path  & \cite{AEG-NDSS11} \\
+%    loop exhaustion & fully explore specific loops  & \cite{AEG-NDSS11} \\
+%    symbolic instruction pointers & prioritize paths with symbolic instruction pointers & \cite{MAYHEM-SP12} \\
+%    symbolic memory accesses & prioritize paths with symbolic memory accesses & \cite{MAYHEM-SP12} \\ 
+%    fitness function & prioritize paths based on a fitness function & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\
+%    %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
+%    
+%    \hline  
+%  \end{tabular}
   \end{small}
   \end{adjustbox}
   \caption{List of path selection heuristics.}
