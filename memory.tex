@@ -39,9 +39,9 @@ Concretization is a natural choice for offline executors \mynote{DART is mention
 \subsection{Partial Memory Modeling}
 \label{ss:index-based-memory}
 
-To overcome the scalability problems of fully symbolic memory and the loss of soundness of memory concretization,
+To mitigate the scalability problems of fully symbolic memory and the loss of soundness of memory concretization,
 %Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, 
-{\sc Mayhem}~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
+{\sc Mayhem}~\cite{MAYHEM-SP12} explores a middle point in the spectrum by introducing a {\em partial} memory model. The key idea is that written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
 
 %This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
 
