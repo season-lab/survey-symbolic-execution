@@ -10,7 +10,7 @@ The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the addres
 \subsection{Fully Symbolic Memory}
 \label{ss:fully-symbolic-memory}
 
-At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements?} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration.
+At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration.
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
@@ -39,7 +39,9 @@ Concretization is a natural choice for offline executors \mynote{DART is mention
 \subsection{Partial Memory Modeling}
 \label{ss:index-based-memory}
 
-Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, {\sc Mayhem}~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
+To overcome the scalability problems of fully symbolic memory and the loss of soundness of memory concretization,
+%Motivated by the observation that concretizing all memory indexes might not work well in some scenarios, while fully symbolic memory does not scale, 
+{\sc Mayhem}~\cite{MAYHEM-SP12} introduces a {\em partial} memory model in which written addresses are always concretized, but read addresses can be modeled symbolically. This model is based on a trade-off: it uses more expressive formulas than concretization, since it encodes multiple pointer values per state, but does not attempt to encode all of them~\cite{MAYHEM-THESIS}. % , which would be too expensive
 
 %This choice is important to keep the analysis feasible: for instance, in a fully symbolic model a repeated read and write on the same symbolic index would result in quadratic increase in either the symbolic constraints or the complexity of the stored symbolic expressions~\cite{DRILLER-NDSS16}.
 
