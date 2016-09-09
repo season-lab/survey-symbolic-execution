@@ -1,3 +1,5 @@
+% !TEX root = main.tex
+
 \usepackage{a4wide}
 \usepackage{listings}
 \usepackage{comment}
@@ -11,6 +13,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{adjustbox}
+\usepackage{framed}
 
 \hypersetup{
   colorlinks = true, % colours links instead of ugly boxes
@@ -22,10 +25,18 @@
 }	
 
 %\setlength{\parindent}{0pt}
+\setlength{\FrameSep}{2pt}
 
 %\newcommand{\mynote}[1]{}
 \newcommand{\mynote}[1]{\marginpar{\raggedleft{\fontfamily{pbk}\selectfont\scriptsize{\em #1}}}}
 \newcommand{\stwoe}{\text{S\textsuperscript{2}E}}
 \newcommand{\myinput}[1]{\ifdefined\internalrep \input{../#1} \else \input{#1} \fi}
 \newcommand{\missing}{\textbf{XXX}}
-\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{#1}}}
+%\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{{\em Example.} #1}}}
+\newcommand{\boxedexample}[1]{
+\begin{framed}
+\noindent{\em Example.} #1
+\end{framed}
+}
+
+

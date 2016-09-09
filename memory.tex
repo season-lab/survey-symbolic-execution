@@ -14,13 +14,16 @@ At the one end of the spectrum, an engine may treat memory addresses as fully sy
 
 \begin{itemize}
 
-\item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation.
+\item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
+\boxedexample{Consider the scenario in Figure~\ref{fi:fully-symbolic-memory} (a). The write operation at line X affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. Execution is therefore forked to explicitly consider both possible scenarios. The path constraints for the forked states encode the assumption made on the value of $i$. }
 
 \item {\em ITE formulas.} 
 
 \end{itemize}
 
-Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration. 
+\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:fully-symbolic-memory} where $a[i]=5$ can write to either $a[0]$ or $a[1]$. In these cases, .
+
+%Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration. 
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
