@@ -3,7 +3,12 @@
 \section{Glossary}
 \label{se:glossary}
 
-\begin{description}
-\item [Control flow path]  \ldots
-\item [SMT solver]  \ldots
-\end{description}
+\noindent {\bf Complete analysis.} Analysis that guarantees no false positives, i.e., all reported property violations are true.
+
+\smallskip\noindent {\bf Control flow graph (CFG).} Representation of a program that uses nodes to model instructions and edges to model the control flow between them.
+
+\smallskip\noindent {\bf Control flow path.} Path in the control flow graph of a program. Represents the sequence of instructions executed by the program for a given concrete input.
+
+\smallskip\noindent {\bf SMT solver.} \ldots
+
+\smallskip\noindent {\bf Sound analysis.} Analysis that guarantees no false negatives, i.e., if there is a property violation, then it is reported.
