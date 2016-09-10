@@ -1,11 +1,37 @@
 % !TEX root = main.tex
 
+\begin{figure}[t]
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+              1.  int a[2];
+              1.  void foobar(unsigned i, unsigned j) {
+              2.     if (i>1 || j>1) return;
+              3.     a[i] = 5;
+              4.     assert(a[j] != 5);
+              5.  }
+\end{lstlisting}
+\caption{Memory modeling example: which values of \texttt{i} and \texttt{j} make the \texttt{assert} fail?}
+\label{fi:example-mem}
+\end{figure}
+
+
 \section{Memory model}
 \label{memory-model}
 
 Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses (indexes) with either expressions over concrete values or symbolic values. We can still support variables by using their address rather than their name in the mapping. In the following, when we write $x\mapsto e$ for a variable $x$ and a constant $c$ we mean $\&x\mapsto e$, where $\&x$ is the concrete address of variable $x$. Also, if $v$ is an array and $c$ is an integer constant, by $v[c]\mapsto e$ we mean $\&v+c\mapsto e$. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
 
 The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. In the remainder of this section, we discuss a number of possible solutions.
+
+\begin{figure}
+\includegraphics[width=1\columnwidth]{images/memory-fork} 
+\caption{Fully symbolic memory via forking for the example of Figure~\ref{fi:example-mem}}
+\label{fi:memory-fork}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=1\columnwidth]{images/memory-fork} 
+\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}}
+\label{fi:memory-ite}
+\end{figure}
 
 \subsection{Fully Symbolic Memory}
 \label{ss:fully-symbolic-memory}
@@ -15,13 +41,13 @@ At the one end of the spectrum, an engine may treat memory addresses as fully sy
 \begin{itemize}
 
 \item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
-\boxedexample{Consider the scenario in Figure~\ref{fi:fully-symbolic-memory} (a). The write operation at line X affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. Execution is therefore forked to explicitly consider both possible scenarios. The path constraints for the forked states encode the assumption made on the value of $i$. }
+\boxedexample{Consider the example shown in Figure~\ref{fi:example-mem}. The write operation at line 3 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assigment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 4 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcome of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
 
 \item {\em ITE formulas.} 
 
 \end{itemize}
 
-\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:fully-symbolic-memory} where $a[i]=5$ can write to either $a[0]$ or $a[1]$. In these cases, .
+\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:example-mem} where indices $i$ and $j$ may assume values in a small set.
 
 %Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration. 
 
