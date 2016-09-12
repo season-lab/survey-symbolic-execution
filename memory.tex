@@ -2,12 +2,12 @@
 
 \begin{figure}[t]
 \begin{lstlisting}[basicstyle=\ttfamily\small]
-              1.  int a[2];
               1.  void foobar(unsigned i, unsigned j) {
-              2.     if (i>1 || j>1) return;
-              3.     a[i] = 5;
-              4.     assert(a[j] != 5);
-              5.  }
+              2.     int a[2] = { 0 };
+              3.     if (i>1 || j>1) return;
+              4.     a[i] = 5;
+              5.     assert(a[j] != 5);
+              6.  }
 \end{lstlisting}
 \caption{Memory modeling example: which values of \texttt{i} and \texttt{j} make the \texttt{assert} fail?}
 \label{fi:example-mem}
@@ -17,50 +17,51 @@
 \section{Memory model}
 \label{memory-model}
 
-Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses (indexes) with either expressions over concrete values or symbolic values. We can still support variables by using their address rather than their name in the mapping. In the following, when we write $x\mapsto e$ for a variable $x$ and a constant $c$ we mean $\&x\mapsto e$, where $\&x$ is the concrete address of variable $x$. Also, if $v$ is an array and $c$ is an integer constant, by $v[c]\mapsto e$ we mean $\&v+c\mapsto e$. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses (indexes) with either expressions over concrete values or symbolic values. We can still support variables by using their address rather than their name in the mapping. In the following, when we write $x\mapsto e$ for a variable $x$ and an expression $e$ we mean $\&x\mapsto e$, where $\&x$ is the concrete address of variable $x$. Also, if $v$ is an array and $c$ is an integer constant, by $v[c]\mapsto e$ we mean $\&v+c\mapsto e$. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
 
-The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. In the remainder of this section, we discuss a number of possible solutions.
+The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression derived from user input instead of a concrete value. In the remainder of this section, we discuss a number of popular solutions.
 
 \begin{figure}
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
-\caption{Fully symbolic memory via forking for the example of Figure~\ref{fi:example-mem}}
+\caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
-\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}}
+\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-ite}
 \end{figure}
 
 \subsection{Fully Symbolic Memory}
 \label{ss:fully-symbolic-memory}
 
-At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Two fundamental approaches, pioneered by King in its seminal paper~\cite{}, are the following:
+At the one end of the spectrum, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Two fundamental approaches, pioneered by King in its seminal paper~\cite{K-CACM76}, are the following:
 
 \begin{itemize}
 
 \item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
-\boxedexample{Consider the example shown in Figure~\ref{fi:example-mem}. The write operation at line 3 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assigment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 4 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcome of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
+\boxedexample{Consider the example shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assigment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
 
 \item {\em ITE formulas.} 
 
 \end{itemize}
 
-\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:example-mem} where indices $i$ and $j$ may assume values in a small set.
+\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:example-mem} where indices $i$ and $j$ range in a bounded interval. 
 
 %Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration. 
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
-To model fully symbolic pointers, a popular line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{SAGE-NDSS08}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}.
+To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{SAGE-NDSS08}, {\sc DART}~\cite{DART-PLDI05}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}. 
 
 \subsection{Address Concretization}
 \label{ss:address-concretization}
 
-At the other end of the spectrum, an engine may choose to concretize a pointer to a single specific address. This can reduce the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some pointers. 
+In all cases where the combinatorial complexity of the analysis explodes as pointer values cannot be bounded to sufficiently small ranges, {\em address concretization}, which consistes in concretizing a pointer to a single specific address, is a popular alternative. This can reduce the number of states and the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some pointers. 
 
-Concretization is a natural choice for offline executors \mynote{DART is mentioned in CS-CACM13 as  using theories of arrays}(Section~\ref{ss:principles}) such as {\sc DART}~\cite{DART-PLDI05} and {\sc SAGE}~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as {\sc CREST}~\cite{CREST-ASE08} and {\sc CUTE}~\cite{CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
+%\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
+Concretization is a natural choice for offline executors (Section~\ref{ss:principles}) such as {\sc DART}~\cite{DART-PLDI05} and {\sc SAGE}~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as {\sc CREST}~\cite{CREST-ASE08} and {\sc CUTE}~\cite{CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
