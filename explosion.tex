@@ -34,7 +34,38 @@ One of the main challenges of symbolic execution is the path explosion problem. 
 \subsection{Pruning Unrealizable Paths}
 \label{ss:unrealizable-paths}
 
-A first natural technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. Indeed, if the constraint solver is able to prove that the logical formula given by the path constraints of a branch is not satisfiable, then there exists no assignment of the program input values that would drive a real execution towards that branch. For this reason, the symbolic engine can safely discard the path involving that branch without affecting soundness of the approach. \mynote{E: aggiungiamo un piccolo esempio?}This approach is commonly referred as {\em eager evaluation} of path constraints and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion of the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}.
+\begin{figure}[t]
+  %\vspace{-3mm}
+  %\centering
+  \begin{subfigure}{.29\textwidth}
+    \vspace{0mm}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+   if (a > 0) {
+     ...
+   } 
+   if (a > 1) {
+     ...
+   }
+    \end{lstlisting}
+    \vspace{3.5mm}
+    \caption{}
+  \end{subfigure}%
+  %\hspace{-2mm}
+  \begin{subfigure}{.70\textwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/eager-evaluation} 
+    %\label{fig:sub1}
+    \caption{}
+  \end{subfigure}%
+  \caption{Eager evaluation example. (a) Fragment of code. (b) Symbolic execution of the fragment of code: {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first towards node D and then through its {\tt true} branch.}
+  \label{fig:eager-evaluation}
+\end{figure}
+
+A first natural technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. Indeed, if the constraint solver is able to prove that the logical formula given by the path constraints of a branch is not satisfiable, then there exists no assignment of the program input values that would drive a real execution towards that path. For this reason, the symbolic engine can safely discard the path involving that branch without affecting soundness of the approach. 
+
+\boxedexample{For instance, consider the example provided in Figure~\ref{fig:eager-evaluation}. Assuming that {\tt a} is a local variable bound to an unconstrained symbol $\alpha_a$, a symbolic engine would start execution of the code fragment in Figure~\ref{fig:eager-evaluation}a by evaluating the branch condition $a > 0$. Before expanding both branches, the symbolic engine queries a constraint solver to verify that no contradiction arises when adding to the path constraints $\pi$ the {\em true} branch condition ($\alpha_a > 0$) or the {\em false} branch condition ($\alpha_a \leq 0$). Since both paths are feasible, the engine adds the execution states B and D. A similar scenario happens when the engine evaluates the branch condition $a > 1$. However, since $\alpha_a$ is not anymore unconstrained, some contradictions may be actually possible. The engine queries the solver to check the following path constraints: (1) $\alpha_a > 0~\wedge~\alpha_a > 1$, (2) $\alpha_a > 0~\wedge~\alpha_a \leq 1$, (3) $\alpha_a \leq 0~\wedge~\alpha_a > 1$, and (4) $\alpha_a \leq 0~\wedge~\alpha_a \leq 1$. It can be easily observed that formula $\alpha_a \leq 0 \wedge \alpha_a > 1$ does not admit a valid solution and thus the related path can be safely dropped by the engine since it is unrealizable. On the other hand, other paths admit a valid solution and can be further explored by the engine.}
+
+This approach is commonly referred as {\em eager evaluation} of path constraints since path constraints are eagerly checked at each branch and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion of the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}, where path constraints are lazely checked in order to possibly reduce the burden on the solver.
 
 % From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
 
@@ -180,7 +211,7 @@ int bar(int x, int y) {
 \end{figure}
 
 % pick the values {\tt x = 2} and {\tt y = 6}, respectively
-An example of dynamic test generation is shown in Figure~\ref{fig:example-concrete-execution}. Consider the function {\tt bar} (Figure~\ref{fig:example-concrete-execution}a) that takes two integer inputs {\tt x} and {\tt y}. To start a first concrete execution, a symbolic engine may initially randomly pick {\tt x = 2} and {\tt y = 6} as input values. The concrete execution induced by these inputs is presented in Figure~\ref{fig:example-concrete-execution}b: both the first (node A) and second branch condition (node B) are satisfied, directing the execution towards the first {\tt return} statement (node D). Other nodes, such as C and E are skipped since their associated branch conditions are not met by the current input values. For instance, node $E$ is not executed since the condition $x > 1$ (node B) directs the path towards the node $D$. An engine that desires to symbolically execute a path containing the node $E$ must track the constraints during the concrete execution over {\tt x = 2} and {\tt y = 6} and then negate the branch condition $x > 1$. To generate a new (random) input, the engine can then invoke a solver over the constraints $\neg(\alpha_x > 1) \wedge (\alpha_x < 5 \wedge \alpha_y > 5)$, possibly getting a valid solution. In our example (Figure~\ref{fig:example-concrete-execution}c), {\tt x = 1} and {\tt y = 6} are the chosen input values by the constrain solver. Notice that since {\tt y} is not involved in the branch condition that is currently negated, the engine may even reuse its value and include an additional constraint $\alpha_y = 6$. This optimization may drastically reduce the solving time required for obtaining a solution from the constraint solver.
+\boxedexample{ An example of dynamic test generation is shown in Figure~\ref{fig:example-concrete-execution}. Consider the function {\tt bar} (Figure~\ref{fig:example-concrete-execution}a) that takes two integer inputs {\tt x} and {\tt y}. To start a first concrete execution, a symbolic engine may initially randomly pick {\tt x = 2} and {\tt y = 6} as input values. The concrete execution induced by these inputs is presented in Figure~\ref{fig:example-concrete-execution}b: both the first (node A) and second branch condition (node B) are satisfied, directing the execution towards the first {\tt return} statement (node D). Other nodes, such as C and E are skipped since their associated branch conditions are not met by the current input values. For instance, node $E$ is not executed since the condition $x > 1$ (node B) directs the path towards the node $D$. An engine that desires to symbolically execute a path containing the node $E$ must track the constraints during the concrete execution over {\tt x = 2} and {\tt y = 6} and then negate the branch condition $x > 1$. To generate a new (random) input, the engine can then invoke a solver over the constraints $\neg(\alpha_x > 1) \wedge (\alpha_x < 5 \wedge \alpha_y > 5)$, possibly getting a valid solution. In our example (Figure~\ref{fig:example-concrete-execution}c), {\tt x = 1} and {\tt y = 6} are the chosen input values by the constrain solver. Notice that since {\tt y} is not involved in the branch condition that is currently negated, the engine may even reuse its value and include an additional constraint $\alpha_y = 6$. This optimization may drastically reduce the solving time required for obtaining a solution from the constraint solver.}
 
 Although dynamic test generation uses concrete inputs to drive the symbolic execution toward a specific path, it still needs to pick a branch to negate whenever a new path have to be explored. Notice that each concrete execution may add new branches that still needs to be visited. Since the set of non-taken branches across all the performed concrete executions can be very large, the search heuristics discussed in Section~\ref{heuristics} still play a crucial role. For instance, {\sc DART}~\cite{DART-PLDI05} choses the next branch to negate using a depth-first strategy. Additional strategies for picking the next branch to negate have been presented in literature. For instance, the {\em generational search} algorithm discussed in {\sc SAGE}~\cite{SAGE-NDSS08} systematically yet partially explores the state space, maximizing the number of new tests generated while also avoiding redundancies in the search. This is achieved by negating constraints following a specific order and by limiting the backtracking of the search algorithm.
 
@@ -228,16 +259,14 @@ This technique enforces a precondition by adding the precondition constraints to
 \caption{\label{fig:preconditioned} Advantages of preconditioned symbolic execution - taken from~{\sc AEG}~\protect\cite{AEG-NDSS11}.}
 \end{figure}
 
-\paragraph{Example} Consider the example in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $S\ge N+M$ bytes. The impact of preconditions on the state space size is as follows:
-
-
+\boxedexample{Consider the example in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $S\ge N+M$ bytes. The impact of preconditions on the state space size is as follows:
 \begin{itemize}
   \item {\em None}: the input space size is $256^S$, and up to $2^N\cdot S\cdot 2^M$ execution engine instances are needed, due to $N+M$ symbolic branches and up to $S$ loop iterations;
   \item {\em Known length}: if we assume a string length $S$, i.e., the first $(S-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{N+M}$;
   \item {\em Known prefix}: if a prefix of $P<N$ bytes is known for {\tt input}, the first $P$ branches and $P$ loop iterations are concrete, and the state space size becomes $2^{N-P}\cdot S\cdot 2^M$;
   \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
 \end{itemize}
-
+}
 % [D] shall we mention that for prefixes also inequalities can be used, and that prefixes while they reduce the space size, they can lead to missing interesting states, e.g., malformed headers? I think it would be a bit too much detailed
 
 
@@ -349,7 +378,7 @@ Suppose the symbolic engine maintains a worklist of states and a bounded history
 Other static or dynamic techniques can be used to help a symbolic engine to focus on interesting states:
 \begin{itemize}
   \item {\em program slicing} is a method that starting from a subset of a program's behavior, it extracts from the program the minimal sequence of instructions that faithfully represents that behavior~\cite{Weiser84}; we discuss an example of use in Section~\ref{ss:auth-bypass}; 
-  \item {\em taint analysis} \mynote{[D] is it accurate to say concolic only?} attempts to identify variables that can be modified by predefined taint sources such as user input and can be performed both statically and dynamically; dynamic taint analysis typically yields more accurate results, and is often employed in concolic executors to symbolically explore only the parts of an execution that depend upon tainted values~\cite{SAB-SP10};
+  \item {\em taint analysis} \mynote{[D] is it accurate to say concolic only?} attempts to identify variables that can be modified by predefined taint sources such as user input and can be performed both statically and dynamically; dynamic taint analysis typically yields more accurate results, and can is often employed in concolic executors to explore symbolically only the parts of an execution that depend upon tainted values~\cite{SAB-SP10};
   \item {\em fuzzing} is a software testing technique that randomly mutates user-provided test inputs to cause crashes or assertion failures and find potential memory leaks; fuzzing can be augmented with symbolic execution to collect contraints for an input and negate them to generate new inputs\footnote{\cite{DRILLER-NDSS16} classifies offline symbolic executors such as {\sc DART} and {\sc SAGE} as whitebox fuzzers.}; on the other hand, a symbolic executor can be augmented with fuzzing to reach deeper states in the exploration more quickly and efficiently: we present two embodiments of this approach in Section~\ref{ss:bug-detection}; 
   \item {\em source code analysis}: extraction of input properties (e.g., size or contents of an array)
 
