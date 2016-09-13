@@ -72,7 +72,7 @@ To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE
 \subsection{Address Concretization}
 \label{ss:address-concretization}
 
-In all cases where the combinatorial complexity of the analysis explodes as pointer values cannot be bounded to sufficiently small ranges, {\em address concretization}, which consistes in concretizing a pointer to a single specific address, is a popular alternative. This can reduce the number of states and the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some pointers. 
+In all cases where the combinatorial complexity of the analysis explodes as pointer values cannot be bounded to sufficiently small ranges, {\em address concretization}, which consists in concretizing a pointer to a single specific address, is a popular alternative. This can reduce the number of states and the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some pointers. 
 
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
 Concretization is a natural choice for offline executors (Section~\ref{ss:principles}) such as {\sc DART}~\cite{DART-PLDI05} and {\sc SAGE}~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. Systems such as {\sc CREST}~\cite{CREST-ASE08} and {\sc CUTE}~\cite{CUTE-FSE13} are capable of reasoning only about equality and inequality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.

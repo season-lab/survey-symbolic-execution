@@ -64,7 +64,7 @@ In more detail, every value that cannot be determined by a static analysis of th
   \item The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraints $\pi$. The symbolic execution is forked by creating two execution states with path constraints $\pi_{true}$ and $\pi_{false}$, respectively, which correspond to the two branches: $\pi_{true}=\pi \wedge e_s$ and $\pi_{false}=\pi \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
 %        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
 %        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
-    Symbolic execution proceeds on both states in parallel.
+    Symbolic execution independently proceeds on both states.
 
   \item The evaluation of a jump {\tt goto} $s$ updates the execution state by advancing the symbolic execution to statement $s$. 
 \end{itemize}
@@ -106,8 +106,7 @@ Challenges that symbolic execution has to face when processing real-world code c
 
 \begin{itemize}
 
-\item \noindent {\em Objects}: how does the symbolic engine handle arrays or other complex objects?
-Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
+\item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
 \vspace{1mm}
 
   \item {\em Environment}: how does the symbolic engine handle interactions with the environment?
