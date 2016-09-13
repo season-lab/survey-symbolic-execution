@@ -92,7 +92,7 @@ After initializing local variables {\tt x} and {\tt y} at line 2, the symbolic s
 After expanding every execution state until the {\tt assert} at line 8 is reached on all branches, we can check which input values for parameters {\tt a} and {\tt b} can make the {\tt assert} fail. By analyzing execution states $\{D,G,H\}$, we can conclude that only $H$ can make {\tt x-y = 0} true. The path constraints for $H$ at this point implicitly define the set of inputs that are unsafe for {\tt foobar}. 
 In particular, any input values such that:
  \[ 2(\alpha_a+\alpha_b)-4 = 0 \wedge \alpha_a \neq 0 \wedge \alpha_b = 0 \]
-will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a {\em model checker}~\cite{}\mynote{Add citation...} to solve the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
+will make {\tt assert} fail. An instance of unsafe input parameters can be eventually determined by invoking a {\em model checker}~\cite{HandbookOfSAT2009} to solve the path constraints, which in this example would yield $a = 2$ and $b = 0$. 
 
 %Notice\mynote{Say earlier?} that a constraint solver is also needed when evaluating the satisfiability of branch conditions.
 
