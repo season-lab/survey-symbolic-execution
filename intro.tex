@@ -23,17 +23,21 @@ Consider the C code of Figure~\ref{fig:example-1} and assume that our goal is to
 By evaluating the code using symbols for its inputs, instead of concrete values, symbolic execution overcomes this limitation and makes it possible to reason on {\em classes of inputs}, rather than single input values. 
 
 \begin{figure}[t]
+\begin{center}
+\begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
-              1.  void foobar(int a, int b) {
-              2.     int x = 1, y = 0;
-              3.     if (a != 0) {
-              4.        y = 3+x;
-              5.        if (b == 0)
-              6.           x = 2*(a+b);
-              7.     }
-              8.     assert(x-y != 0);
-              9.  }
+1.  void foobar(int a, int b) {
+2.     int x = 1, y = 0;
+3.     if (a != 0) {
+4.        y = 3+x;
+5.        if (b == 0)
+6.           x = 2*(a+b);
+7.     }
+8.     assert(x-y != 0);
+9.  }
 \end{lstlisting}
+\end{tabular}
+\end{center}
 \caption{Warm-up example: which values of \texttt{a} and \texttt{b} make the \texttt{assert} fail?}
 \label{fig:example-1}
 \end{figure}

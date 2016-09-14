@@ -17,10 +17,16 @@
 \label{fi:example-mem}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[t]
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
+\end{figure}
+
+\begin{figure}[t]
+\includegraphics[width=1\columnwidth]{images/memory-ite} 
+\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
+\label{fi:memory-ite}
 \end{figure}
 
 
@@ -41,12 +47,6 @@ At the one end of the spectrum, an engine may treat memory addresses as fully sy
 
 \item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
 \boxedexample{Consider the example shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assigment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
-
-\begin{figure}
-\includegraphics[width=1\columnwidth]{images/memory-ite} 
-\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
-\label{fi:memory-ite}
-\end{figure}
 
 \item {\em if-then-else formulas.} An alternative approach consists in encoding the uncertainty on the possible values of a symbolic pointer into the expressions kept in the symbolic store and in the path constraints, without forking any new states. The key idea is to exploit the capability of some solvers to reason on formulas that contain if-then-else expressions of the form $ite(\texttt{c}, \texttt{t}, \texttt{f})$, which yields \texttt{t} if \texttt{c} is true, and to \texttt{f} otherwise. The approach works differently for memory read and write operations. Let $\alpha$ be a symbolic address that may assume the concrete values $a_1, a_2, \ldots$:
 \begin{itemize}
