@@ -3,7 +3,7 @@
 \section{Path explosion}
 \label{se:path-explosion}
 
-One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches of the program. This impacts both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explore. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+One of the main challenges of symbolic execution is the path explosion problem. Since symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches of the program. This impacts both time and space, as a symbolic executor may need to keep track of an exponential number of pending branches to be explored. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
 \mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
 
 \iffalse
@@ -57,13 +57,13 @@ One of the main challenges of symbolic execution is the path explosion problem. 
     %\label{fig:sub1}
     \caption{}
   \end{subfigure}%
-  \caption{Eager evaluation example. (a) Fragment of code. (b) Symbolic execution of the fragment of code: {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first towards node D and then through its {\tt true} branch.}
+  \caption{Eager evaluation example. (a) Fragment of code. (b) Symbolic execution of the fragment of code: the {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first towards node D and then through its {\em true} branch.}
   \label{fig:eager-evaluation}
 \end{figure}
 
 A first natural technique for reducing the path space is invoking the constraint solver at each branch, pruning branches that are not realizable. Indeed, if the constraint solver is able to prove that the logical formula given by the path constraints of a branch is not satisfiable, then there exists no assignment of the program input values that would drive a real execution towards that path. For this reason, the symbolic engine can safely discard the path involving that branch without affecting soundness of the approach. 
 
-\boxedexample{For instance, consider the example provided in Figure~\ref{fig:eager-evaluation}. Assuming that {\tt a} is a local variable bound to an unconstrained symbol $\alpha_a$, a symbolic engine would start execution of the code fragment in Figure~\ref{fig:eager-evaluation}a by evaluating the branch condition $a > 0$. Before expanding both branches, the symbolic engine queries a constraint solver to verify that no contradiction arises when adding to the path constraints $\pi$ the {\em true} branch condition ($\alpha_a > 0$) or the {\em false} branch condition ($\alpha_a \leq 0$). Since both paths are feasible, the engine adds the execution states B and D. A similar scenario happens when the engine evaluates the branch condition $a > 1$. However, since $\alpha_a$ is not anymore unconstrained, some contradictions may be actually possible. The engine queries the solver to check the following path constraints: (1) $\alpha_a > 0~\wedge~\alpha_a > 1$, (2) $\alpha_a > 0~\wedge~\alpha_a \leq 1$, (3) $\alpha_a \leq 0~\wedge~\alpha_a > 1$, and (4) $\alpha_a \leq 0~\wedge~\alpha_a \leq 1$. It can be easily observed that formula $\alpha_a \leq 0 \wedge \alpha_a > 1$ does not admit a valid solution and thus the related path can be safely dropped by the engine since it is unrealizable. On the other hand, other paths admit a valid solution and can be further explored by the engine.}
+\boxedexample{Consider the example shown in Figure~\ref{fig:eager-evaluation}. Assuming that {\tt a} is a local variable bound to an unconstrained symbol $\alpha_a$, a symbolic engine would start execution of the code fragment in Figure~\ref{fig:eager-evaluation}(a) by evaluating the branch condition $a > 0$. Before expanding both branches, the symbolic engine queries a constraint solver to verify that no contradiction arises when adding to the path constraints $\pi$ the {\em true} branch condition ($\alpha_a > 0$) or the {\em false} branch condition ($\alpha_a \leq 0$). Since both paths are feasible, the engine forks the execution states B and D. A similar scenario happens when the engine evaluates the branch condition $a > 1$. However, since $\alpha_a$ is not anymore unconstrained, some contradictions may be actually possible. The engine queries the solver to check the following path constraints: (1) $\alpha_a > 0~\wedge~\alpha_a > 1$, (2) $\alpha_a > 0~\wedge~\alpha_a \leq 1$, (3) $\alpha_a \leq 0~\wedge~\alpha_a > 1$, and (4) $\alpha_a \leq 0~\wedge~\alpha_a \leq 1$. Notice that formula $\alpha_a \leq 0 \wedge \alpha_a > 1$ does not admit a valid solution and thus the related path can be safely dropped by the engine since it is unrealizable. On the other hand, other paths admit a valid solution and can be further explored by the engine.}
 
 \noindent This approach is commonly referred as {\em eager evaluation} of path constraints since path constraints are eagerly checked at each branch and is typically the default approach adopted by most symbolic engines. We refer to Section~\ref{ss:constraint-reuse} for a discussion of the possible benefits given by the opposite strategy, i.e., {\em lazy evaluation}, where path constraints are lazely checked in order to possibly reduce the burden on the solver.
 
@@ -86,17 +86,17 @@ A first natural technique for reducing the path space is invoking the constraint
   \begin{tabular}{| l || l |}
     \hline      
     {\bf Heuristic} & {\bf Goal} \\ \hline\hline
-    BFS & {\em Maximize coverage} \\ & \cite{CKC-TOCS12,PEX-TAP08} \\\hline
-    DFS & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12,PEX-TAP08,DART-PLDI05} \\\hline
-    Random path selection & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
+    \multirow{2}*{BFS} & {\em Maximize coverage} \\ & \cite{CKC-TOCS12,PEX-TAP08} \\\hline
+    \multirow{3}*{DFS} & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12}\\ & \cite{PEX-TAP08,DART-PLDI05} \\\hline
+    \multirow{2}*{Random path selection} & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
     %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    Code coverage search & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12,CKC-TOCS12,GV-ISSTA02} \\\hline
-    Buggy-path-first & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
-    Loop exhaustion & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
-    Symbolic instruction pointers & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
-    Symbolic memory accesses & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
-    Fitness function & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
-    Subpath-guided search & {\em Use frequency distributions of explored subpaths to prioritize less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
+    \multirow{3}*{Code coverage search} & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12}\\ & \cite{CKC-TOCS12,GV-ISSTA02} \\\hline
+    \multirow{2}*{Buggy-path-first} & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
+    \multirow{2}*{Loop exhaustion} & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
+    \multirow{2}*{Symbolic instruction pointers} & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
+    \multirow{2}*{Symbolic memory accesses} & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
+    \multirow{2}*{Fitness function} & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
+    \multirow{3}*{Subpath-guided search} & {\em Use frequency distributions of explored subpaths to prioritize}\\ & {\em less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
     %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
     \hline  
   \end{tabular}
