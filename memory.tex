@@ -1,14 +1,18 @@
 % !TEX root = main.tex
 
 \begin{figure}[t]
+\begin{center}
+\begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
-              1.  void foobar(unsigned i, unsigned j) {
-              2.     int a[2] = { 0 };
-              3.     if (i>1 || j>1) return;
-              4.     a[i] = 5;
-              5.     assert(a[j] != 5);
-              6.  }
+1.  void foobar(unsigned i, unsigned j) {
+2.     int a[2] = { 0 };
+3.     if (i>1 || j>1) return;
+4.     a[i] = 5;
+5.     assert(a[j] != 5);
+6.  }
 \end{lstlisting}
+\end{tabular}
+\end{center}
 \caption{Memory modeling example: which values of \texttt{i} and \texttt{j} make the \texttt{assert} fail?}
 \label{fi:example-mem}
 \end{figure}
@@ -56,8 +60,6 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 }
 
 %Indeed, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression introduced in the symbolic store $\sigma$ is a short term for an {\tt if-then-else} expression and means that if the condition {\tt c} is verified then {\tt t} holds, otherwise {\tt f} must be assumed as true. Nonetheless, $ite$ expressions are often just syntactic sugar for disjunctive formulas and are commonly supported by most prominent constraint solvers. For instance, in the context of propositional logic the $ite(\texttt{c}, \texttt{t}, \texttt{f})$  expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$ . 
-
-
 
 \end{itemize}
 
