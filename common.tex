@@ -15,6 +15,10 @@
 \usepackage{adjustbox}
 \usepackage{framed}
 \usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{framed}
+
+\definecolor{shadecolor}{rgb}{0.9,0.9,0.9}
 
 \hypersetup{
   colorlinks = true, % colours links instead of ugly boxes
@@ -36,9 +40,9 @@
 \newcommand{\missing}{\textbf{XXX}}
 %\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{{\em Example.} #1}}}
 \newcommand{\boxedexample}[1]{
-\begin{framed}
-\noindent{\em Example.} #1
-\end{framed}
+\begin{shaded*}
+\noindent{\bf\small Example.} #1
+\end{shaded*}
 }
 
 

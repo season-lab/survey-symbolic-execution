@@ -62,7 +62,7 @@ After checking that the \texttt{assert} conditions at line 8 succeed, we can gen
 %}
 
 \vspace{2mm}
-\noindent As shown by the example, the symbolic information maintained during a concrete run can be exploited by the execution engine, for instance, to obtain new inputs and explore new control flow paths. We will further discuss this aspect in Section~\ref{heuristics}. 
+\noindent As shown by the example, the symbolic information maintained during a concrete run can be exploited by the execution engine, for instance, to obtain new inputs and explore new control flow paths. We will further discuss this aspect in Section~\ref{ss:heuristics}. 
 
 It is worth noticing that concolic execution trades soundness for performance: false negatives are indeed possible, because some program executions -- and therefore possible erroneous behaviors -- may be missed. In the literature, this is also regarded as an {\em under-approximate} form of program analysis.
 
