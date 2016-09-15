@@ -16,12 +16,12 @@ Loops are one of the main cause of path explosion: each iteration of a loop can 
 \end{lstlisting}
 \end{tabular}
 \end{center}
-\caption{Loop example with input read from the environment.}
+\caption{Loop example with input read from the environment~\protect\cite{CS-CACM13}.}
 \label{fi:example-loop}
 \end{figure}
 
 
-\boxedexample{Consider the example of Figure~\ref{fi:example-loop}~\cite{CS-CACM13}, where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form:
+\boxedexample{Consider the code fragment of Figure~\ref{fi:example-loop}~\cite{CS-CACM13}, where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form:
 \[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \]
 where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
 

@@ -38,6 +38,7 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check, so to avoid scalability problems arising when too large queries result in blowing the solver up. We discuss a number of such techniques in the upcoming section. We will then present other optimizations that become possible in the setting of symbolic execution.
 
 \subsection{Constraint Optimization}
+\label{ss:constraint-opt}
 
 We identified two orthogonal optimization approaches to constraint optimization in the symbolic execution literature: {\em constraint reduction} techniques aim at simplify constraints fed to a solver by rewriting them into a shorter form, while techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
