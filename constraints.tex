@@ -42,7 +42,7 @@ However, despite the significant advances observed over the past few years -- wh
 
 We identified two orthogonal optimization approaches to constraint optimization in the symbolic execution literature: {\em constraint reduction} techniques aim at simplify constraints fed to a solver by rewriting them into a shorter form, while techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
-\medskip\noindent{\bf Constraint Reduction.} 
+\myparagraph{Constraint Reduction} 
 A common optimization approach followed by both solvers and symbolic executors is to reduce constraints into simpler forms. For example, the {\em expression rewriting} optimization can apply classical techniques from optimizing compilers such as constant folding, strength reduction, and simplification of linear expressions (see, e.g., {\sc KLEE}~\cite{KLEE-OSDI08}).
 
 {\sc EXE}~\cite{EXE-CCS06} introduces a {\em constraint independence} optimization that exploits the fact that a set of constraints can frequently be divided into multiple independent subsets of constraints. This optimization interacts well with query result caching strategies, and offers an additional advantage when an engine asks the solver about the satisfiability of a specific constraint, as it removes irrelevant constraints from the query. In fact, real programs typically have many independent branches, which can often introduce irrelevant constraints that add up quickly.
@@ -56,7 +56,7 @@ In a similar spirit, {\sc \stwoe}~\cite{CKC-TOCS12} introduces a bitfield-theory
 %\subsubsection{Reuse of Constraint Solutions}
 %\label{ss:constraint-reuse}
 
-\medskip\noindent{\bf Reuse of Constraint Solutions.} 
+\myparagraph{Reuse of Constraint Solutions} 
 The idea of reusing previously computed results to speed constraint solving up can be particularly effective in the setting of a symbolic executor, especially when combined with other techniques such as constraint independence optimization. Most reuse approaches for constraint solution are currently based on syntactic or semantic equivalence of the constraints.
 
 {\sc EXE}~\cite{EXE-CCS06} caches the result of satisfiability queries and constraint solutions in order to avoid calling the solver when possible. A cache is managed by a server process that can receive queries by multiple parallel instances of the execution engine each exploring a different program state.
@@ -70,8 +70,8 @@ The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across
 \subsection{Other Optimizations in Symbolic Executors}
 In this section we present a number of optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
 
-\medskip\noindent{\bf Lazy Constraints.}
-~\cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
+\myparagraph{Lazy Constraints}
+\cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
 They thus implemented a solution that works as follow: when the executor encounters a branch statement involving an expensive symbolic operation, it will take both the true and false branches and add a {\em lazy} constraint on the result of the expensive operation to the path conditions. When the exploration reaches a state that satisfies some goal (e.g., an error is found), the algorithm will check for the feasibility of the path, and suppress it if deemed as unreachable in a real execution.
 
 Compared to the {\em eager} approach of checking the feasibility of a branch as encountered (Section~\ref{ss:unrealizable-paths}), a lazy strategy may lead to a larger number of active states, and in turn to more solver queries. However, the authors report that the delayed queries are in many cases more efficient than their eager counterparts: the path constraints added after a lazy constraint can in fact narrow down the solution space for the solver.
@@ -97,5 +97,5 @@ A concolic executor will generate some random input for the program and execute 
 
 To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA11} suggests to consider {\em all} the path constraints collectable over a path before binding one or more symbols to specific concrete values. Indeed, {\sc DART}~\cite{DART-PLDI05} concretizes symbols based on the path constraints collected up to a target branch. In this manner, a constraint contained in a subsequent branch in the same path is not considered and it may be not satisfiable due to already concretized symbols. If this happen, {\sc DART} restarts the execution with different random concrete values, hoping to be able to satisfy the subsequent branch. The approach presented in~\cite{PRV-ISSTA11} requires to detect {\em solvable} constraints along a full path and to delay concretization as much as possible.
 
-\medskip\noindent{\bf Memory Page Size.}
+\myparagraph{Memory Page Size}
 In {\sc \stwoe}~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, they use small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
