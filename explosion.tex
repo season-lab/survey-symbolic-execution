@@ -58,7 +58,7 @@ One of the main challenges of symbolic execution is the path explosion problem. 
     %\label{fig:sub1}
     \caption{}
   \end{subfigure}%
-  \caption{Eager evaluation example. (a) Fragment of code. (b) Symbolic execution of the fragment of code: the {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first towards node D and then through its {\em true} branch.}
+  \caption{Pruning unrealizable paths example: (a) Fragment of code; (b) Symbolic execution of the fragment of code: the {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first towards node D and then through its {\em true} branch.}
   \label{fig:eager-evaluation}
 \end{figure}
 
