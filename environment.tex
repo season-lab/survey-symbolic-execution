@@ -2,7 +2,7 @@
 
 \section{Interaction with the environment}
 
-When a program interacts with its environment - e.g., file system, environment variables, network - a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, drivers, etc.
+When a program interacts with its environment -- e.g., file system, environment variables, network - a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, drivers, etc.
 
 A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05}, {\sc CUTE}~\cite{CUTE-FSE13}, and {\sc EXE}~\cite{EXE-CCS06}) include the environment in symbolic analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. In an online executor this choice also results in having calls from distinct execution paths interfere with each other. 
 
