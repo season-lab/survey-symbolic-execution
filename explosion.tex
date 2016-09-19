@@ -41,11 +41,11 @@ One of the main challenges of symbolic execution is the path explosion problem. 
     \vspace{0mm}
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
    if (a > 0) {
-     ...
+      ...
    } 
 
    if (a > 1) {
-     ...
+      ...
    }
     \end{lstlisting}
     \vspace{3.5mm}
@@ -326,11 +326,11 @@ Several static program analysis techniques such as abstract interpretation merge
 \begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
 1.  void foo(int x, int y) {
-2.    if (x < 5)
-3.      y = y * 2;
-4.    else
-5.      y = y * 3;
-6.    return y;
+2.     if (x < 5)
+3.        y = y * 2;
+4.     else
+5.        y = y * 3;
+6.     return y;
 7.  }
 \end{lstlisting}
 \end{tabular}
