@@ -74,7 +74,9 @@ Many papers exploit variants of concolic execution or different ways of mixing c
 \subsection{Design Principles of Symbolic Executors}
 \label{ss:principles}
 
-A number\mynote{[D] why MAYHEM?}  of performance-related design principles that a symbolic execution engine should follow are  summarized in {\sc Mayhem}~\cite{MAYHEM-SP12}. Most notably:
+A number %\mynote{[D] why MAYHEM?}  
+of performance-related design principles that a symbolic execution engine should follow are  summarized in %{\sc Mayhem}
+\cite{MAYHEM-SP12}. Most notably:
 \begin{enumerate}
   \item {\em Progress}: the executor should be able make forward progress for an arbitrarily long time without exceeding the given resources. Memory consumption is especially critical, due to the gargantuan number of control flow paths.
   \item {\em Work repetition}: no execution work should be repeated, avoiding to restart a program several times from its very beginning in order to analyze different paths that might have a  common prefix.
