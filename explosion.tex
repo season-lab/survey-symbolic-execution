@@ -383,7 +383,7 @@ Note that the path constraints of the execution states $D$ and $E$ can be merged
 
 %At the other end, static state merging combines states at control-flow join points after all subpaths leading to a join point have been explored.
 
-\mynote{Function summaries}
+%\mynote{Function summaries}
 
 \myparagraph{Merging heuristics} Intermediate merging solutions adopt heuristics to identify state merges that can speed the exploration process up. Indeed, generating larger symbolic expressions and possibly extra solvers invocations can outweigh the benefit of having fewer states, leading to poorer overall performance~\cite{HSS-RV09,KKB-PLDI12}. {\em Query count estimation}~\cite{KKB-PLDI12} relies on a simple static analysis to identify how often each variable is used in branch conditions past any given point in the CFG. The estimate is used as a proxy for the number of solver queries that a given variable is likely to be part of. Two states make a good candidate for merging when their differing variables are expected to appear infrequently in later queries. {\em Veritesting}~\cite{VERITESTING-ICSE14} implements a form of merging heuristic based on a distinction between easy and hard statements. Hard statements are those that involve system calls, indirect jumps, and other operations that are difficult to reason about statically. Static merging is performed on sequences of easy statements, %which are represented as a single path 
 whose effect is captured using $ite$ expressions, 
