@@ -1,3 +1,20 @@
+%%% INTRO
+
+\iffalse
+  \item {\em Subroutines and recursion}: how does the symbolic engine handle subroutines and recursive calls?
+In order to support subroutines, the execution state is typically provided with an execution stack. Consider the following recursive example:
+    \begin{lstlisting}[basicstyle=\ttfamily\small]
+    1.  int fac(int n) {
+    2.    if (n <= 1) return 1;
+    3.    return n*fac(n - 1);
+    3.  }
+    \end{lstlisting}
+Note that each distinct value of {\tt n} leads to a distinct control flow path. Since {\tt n} can assume up to  $2^{31} - 1$ positive values, a symbolic engine would create as many execution states to cover all the possible paths.
+%This code can easily lead to a very large number of states: a new state would be indeed created each time the branch at line 2 is not taken. Since variable {\tt n} can assume up to  $2^{31} - 1$ positive values, the symbolic engine would create as many execution states to cover all the possible paths.
+ %Indeed, the number of executions states is related to the number of times that the conditional branch on line 2 is not taken. 
+ \vspace{1mm}
+ \fi
+
 %%% MEMORY MODELS
 \vspace{2em}\mynote{[D] Previous text starts here}In other words, a symbolic engine may see symbols as distinct objects (i.e., each symbol is a distinct array of a specific size) or as pointers to a flat memory (i.e., index-based memory). Although the latter approach may seem more natural since it is akin to a concrete execution model, the former has been proved to be very effective in many scenarios since the symbolic constraints generated when using this approach are {\em easier} to parse for some solvers.
 
