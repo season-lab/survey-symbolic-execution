@@ -71,10 +71,10 @@ The idea of reusing previously computed results to speed constraint solving up c
 The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across runs of not only the same program, but also similar programs, different programs, and different analyses. Constraints are distilled into their essential parts through a {\em slicing} transformation and represented in a canonical form to achieve good reuse, even within a single analysis run. ~\cite{JGY-ISSTA15} presents an extension to the framework that supports constraint reuse based on the logical implication relations among constraints, leading to better reuse and faster execution time for the symbolic analysis.
 
 %\subsection{Other Optimizations in Symbolic Executors}
-\subsection{Reducing the Pressure on Constraint Solvers}
+\subsection{Reducing the Executor's Pressure on Constraint Solvers}
 \label{ss:reducing-constraint-solver-pressure}
 
-In this section we present a number of optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
+In this section we present a number of other optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
 
 \myparagraph{Lazy Constraints}
 \cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
@@ -86,16 +86,16 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 \begin{center}
 \begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\small]
-int non_linear(int v) {
-   return (v*v) % 50;
-}
+1. int non_linear(int v) {
+2.    return (v*v) % 50;
+3. }
 
-void test(int x, int y) {
-   z = non_linear(y);
-   if (z == x) {
-      if (x > y + 10) ERROR;  
-   }
-}
+4. void test(int x, int y) {
+5.    z = non_linear(y);
+6.    if (z == x) {
+7.      if (x > y + 10) ERROR;  
+8.    }
+9. }
 \end{lstlisting}
 \end{tabular}
 \end{center}
@@ -105,11 +105,11 @@ void test(int x, int y) {
 
 
 \medskip\noindent{\bf Concretization.}
-\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers. In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine generates a constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the true branch in the first {\tt if} statement in {\tt test}. A solver that does not support nonlinear arithmetic fails to generate any input for the program.
+\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers. In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine generates a constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the $true$ branch at line 6. A solver that does not support nonlinear arithmetic fails to generate any input for the program.
 
-A concolic executor generates some random input for the program and execute it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. For instance, in the presence of three nested branches with only one being nonlinear, {\sc DART}~\cite{DART-PLDI05} will start from a random valid input for the function, and then alter it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
+A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. For instance, in the presence of three nested branches with only one being nonlinear, {\sc DART}~\cite{DART-PLDI05} starts from a random valid input for the function, and then alters it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
 
 To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA11} suggests to consider {\em all} the path constraints collectable over a path before binding one or more symbols to specific concrete values. Indeed, {\sc DART}~\cite{DART-PLDI05} concretizes symbols based on the path constraints collected up to a target branch. In this manner, a constraint contained in a subsequent branch in the same path is not considered and it may be not satisfiable due to already concretized symbols. If this happen, {\sc DART} restarts the execution with different random concrete values, hoping to be able to satisfy the subsequent branch. The approach presented in~\cite{PRV-ISSTA11} requires to detect {\em solvable} constraints along a full path and to delay concretization as much as possible.
 
 \myparagraph{Memory Page Size}
-In {\sc \stwoe}~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, they use small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
+In {\sc \stwoe}~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced, the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, they use small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
