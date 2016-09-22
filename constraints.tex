@@ -35,12 +35,15 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 \end{figure}
 \fi
 
-However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check, so to avoid scalability problems arising when too large queries result in blowing the solver up. We discuss a number of such techniques in the upcoming section. We will then present other optimizations that become possible in the setting of symbolic execution.
+However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check. 
+%, so to avoid scalability problems arising when large queries result in blowing the solver up. 
+We discuss a number of optimization techniques in the remainder of this section. 
+%We will then present other optimizations that become possible in the setting of symbolic execution.
 
 \subsection{Constraint Optimization}
 \label{ss:constraint-opt}
 
-We identified two orthogonal optimization approaches to constraint optimization in the symbolic execution literature: {\em constraint reduction} techniques aim at simplify constraints fed to a solver by rewriting them into a shorter form, while techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
+In this section, we address two orthogonal optimization approaches to constraint optimization investigated in the symbolic execution literature: {\em constraint reduction} techniques aim at simplify constraints fed to a solver by rewriting them into a shorter form, while techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
 \myparagraph{Constraint Reduction} 
 A common optimization approach followed by both solvers and symbolic executors is to reduce constraints into simpler forms. For example, the {\em expression rewriting} optimization can apply classical techniques from optimizing compilers such as constant folding, strength reduction, and simplification of linear expressions (see, e.g., {\sc KLEE}~\cite{KLEE-OSDI08}).
@@ -67,7 +70,10 @@ The idea of reusing previously computed results to speed constraint solving up c
 
 The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across runs of not only the same program, but also similar programs, different programs, and different analyses. Constraints are distilled into their essential parts through a {\em slicing} transformation and represented in a canonical form to achieve good reuse, even within a single analysis run. ~\cite{JGY-ISSTA15} presents an extension to the framework that supports constraint reuse based on the logical implication relations among constraints, leading to better reuse and faster execution time for the symbolic analysis.
 
-\subsection{Other Optimizations in Symbolic Executors}
+%\subsection{Other Optimizations in Symbolic Executors}
+\subsection{Reducing the Pressure on Constraint Solvers}
+\label{ss:reducing-constraint-solver-pressure}
+
 In this section we present a number of optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
 
 \myparagraph{Lazy Constraints}
@@ -80,14 +86,14 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 ~\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers.
     \begin{lstlisting}[basicstyle=\ttfamily\small]
     int non_linear(int v) {
-      return (v*v) % 50;
+       return (v*v) % 50;
     }
     
     void test(int x, int y) {
-      z = non_linear(y);
-      if (z == x) {
-        if (x > y + 10) ERROR;  
-      }
+       z = non_linear(y);
+       if (z == x) {
+          if (x > y + 10) ERROR;  
+       }
     }
     \end{lstlisting}
 
