@@ -60,7 +60,7 @@ In a similar spirit, {\sc \stwoe}~\cite{CKC-TOCS12} introduces a bitfield-theory
 %\label{ss:constraint-reuse}
 
 \myparagraph{Reuse of Constraint Solutions} 
-The idea of reusing previously computed results to speed constraint solving up can be particularly effective in the setting of a symbolic executor, especially when combined with other techniques such as constraint independence optimization. Most reuse approaches for constraint solution are currently based on syntactic or semantic equivalence of the constraints.
+The idea of reusing previously computed results to speed up constraint solving can be particularly effective in the setting of a symbolic executor, especially when combined with other techniques such as constraint independence optimization. Most reuse approaches for constraint solution are currently based on syntactic or semantic equivalence of the constraints.
 
 {\sc EXE}~\cite{EXE-CCS06} caches the result of satisfiability queries and constraint solutions in order to avoid calling the solver when possible. A cache is managed by a server process that can receive queries by multiple parallel instances of the execution engine each exploring a different program state.
 
@@ -71,7 +71,7 @@ The idea of reusing previously computed results to speed constraint solving up c
 The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across runs of not only the same program, but also similar programs, different programs, and different analyses. Constraints are distilled into their essential parts through a {\em slicing} transformation and represented in a canonical form to achieve good reuse, even within a single analysis run. ~\cite{JGY-ISSTA15} presents an extension to the framework that supports constraint reuse based on the logical implication relations among constraints, leading to better reuse and faster execution time for the symbolic analysis.
 
 %\subsection{Other Optimizations in Symbolic Executors}
-\subsection{Reducing the Executor's Pressure on Constraint Solvers}
+\subsection{Reducing the Symbolic Executor's Pressure on Constraint Solvers}
 \label{ss:reducing-constraint-solver-pressure}
 
 In this section we present a number of other optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
