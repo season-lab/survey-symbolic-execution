@@ -35,13 +35,14 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 \end{figure}
 \fi
 
-However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check. In the remainder of this section we address some relevant approaches.
-%, so to avoid scalability problems arising when large queries result in blowing the solver up. 
+However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains one of the main obstacles to the scalability of symbolic execution engines.
 
-\subsection{Optimizing Constraints}
+\subsection{Optimization Techniques}
 \label{ss:constraint-opt}
 
-In this section, we address two orthogonal approaches to constraint optimization investigated in the symbolic execution literature: (i) {\em constraint reduction} techniques aim at simplifying constraints fed to a solver by rewriting them into a shorter form: (ii) techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
+In this section, we address different techniques to extend the range of programs that can be handled by symbolic execution and to optimize the performance of constraint solving. Two prominent approaches consist in: (i) reducing the size and complexity of the constraints to check, and (ii) unburdening the solver, e.g., by resorting to constraint solution caching, deferring of solver activations, or concretization.
+
+%: (i) {\em constraint reduction} techniques aim at simplifying constraints fed to a solver by rewriting them into a shorter form: (ii) techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
 \myparagraph{Constraint Reduction} 
 A common optimization approach followed by both solvers and symbolic executors is to reduce constraints into simpler forms. For example, the {\em expression rewriting} optimization can apply classical techniques from optimizing compilers such as constant folding, strength reduction, and simplification of linear expressions (see, e.g., {\sc KLEE}~\cite{KLEE-OSDI08}).
@@ -57,10 +58,13 @@ In a similar spirit, {\sc \stwoe}~\cite{CKC-TOCS12} introduces a bitfield-theory
 %\subsubsection{Reuse of Constraint Solutions}
 %\label{ss:constraint-reuse}
 
-\myparagraph{Reuse of Constraint Solutions} 
-The idea of reusing previously computed results to speed up constraint solving can be particularly effective in the setting of a symbolic executor, especially when combined with other techniques such as constraint independence optimization. Most reuse approaches for constraint solution are currently based on syntactic or semantic equivalence of the constraints.
+%\subsection{Unburdening the Constraint Solver} 
+%\label{ss:solver-unburdening}
 
-{\sc EXE}~\cite{EXE-CCS06} caches the result of satisfiability queries and constraint solutions in order to avoid calling the solver when possible. A cache is managed by a server process that can receive queries from multiple parallel instances of the execution engine each exploring a different program state.
+\myparagraph{Reuse of Constraint Solutions} 
+The idea of reusing previously computed results to speed up constraint solving can be particularly effective in the setting of a symbolic executor, especially when combined with other techniques such as constraint independence optimization. Most reuse approaches for constraint solving are currently based on syntactic or semantic equivalence of the constraints.
+
+{\sc EXE}~\cite{EXE-CCS06} caches the results of satisfiability queries and constraint solutions in order to avoid calling the solver when possible. A cache is managed by a server process that can receive queries from multiple parallel instances of the execution engine, each exploring a different program state.
 
 {\sc KLEE}~\cite{KLEE-OSDI08} implements an incremental optimization strategy called {\em counterexample caching}. A tree representation-based cache maps constraint sets to concrete variable assignments, or to a special null value when a constraint set is unsatisfiable. When an unsatisfiable set in the cache is a subset for a given constraint set $S$, $S$ is deemed as unsatisfiable as well. Conversely, when the cache contains a solution for a superset of $S$, the solution trivially satisfies $S$ too. Finally, when the cache contains a solution for one or more subsets of $S$, the algorithm tries substituting in all the solutions to check whether a satisfying solution for $S$ can be found.
 
@@ -69,10 +73,10 @@ The idea of reusing previously computed results to speed up constraint solving c
 The Green framework~\cite{GREEN-FSE12} explores constraint solution reuse across runs of not only the same program, but also similar programs, different programs, and different analyses. Constraints are distilled into their essential parts through a {\em slicing} transformation and represented in a canonical form to achieve good reuse, even within a single analysis run. ~\cite{JGY-ISSTA15} presents an extension to the framework that supports constraint reuse based on the logical implication relations among constraints, leading to better reuse and faster execution time for the symbolic analysis.
 
 %\subsection{Other Optimizations in Symbolic Executors}
-\subsection{Reducing the Symbolic Executor's Pressure on Constraint Solvers}
-\label{ss:reducing-constraint-solver-pressure}
+%\subsection{Reducing the Symbolic Executor's Pressure on Constraint Solvers}
+%\label{ss:reducing-constraint-solver-pressure}
 
-In this section we present a number of other optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
+%In this section we present a number of other optimizations that become possible in the setting of a symbolic executor to reduce the time spent in the constraint solver.
 
 \myparagraph{Lazy Constraints}
 \cite{UCKLEE-USEC15} adopts a timeout approach for constraint solver queries. In their initial experiments, the authors traced most timeouts to symbolic division and remainder operations, with the worst cases occurring when an unsigned remainder operation had a symbolic value in the denominator.
@@ -101,8 +105,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 \label{fi:non-linear-constraints}
 \end{figure}
 
-
-\medskip\noindent{\bf Concretization.}
+\myparagraph{Concretization}
 \cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers. 
 
 \boxedexample{In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine stores a non-linear constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the $true$ branch at line 6. A solver that does not support non-linear arithmetic fails to generate any input for the program.}
@@ -111,5 +114,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 
 To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA11} suggests to consider {\em all} the path constraints collectable over a path before binding one or more symbols to specific concrete values. Indeed, {\sc DART}~\cite{DART-PLDI05} concretizes symbols based on the path constraints collected up to a target branch. In this manner, a constraint contained in a subsequent branch in the same path is not considered and it may be not satisfiable due to already concretized symbols. If this happen, {\sc DART} restarts the execution with different random concrete values, hoping to be able to satisfy the subsequent branch. The approach presented in~\cite{PRV-ISSTA11} requires instead to detect {\em solvable} constraints along a full path and to delay concretization as much as possible.
 
-\myparagraph{Memory Page Size}
-In {\sc \stwoe}~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced, the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, {\sc \stwoe} uses small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
+%\myparagraph{Memory Page Size}
+%In {\sc \stwoe}~\cite{CKC-TOCS12}, when a symbolic pointer is dereferenced, the engine determines which memory pages are referenced by it and passes their contents to the solver. As large page sizes can overwhelm the solver, {\sc \stwoe} uses small pages of configurable size rather than the default 4KB pages. The authors report significant performance benefits from using pages of smaller size.
+
+
