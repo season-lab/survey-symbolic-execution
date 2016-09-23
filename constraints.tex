@@ -35,15 +35,13 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 \end{figure}
 \fi
 
-However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have thus been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check. 
+However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains the main performance bottleneck in symbolic execution engines. Several optimizations have been developed in order to reduce both the number of invocations of the solver and the size of the formulas to check. In the remainder of this section we address some relevant approaches.
 %, so to avoid scalability problems arising when large queries result in blowing the solver up. 
-We discuss a number of optimization techniques in the remainder of this section. 
-%We will then present other optimizations that become possible in the setting of symbolic execution.
 
-\subsection{Constraint Optimization}
+\subsection{Optimizing Constraints}
 \label{ss:constraint-opt}
 
-In this section, we address two orthogonal optimization approaches to constraint optimization investigated in the symbolic execution literature: {\em constraint reduction} techniques aim at simplify constraints fed to a solver by rewriting them into a shorter form, while techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
+In this section, we address two orthogonal approaches to constraint optimization investigated in the symbolic execution literature: (i) {\em constraint reduction} techniques aim at simplifying constraints fed to a solver by rewriting them into a shorter form: (ii) techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
 \myparagraph{Constraint Reduction} 
 A common optimization approach followed by both solvers and symbolic executors is to reduce constraints into simpler forms. For example, the {\em expression rewriting} optimization can apply classical techniques from optimizing compilers such as constant folding, strength reduction, and simplification of linear expressions (see, e.g., {\sc KLEE}~\cite{KLEE-OSDI08}).
@@ -107,7 +105,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 \medskip\noindent{\bf Concretization.}
 \cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers. 
 
-\boxedexample{In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine generates a non-linear constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the $true$ branch at line 6. A solver that does not support non-linear arithmetic fails to generate any input for the program.}
+\boxedexample{In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine stores a non-linear constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the $true$ branch at line 6. A solver that does not support non-linear arithmetic fails to generate any input for the program.}
 
 \noindent A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. For instance, in the presence of three nested branches with only one being nonlinear, {\sc DART}~\cite{DART-PLDI05} starts from a random valid input for the function, and then alters it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
 
