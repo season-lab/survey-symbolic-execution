@@ -235,7 +235,7 @@ Indeed, preconditions need to be selected carefully. If a precondition is too sp
 % Preconditioned symbolic execution enforces the precondition
 This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem counterintuitive since there are more checks to perform at branch points during symbolic execution. However, the state space shrink caused by the precondition constraints outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, neither further checks are made, nor a new execution engine instance is forked for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
 
-The authors identify 4 different categories of preconditions:
+Four prominent categories of preconditions are:
 \begin{itemize}
 \item {\em None}: there is no precondition, thus space exploration proceeds as normal;
 \item {\em Known length}: symbolic inputs are of known maximum length, e.g., a network packet has a fixed size, or static analysis can determine the input length;
