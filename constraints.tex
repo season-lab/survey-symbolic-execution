@@ -37,10 +37,10 @@ In a symbolic executor, constraint solving plays a crucial role in checking the 
 
 However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains one of the main obstacles to the scalability of symbolic execution engines.
 
-\subsection{Optimization Techniques}
-\label{ss:constraint-opt}
+%\subsection{Optimization Techniques}
+%\label{ss:constraint-opt}
 
-In this section, we address different techniques to extend the range of programs that can be handled by symbolic execution and to optimize the performance of constraint solving. Two prominent approaches consist in: (i) reducing the size and complexity of the constraints to check, and (ii) unburdening the solver, e.g., by resorting to constraint solution caching, deferring of solver activations, or concretization.
+In the remainder of this section, we address different techniques to extend the range of programs that can be handled by symbolic execution and to optimize the performance of constraint solving. Two prominent approaches consist in: (i) reducing the size and complexity of the constraints to check, and (ii) unburdening the solver, e.g., by resorting to constraint solution caching, deferring of constraint solver queries, or concretization.
 
 %: (i) {\em constraint reduction} techniques aim at simplifying constraints fed to a solver by rewriting them into a shorter form: (ii) techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
