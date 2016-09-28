@@ -62,11 +62,11 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=0.68\columnwidth]{images/memory-ite} % TODO 0.7
+\includegraphics[width=0.7\columnwidth]{images/memory-ite} % TODO 0.7
 \end{center}
 \vspace{-2.5mm}
 \caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
-\vspace{-1mm} % TODO
+%\vspace{-1mm} % TODO
 \label{fi:memory-ite}
 \end{figure}
 
@@ -78,7 +78,7 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}. 
 
-\vspace{-2pt} % TODO
+%\vspace{-2pt} % TODO
 \subsection{Address Concretization}
 \label{ss:address-concretization}
 
@@ -101,7 +101,7 @@ Systems such as {\sc CREST}~\cite{CREST-ASE08} and {\sc CUTE}~\cite{CUTE-FSE13} 
 
 %STP reduces formulas over array to an equisatisfiable form that contains no $read$ or $write$ operations by applying three standard transformations and introducing fresh bitvector variables. Generated formulas are then amenable to SAT solving. However, transformations can also introduce bottlenecks, for instance by destroying sharing of subterms, and thus are typically procrastinated using refinement algorithms. SMT attempts also to eliminate variables through linear solving~\cite{STP-CAV07}.
 
-\vspace{-2pt} % TODO
+%\vspace{-2pt} % TODO
 \subsection{Partial Memory Modeling}
 \label{ss:index-based-memory}
 
