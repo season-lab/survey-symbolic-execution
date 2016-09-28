@@ -48,7 +48,7 @@ One of the main challenges of symbolic execution is the path explosion problem. 
       ...
    }
     \end{lstlisting}
-    \vspace{3.5mm}
+    \vspace{-0.7mm}
     \caption{}
   \end{subfigure}%
   %\hspace{-2mm}
@@ -56,8 +56,10 @@ One of the main challenges of symbolic execution is the path explosion problem. 
     \centering
     \includegraphics[width=1.0\columnwidth]{images/eager-evaluation} 
     %\label{fig:sub1}
+    \vspace{-5mm}
     \caption{}
   \end{subfigure}%
+  \vspace{-2mm}
   \caption{Pruning unrealizable paths example: (a) Fragment of code; (b) Symbolic execution of the fragment of code: the {\em true} branch in node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable, i.e., there exists no assignment of variable {\tt a} that can drive a concrete execution first toward node D and then through its {\em true} branch.}
   \label{fig:eager-evaluation}
 \end{figure}
@@ -203,11 +205,13 @@ int bar(int x, int y) {
   \hspace{-2mm}
   \begin{subfigure}{.33\textwidth}
     \centering
-    \vspace{0.05mm}
+    \vspace{0.03mm}
     \includegraphics[width=1.1\columnwidth]{images/concolic-execution-2} 
     %\label{fig:sub2}
+    %\vspace{0.0mm}
     \caption{}
   \end{subfigure}
+  \vspace{-2mm}
   \caption{Dynamic test generation example. (a) Source code of function {\tt bar}. (b) Symbolic execution tree for the function {\tt bar}. Solid edges show the path taken by the concolic execution when {\tt x = 2} and {\tt y = 6}. These input values have been randomly chosen. (c) Concolic execution when {\tt x = 1} and {\tt y = 6}. These input values have been obtained using a constraint solver, after negating the path constraints of node B in the function {\tt bar}.}
   \label{fig:example-concrete-execution}
   \vspace{-3mm}
@@ -369,14 +373,17 @@ Note that the path constraints of the execution states $D$ and $E$ can be merged
     \hspace{-5mm}
     \includegraphics[width=1.05\columnwidth]{images/state-merging} 
     %\label{fig:sub1}
+    \vspace{-6.5mm}
     \caption{}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=1.05\columnwidth]{images/state-merging-2} 
     %\label{fig:sub2}
+    \vspace{-4mm}
     \caption{}
   \end{subfigure}
+  \vspace{-3mm}
   \caption{Symbolic execution of function \texttt{foo} of Figure~\ref{fi:example-state-merging}: (a) without state merging; (b) with state merging.}
   \label{fig:example-state-merging}
 \end{figure}

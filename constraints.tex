@@ -85,25 +85,36 @@ They thus implemented a solution that works as follow: when the executor encount
 Compared to the {\em eager} approach of checking the feasibility of a branch as encountered (Section~\ref{ss:unrealizable-paths}), a lazy strategy may lead to a larger number of active states, and in turn to more solver queries. However, the authors report that the delayed queries are in many cases more efficient than their eager counterparts: the path constraints added after a lazy constraint can in fact narrow down the solution space for the solver.
 
 \begin{figure}[t]
-\begin{center}
-\begin{tabular}{c}
-\begin{lstlisting}[basicstyle=\ttfamily\small]
+  \begin{center}
+  \begin{subfigure}{.4\textwidth}
+    \vspace{0mm}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 1. int non_linear(int v) {
 2.    return (v*v) % 50;
 3. }
-
+    \end{lstlisting}
+    \vspace{8.5mm}
+    %\caption{}
+  \end{subfigure}%
+    \begin{subfigure}{.4\textwidth}
+    %\vspace{0mm}
+    \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 4. void test(int x, int y) {
 5.    z = non_linear(y);
 6.    if (z == x) {
 7.      if (x > y + 10) ERROR;  
 8.    }
 9. }
-\end{lstlisting}
-\end{tabular}
-\end{center}
-\caption{Non-linear constraints example.}
-\label{fi:non-linear-constraints}
+    \end{lstlisting}
+    %\vspace{3.5mm}
+    %\caption{}
+  \end{subfigure}%
+  \end{center}
+  \vspace{-3.5mm}
+  \caption{Non-linear constraints example.}
+  \label{fi:non-linear-constraints}
 \end{figure}
+
 
 \myparagraph{Concretization}
 \cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that cannot be (efficiently) solved by constraint solvers. 
