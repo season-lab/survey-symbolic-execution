@@ -2420,8 +2420,8 @@ FUNCTION { output.issue.doi.coden.isxn.lccn.url }
   output.coden  % CODEN is functionally like ISSN, so output them sequentially
   output.issn
   output.lccn
-  output.doi    % DOI is ALWAYS last according to CrossRef DOI documentation
-  output.url    % but ACM wants URL last
+  % output.doi    % DOI is ALWAYS last according to CrossRef DOI documentation
+  % output.url    % but ACM wants URL last
 }
 
 FUNCTION { output.issue.doi.coden.isxn.lccn.url.note }
