@@ -84,7 +84,7 @@ A first natural technique for reducing the path space is invoking the constraint
 
 \begin{figure}[t]
   \centering
-  %\begin{adjustbox}{width=1\columnwidth} % TODO
+  \begin{adjustbox}{width=0.84\columnwidth} % TODO was 1; with 0.88 the last paragraph will fit
   \begin{small}
   \begin{tabular}{| l || l |}
     \hline      
@@ -104,7 +104,7 @@ A first natural technique for reducing the path space is invoking the constraint
     \hline  
   \end{tabular}
   \end{small}
-  %\end{adjustbox}
+  \end{adjustbox}
   \caption{Common path selection heuristics discussed in literature.}
   \label{tab:heuristics}
 \end{figure}
@@ -132,7 +132,7 @@ Several works, such as {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}
 Other search heuristics try to prioritize paths likely leading to states that are {\em interesting} according to some goal. For instance, the {\em buggy-path first} strategy in {\sc AEG}~\cite{AEG-NDSS11} picks paths whose past states have contained small but unexploitable bugs. The intuition is that if a path contains some small errors, it is likely that it has not been properly tested. There is thus a good chance that future states may contain interesting, and hopefully exploitable, bugs. Similarly, the {\em loop exhaustion} strategy discussed in {\sc AEG}~\cite{AEG-NDSS11} explores paths that visit loops. This approach is inspired by the practical observation that common programming mistakes in loops may lead to buffer overflows or other memory-related errors. In order to find exploitable bugs, {\sc Mayhem}~\cite{MAYHEM-SP12} instead gives priority to paths where symbolic memory accesses are identified or symbolic instruction pointers are detected. 
 
 {\em Fitness functions} have been largely used in the context of search-based test generation~\cite{M-STVR04}. %\mynote{[D] Check and rephrase 2nd sentence}
-A fitness function measures how close an explored path is to achieve the target test coverage. Several papers, e.g.,~\cite{XTD-DSN09,CS-CACM13,XTD-DSN09}, have applied this idea in the context of symbolic execution. As an example,~\cite{XTD-DSN09} introduces {\em fitnex}, a strategy for concolic execution that prioritizes paths that are {\em closer} to take a specific branch. In more detail, given a branch condition of the form $|a - c| == 0$ and a path that has reached the branch, {\em fitnex} computes a closeness equal to $|a - c|$ by leveraging the concrete values of variables $a$ and $c$ in that path. Similar fitness values can be computed for other kinds of branch conditions. The path with the lowest fitness value for a branch is selected by the symbolic engine. Paths that have not reached the branch yet get the worst-case fitness value.
+A fitness function measures how close an explored path is to achieve the target test coverage. Several papers, e.g.,~\cite{XTD-DSN09,CS-CACM13,XTD-DSN09}, have applied this idea in the context of symbolic execution. As an example,~\cite{XTD-DSN09} introduces {\em fitnex}, a strategy for concolic execution that prioritizes paths that are {\em closer} to take a specific branch. In more detail, given a branch condition of the form $|a - c| == 0$ and a path that has reached the branch, {\em fitnex} computes a closeness equal to $|a - c|$ by leveraging the concrete values \iffullver{of the two}{of} variables $a$ and $c$ in that path. Similar fitness values can be computed for other kinds of branch conditions. The path with the lowest fitness value for a branch is selected by the symbolic engine. Paths that have not reached the branch yet get the worst-case fitness value.
 
 \begin{comment}
 \begin{itemize}
@@ -212,13 +212,15 @@ int bar(int x, int y) {
     \caption{}
   \end{subfigure}
   \vspace{-2mm}
-  \caption{Dynamic test generation example. (a) Source code of function {\tt bar}. (b) Symbolic execution tree for the function {\tt bar}. Solid edges show the path taken by the concolic execution when {\tt x = 2} and {\tt y = 6}. These input values have been randomly chosen. (c) Concolic execution when {\tt x = 1} and {\tt y = 6}. These input values have been obtained using a constraint solver, after negating the path constraints of node B in the function {\tt bar}.}
+  \caption{Dynamic test generation example. (a) Source code of function {\tt bar}. (b) Symbolic execution tree for the function {\tt bar}. Solid edges show the path taken by the concolic execution when {\tt x = 2} and {\tt y = 6}. These input values have been randomly chosen. (c) Concolic execution when {\tt x = 1} and {\tt y = 6}. These input values have been obtained using a constraint solver, after negating the path constraints of \iffullver{node B in the function {\tt bar}}{node B}.}
   \label{fig:example-concrete-execution}
   \vspace{-3mm}
 \end{figure}
 
 % pick the values {\tt x = 2} and {\tt y = 6}, respectively
+\vspace{-3pt} % TODO
 \boxedexample{ An example of dynamic test generation is shown in Figure~\ref{fig:example-concrete-execution}. Consider the function {\tt bar} (Figure~\ref{fig:example-concrete-execution}a) that takes two integer inputs {\tt x} and {\tt y}. To start a first concrete execution, a symbolic engine may initially randomly pick {\tt x = 2} and {\tt y = 6} as input values. The concrete execution induced by these inputs is presented in Figure~\ref{fig:example-concrete-execution}b: both the first and second branch condition (nodes $A$ and $B$) are satisfied, directing the execution toward the first {\tt return} statement (node $D$). Nodes $C$ and $E$ are skipped since their associated branch conditions are not met by the current input values. For instance, node $E$ is not executed since the condition $x > 1$ (node $B$) directs the path toward the node $D$. An engine that desires to symbolically execute a path containing the node $E$ must track the constraints during the concrete execution over {\tt x = 2} and {\tt y = 6} and then negate the branch condition $x > 1$. To generate a new input, the engine then invokes a solver over the constraints $\neg(\alpha_x > 1) \wedge (\alpha_x < 5 \wedge \alpha_y > 5)$, getting, e.g., {\tt x = 1} and {\tt y = 6} (Figure~\ref{fig:example-concrete-execution}c). Notice that since {\tt y} is not involved in the branch condition that is currently negated, the engine may reuse its value and include an additional constraint $\alpha_y = 6$. This optimization may drastically reduce the solving time required to obtain a solution from the constraint solver.}
+\vspace{-3pt} % TODO
 
 % that still need to be visited
 % what is done with
@@ -244,6 +246,14 @@ Although this technique is not sound as it may miss errors, it can still scale t
 % ---------------------------------------------------------------------------------------------------
 \subsection{Preconditioned Symbolic Execution}%\mynote{[D] Entirely rewritten}
 \label{precontioned-symbolic-execution}
+
+% input state space
+{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution} as a novel method to drive symbolic execution toward certain subsets of the input space. A subset is determined by a precondition predicate: inputs that do not satisfy it will not be explored. The intuition behind preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying goal-oriented (e.g., exploitability) conditions as a precondition, e.g., all symbolic inputs should have the maximum size to expose buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before execution begins, we can prune program paths and therefore explore the target program more efficiently.
+Indeed, preconditions need to be selected carefully. If a precondition is too specific, no bug may be detected; if it is too general, almost the entire state space will be explored. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
+% Note that preconditions cannot be selected at random
+
+% Preconditioned symbolic execution enforces the precondition
+This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem counterintuitive since there are more checks to perform at branch points during symbolic execution. However, the state space shrink caused by the precondition constraints outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, neither further checks are made, nor a new execution engine instance is forked for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
 
 \begin{figure}[t]
 \centering
@@ -290,14 +300,6 @@ if (input[N+M-1] < 42) [...]
 \end{subfigure}
 \caption{\label{fig:preconditioned-and-merge} (a) Preconditioned symbolic execution example~\protect\cite{AEG-NDSS11}; (b) State merging example}
 \end{figure}
-
-% input state space
-{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution} as a novel method to drive symbolic execution toward certain subsets of the input space. A subset is determined by a precondition predicate: inputs that do not satisfy it will not be explored. The intuition behind preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying goal-oriented (e.g., exploitability) conditions as a precondition, e.g., all symbolic inputs should have the maximum size to expose buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before execution begins, we can prune program paths and therefore explore the target program more efficiently.
-Indeed, preconditions need to be selected carefully. If a precondition is too specific, no bug may be detected; if it is too general, almost the entire state space will be explored. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
-% Note that preconditions cannot be selected at random
-
-% Preconditioned symbolic execution enforces the precondition
-This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem counterintuitive since there are more checks to perform at branch points during symbolic execution. However, the state space shrink caused by the precondition constraints outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, neither further checks are made, nor a new execution engine instance is forked for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
 
 Four prominent categories of preconditions are:
 \begin{itemize}
@@ -371,8 +373,8 @@ Note that the path constraints of the execution states $D$ and $E$ can be merged
   \label{fig:example-state-merging}
 \end{figure}
 
-
-\myparagraphnoperiod{Trade-Offs: to Merge or Not to Merge?} Early works~\cite{G-POPL07,HSS-RV09} have shown that merging techniques effectively decrease the number of paths to explore, but also put a burden on constraints solvers, which typically encounter difficulties when dealing with disjunction. Merging can also introduce new symbolic expressions in the code, for instance when merging different concrete values from a conditional assignment into a symbolic expression over the condition. \cite{KKB-PLDI12} provides an excellent discussion of the design space of state merging techniques. At the one end of the spectrum, complete separation of the paths does not perform any merge and is used in search-based symbolic execution (Section~\ref{ss:heuristics}). At the other end, static state merging combines states at control-flow join points, thus essentially representing a whole program with a single formula. Static state merging is used in whole-program verification condition generators, e.g, ~\cite{SATURN-POPL05,CALYSTO-ICSE08}), which typically trade precision for scalability by, for instance, unrolling loops only once.
+%\vspace{-4pt} % TODO
+\myparagraphnoperiod{Trade-Offs: to Merge or Not to Merge?} Early works~\cite{G-POPL07,HSS-RV09} have shown that merging techniques effectively decrease the number of paths to explore, but also put a burden on constraints solvers, which typically encounter difficulties when dealing with disjunction. Merging can also introduce new symbolic expressions in the code, for instance when merging different concrete values from a conditional assignment into a symbolic expression over the condition. \cite{KKB-PLDI12} provides an excellent discussion of the design space of state merging techniques. At the one end of the spectrum, complete separation of the paths does not perform any merge and is used in search-based symbolic execution (Section~\ref{ss:heuristics}). At the other end, static state merging combines states at control-flow join points, thus essentially representing a whole program with a single formula. Static state merging is used in whole-program verification condition generators\iffullver{, e.g.,} ~\cite{SATURN-POPL05,CALYSTO-ICSE08}), \iffullver{which typically trade precision for scalability by, for instance, unrolling loops only once.}{which usually trade precision for scalability by, e.g., unrolling loops only once.}
 
 %At the other end, static state merging combines states at control-flow join points after all subpaths leading to a join point have been explored.
 
@@ -405,7 +407,7 @@ A deeper understanding of a program's behavior can help a symbolic engine to foc
   \item {\em Branch predication} is a strategy for mitigating misprediction penalties in pipelined executions by avoiding jumps over very small sections of code: for instance, control-flow forking constructs such as the C ternary operator can be replaced with a predicated {\tt select} instruction. \cite{CCK-EUROSYS11} reports an exponential decrease in the number of paths to explore from the adoption of this strategy when cross-checking two implementations of a program using symbolic execution. % [D] alternative formulation: ~\cite{CCK-EUROSYS11} cross-checks two implementations of a program using symbolic execution and reports an exponential decrease in the number of paths to explore from the adoption of a simple form of this strategy; 
 %  \item {\em source code analysis}: \mynote{TODO/drop?} extraction of input properties (e.g., size or contents of an array);
   \item {\em State matching} determines whether an abstract state is subsumed by another, and can be used to analyze an under-approximation of a program's behavior. For instance, ~\cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
-  \item {\em Type checking} can be effectively mixed with symbolic analysis~\cite{KCF-PLDI10};  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{Interestingly,~\cite{KCF-PLDI10} discuss also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
+  \item {\em Type checking} can be effectively mixed with symbolic analysis~\cite{KCF-PLDI10};  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{Interestingly,~\cite{KCF-PLDI10} discusses also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
 \end{itemize}
 
    %%%% DROPPED PARTS
