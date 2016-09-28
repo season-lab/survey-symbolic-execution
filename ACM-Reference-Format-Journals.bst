@@ -2137,7 +2137,7 @@ FUNCTION { format.advisor }
 {
   advisor empty.or.unknown
     { "" }
-    { "Advisor(s) " advisor * }
+    %{ "Advisor(s) " advisor * }
   if$
 }
 
