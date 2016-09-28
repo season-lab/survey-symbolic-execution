@@ -1,3 +1,46 @@
+\begin{figure}[t]
+\begin{small}
+\begin{center}
+\begin{tabular}{c}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+// N symbolic branches 
+if (input[0] < 42) [...]
+[...]
+if (input[N-1] < 42) [...]
+
+// symbolic loop
+strcpy(dest, input); 
+
+// M symbolic branches
+if (input[N] < 42) [...]
+[...]
+if (input[N+M-1] < 42) [...]
+\end{lstlisting}
+\end{tabular}
+\end{center}
+\end{small}
+\caption{\label{fig:preconditioned} Preconditioned symbolic execution example~\protect\cite{AEG-NDSS11}.}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{c}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+1.  void foo(int x, int y) {
+2.     if (x < 5)
+3.        y = y * 2;
+4.     else
+5.        y = y * 3;
+6.     return y;
+7.  }
+\end{lstlisting}
+\end{tabular}
+\end{center}
+\caption{State merging example.}
+\label{fi:example-state-merging}
+\end{figure}
+
+
 %%% INTRO
 
 \iffalse
@@ -124,6 +167,28 @@ Notice that if some input preconditions~\ref{precontioned-symbolic-execution} ha
   \item {\em environment variables}: a complete summary of all possible results (concrete values, fully symbolic, and failures) of {\tt get\_env}.
   \item {\em library function calls and system calls}: emulation of more than 70 library routines and system calls. In particular, formatting functions (e.g., {\tt fprintf}) are emulated to capture buffer overflows.
 \end{itemize}
+\fi
+
+
+%%%% UNDER-CONSTRAINED
+
+\iffalse % [D] original text here, while commented text has been moved to sandbox.tex
+%By isolating a function from the rest of the program, we can perform symbolic execution on it.
+A possible approach to avoid path explosion with function calls is to symbolically execute a function in isolation. The results of the analysis can then be exploited when any other code region is symbolically executed and a call to the function is present. However, errors detected in the isolated function may be false positives since the input may never assume certain values (e.g., a null pointer) when the function is executed in the context of the full program. Some prior works, e.g., \cite{CS-ICSE05}\mynote{check this paper}, first analyze the code in isolation and then test the generated crashing inputs using concrete executions. % However, errors detected in the isolated function may be false positives since some of the input values may never been valid when the function is actually executed in the context of the full program
+
+{\em Under-constrained symbolic execution}~\cite{ED-ISSTA07} is a technique that performs symbolic execution of an isolated function and explicitly marks which symbols are {\em under-constrained} (i.e., their symbolic values might violate preconditions due to missing constraints) to distinguish them from {\em exactly constrained} symbols.
+
+Errors due to concrete values and exactly constrained symbols are treated as true positives. On the other hand, errors due to under-constraining are treated as true positives only if {\em all} the solutions to the currently known constraints on the symbols cause the error to occur. Otherwise the negation of the error is added to the constraint set and the symbolic execution of the isolated function is continued. In other words, an error is \mynote{[D] added promptly} promptly reported if and only if it is {\em context-insensitive}. Notice that a symbol may initially be under-constrained and then become exactly constrained. For instance, consider the following piece of code:
+
+    \begin{lstlisting}[basicstyle=\ttfamily\small]
+    assert(a != 0); // no knowledge about a
+    a = 0;          // from now on a's value is known
+    assert(a != 0); // error always hits: context-insensitive! 
+    \end{lstlisting}
+
+If {\tt a} is marked as under-constrained, then the first {\tt assert} will not trigger an error: indeed, there is at least one possible value for the symbol associated to {\tt a} that does not hit the error. Conversely, the second {\tt assert} will always trigger an error since {\tt a} has a concrete value and is not under-constrained anymore.
+
+Although this technique is not able to find {\em all} the possible errors in a function, it can still find interesting bugs. Moreover, since symbolically executing a whole program may be unfeasible, this technique allows for testing a large number of lines of code in a reasonable amount of time. In particular, this technique allows an engine to skip code: if a function or any other construct (e.g., a loop) may be troublesome for symbolic execution, it can be skipped by just marking the locations affected by it as under-constrained. However, a possible implementation issue is given by the propagation of under-constrained symbols: given an instruction of the form {\tt if (s < t)}, if {\tt t} is under-constrained while {\tt s} is exactly constrained then when the symbolic execution proceeds through the two possible branches, {\tt s} must be marked as under-constrained. Some optimizations may thus be needed in order to minimize this propagation effect.
 \fi
 
 %%% STATE MERGING

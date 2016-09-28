@@ -20,6 +20,30 @@
 \usepackage{enumitem}
 \usepackage{epigraph}
 
+% commands
+%\newcommand{\fullver}{}
+\ifdefined\fullver
+\newcommand{\iffullver}[2]{#1}
+\else
+\newcommand{\iffullver}[2]{#2}
+\fi
+
+%\usepackage{titlesec}
+ %\titlespacing{\section}{0pt}{*1.2}{*1.2}
+ %\titlespacing{\subsection}{0pt}{*1.1}{*1.1}
+ %\titlespacing{\subsubsection}{0pt}{*.6}{*.6}
+%\titlespacing{\paragraph}{0pt}{*.6}{*.60}
+%\titleformat{\paragraph}[runin]{\normalsize\bfseries\scshape}{}{}{}
+%Get rid of some extra whitespace in the bibliography
+ %\setlength{\bibsep}{0.75pt}
+%Get rid of some extra whitespace around float (containing figures)
+ %\setlength{\textfloatsep}{4pt plus 0.25pt minus 1pt}
+ %\setlength{\intextsep}{4.0pt plus 0.25pt minus .5pt}
+ %\setlength{\floatsep}{2pt plus 2pt minus 1pt}
+ %\setlength{\abovecaptionskip}{5pt plus 1pt minus 1pt}
+% \setlength{\belowcaptionskip}{10pt plus 1pt minus 1pt}
+ %\setlength{\parskip}{0pt}
+
 \renewcommand{\epigraphsize}{\footnotesize}
 \setlength{\epigraphwidth}{10cm}
 %\renewcommand{\epigraphrule}{0pt}
@@ -47,11 +71,11 @@
 \newcommand{\missing}{\textbf{XXX}}
 %\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{{\em Example.} #1}}}
 \newcommand{\boxedexample}[1]{
-\vspace{-1mm}
+%\vspace{-2mm}
 \begin{shaded*}
 \noindent{\bf\small Example.} #1
 \end{shaded*}
-\vspace{-3mm}
+%\vspace{-2mm}
 }
 
 
