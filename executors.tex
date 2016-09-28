@@ -34,6 +34,7 @@ A standard approach to limit the resources (running time and space usage) requir
 %  \label{fig:example-concolic-execution}
 %\end{figure}
 
+\vspace{-2pt} % TODO
 \boxedexample{
 Consider the C function in Figure~\ref{fig:example-1} and suppose to choose $a = 1$ and $b = 1$ as input parameters. Under these conditions, the concrete execution takes path $A\leadsto B\leadsto C\leadsto E\leadsto G$ in the symbolic tree of Figure~\ref{fig:example-symbolic-execution}. Besides the symbolic stores shown in Figure~\ref{fig:example-symbolic-execution}, the concrete stores maintained in the traversed states are the following:
   \begin{enumerate}
@@ -63,7 +64,8 @@ After checking that the \texttt{assert} conditions at line 8 succeed, we can gen
 %After checking that the \texttt{assert} conditions at line 8 succeed, we can generate a new control flow path by negating the last path constraint, i.e., $\alpha_b\neq 0$. The solver at this point would generate a new input that satisfies the constraints $\alpha_a\neq 0\,\wedge\, \alpha_b=0$ (for instance $a = 1$ and $b = 0$) and the execution would continue in a similar way along the path $A\leadsto B\leadsto C\leadsto E\leadsto F$. }%
 %}
 
-\vspace{2mm}
+%\vspace{2mm} % TODO rimosso
+\vspace{-2pt}  % TODO was +2mm
 \noindent As shown by the example, the symbolic information maintained during a concrete run can be exploited by the execution engine, for instance, to obtain new inputs and explore new control flow paths. We will further discuss this aspect in Section~\ref{ss:heuristics}. 
 
 It is worth noticing that concolic execution trades soundness for performance: false negatives are indeed possible, because some program executions -- and therefore possible erroneous behaviors -- may be missed. In the literature, this is also regarded as an {\em under-approximate} form of program analysis.
@@ -95,7 +97,7 @@ Reasoning about a single path at a time, as in concolic execution, is the approa
 
 \begin{figure}[t]
   \centering
-  \begin{adjustbox}{width=1\columnwidth}
+  \begin{adjustbox}{width=0.98\columnwidth} % TODO was 1
   %\begin{small}
   \begin{tabular}{| l || c || l |}
     \hline      
