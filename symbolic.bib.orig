@@ -462,17 +462,17 @@
 } 
 
 @article{BLISS-TSE15, 
-	author={N. Rosner and J. Geldenhuys and N. M. Aguirre and W. Visser and M. F. Frias}, 
-	journal={IEEE Transactions on Software Engineering}, 
-	title={BLISS: Improved Symbolic Execution by Bounded Lazy Initialization with SAT Support}, 
-	year={2015}, 
-	volume={41}, 
-	number={7}, 
-	pages={639-660}, 
-	keywords={computability;data structures;program verification;BLISS;bounded lazy initialization with SAT support;class fields;field bound refinement;heap-allocated data structures;program path;relational bounds;satisfiability check;symbolic execution;symbolic heap;symbolic structures;Binary trees;Concrete;Java;Periodic structures;Software;Symbolic PathFinder;Symbolic execution;lazy initialization;tight field bounds}, 
-	doi={10.1109/TSE.2015.2389225}, 
-	ISSN={0098-5589}, 
-	month={July},}
+  author={Rosner, Nicolas and Geldenhuys, Jaco and Aguirre, Nazareno M. and Visser, Willem and Frias, Marcelo F.}, 
+  journal={IEEE Transactions on Software Engineering}, 
+  title={BLISS: Improved Symbolic Execution by Bounded Lazy Initialization with SAT Support}, 
+  year={2015}, 
+  volume={41}, 
+  number={7}, 
+  pages={639-660}, 
+  keywords={computability;data structures;program verification;BLISS;bounded lazy initialization with SAT support;class fields;field bound refinement;heap-allocated data structures;program path;relational bounds;satisfiability check;symbolic execution;symbolic heap;symbolic structures;Binary trees;Concrete;Java;Periodic structures;Software;Symbolic PathFinder;Symbolic execution;lazy initialization;tight field bounds}, 
+  doi={10.1109/TSE.2015.2389225}, 
+  ISSN={0098-5589}, 
+  month={July},}
 
 @inproceedings{GDV-ISSTA12,
 	Author = {Jaco Geldenhuys and Matthew B. Dwyer and Willem Visser},
@@ -2395,7 +2395,7 @@
 } 
 
 @ARTICLE{PB-SSP04, 
- author={J. Pincus and B. Baker}, 
+ author={Pincus, Jonathan and Baker, Brandon}, 
  journal={IEEE Security Privacy}, 
  title={Beyond stack smashing: recent advances in exploiting buffer overruns}, 
  year={2004}, 
