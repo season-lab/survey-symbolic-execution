@@ -70,6 +70,14 @@
 \newcommand{\myinput}[1]{\ifdefined\internalrep \input{../#1} \else \input{#1} \fi}
 \newcommand{\missing}{\textbf{XXX}}
 %\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{{\em Example.} #1}}}
+
+\ifdefined\arxvviver
+\newcommand{\boxedexample}[1]{
+\begin{shaded}
+\noindent{\bf\small Example.} #1
+\end{shaded}
+}
+\else
 \newcommand{\boxedexample}[1]{
 %\vspace{-2mm}
 \begin{shaded*}
@@ -77,5 +85,6 @@
 \end{shaded*}
 %\vspace{-2mm}
 }
+\fi
 
 
