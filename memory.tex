@@ -86,7 +86,7 @@ In all cases where the combinatorial complexity of the analysis explodes as poin
 
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
 Concretization arises naturally in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and early {\sc SAGE} releases~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
-Systems such as {\sc CREST}~\cite{CREST-ASE08} and {\sc CUTE}~\cite{CUTE-FSE13} are capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references. % equality and inequality
+Systems such as {\sc CUTE}~\cite{CUTE-FSE13} and {\sc CREST}~\cite{CREST-ASE08} are capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references. % equality and inequality
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
