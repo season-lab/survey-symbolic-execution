@@ -146,7 +146,7 @@
  title = {{CUTE}: A Concolic Unit Testing Engine for C},
  booktitle = {Proceedings of the 10th European Software Engineering Conference Held Jointly with 13th ACM SIGSOFT International Symposium on Foundations of Software Engineering},
  series = {ESEC/FSE-13},
- year = {2005},
+ year = {2013},
  isbn = {1-59593-014-0},
  location = {Lisbon, Portugal},
  pages = {263--272},

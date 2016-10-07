@@ -6,7 +6,7 @@
 \section{Introduction}
 \label{se:intro}
 
-Symbolic execution is a popular program analysis technique introduced in the mid '70s in the context of software testing to check whether a certain property can be violated by a program~\cite{K-ICRS75,SELECT-ICRS75,K-CACM76,H-TSE77}. Aspects of interest could be that no division by zero is ever performed, no {\tt NULL} pointer is ever dereferenced, no backdoor exists that can bypass authentication, etc. While in general there is no automated way to decide some properties (e.g., the target of an indirect jump), heuristics and approximate analyses can prove useful in practice in a variety of settings, including mission-critical and security applications.
+Symbolic execution is a popular program analysis technique introduced in the mid '70s to test whether certain properties can be violated by a piece of software~\cite{K-ICRS75,SELECT-ICRS75,K-CACM76,H-TSE77}. Aspects of interest could be that no division by zero is ever performed, no {\tt NULL} pointer is ever dereferenced, no backdoor exists that can bypass authentication, etc. While in general there is no automated way to decide some properties (e.g., the target of an indirect jump), heuristics and approximate analyses can prove useful in practice in a variety of settings, including mission-critical and security applications.
 
 %While in general there is no automated way to decide some properties (think, e.g., of the halting problem), decidable approximations often exist (e.g., ``does a program always terminate within a certain amount of time?''). Such approximations can prove useful in practice in a variety of settings, including mission-critical and security applications.
 
@@ -19,7 +19,7 @@ The key idea is to allow a program to take on {\em symbolic} -- rather than conc
 Symbolic execution techniques have been brought to the attention of a heterogenous audience since DARPA announced in 2013 the Cyber Grand Challenge, a two-year competition seeking to create automatic systems for vulnerability detection, exploitation, and patching in near real-time~\cite{ANGR-SSP16}.
 
 % other static program
-More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly one third of the bugs discovered during the development of Windows 7, which were missed by other program analyses and blackbox testing techniques~\cite{SAGE-QUEUE12}.
+More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly 30\% of all the bugs discovered during the development of Windows 7, which were missed by other program analyses and blackbox testing techniques~\cite{SAGE-QUEUE12}.
 
 In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in software testing and computer security applications, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
 
@@ -137,7 +137,7 @@ Language constructs such as loops might exponentially increase the number of exe
 
   \item {\em Constraint solver}: what can a constraint solver do in practice?
   %{\em What is a constraint solver in practice}? \\
- Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents. Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
+ Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of polynomial expressions over their constituents. Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
 
   \item {\em Binary code}: what issues can arise when symbolically executing binary code?
   %what are the disadvantages of symbolically executing binary code?
