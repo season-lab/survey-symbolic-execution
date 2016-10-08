@@ -248,7 +248,8 @@ Although this technique is not sound as it may miss errors, it can still scale t
 \label{precontioned-symbolic-execution}
 
 % input state space
-{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution} as a novel method to drive symbolic execution toward certain subsets of the input space. A subset is determined by a precondition predicate: inputs that do not satisfy it will not be explored. The intuition behind preconditioned symbolic execution is that we can narrow down the state space we are exploring by specifying goal-oriented (e.g., exploitability) conditions as a precondition, e.g., all symbolic inputs should have the maximum size to expose buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before execution begins, we can prune program paths and therefore explore the target program more efficiently.
+{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution}, a technique for reducing the number of explored states by focusing the exploration to a subset of the input space that satisfies a precondition predicate. %: inputs that do not satisfy it will not be explored. 
+The intuition is that we can narrow down the state space we are exploring by specifying goal-oriented (e.g., exploitability) conditions as a precondition, e.g., all symbolic inputs should have the maximum size to expose buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before execution begins, we can prune program paths and therefore explore the target program more efficiently.
 Indeed, preconditions need to be selected carefully. If a precondition is too specific, no bug may be detected; if it is too general, almost the entire state space will be explored. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
 % Note that preconditions cannot be selected at random
 
@@ -289,10 +290,6 @@ if (input[N+M-1] < 42) [...]
 5.        y = y * 3;
 6.     return y;
 7.  }
-
-
-
-
 
 \end{lstlisting}
 \end{tabular}
