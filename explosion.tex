@@ -248,13 +248,8 @@ Although this technique is not sound as it may miss errors, it can still scale t
 \label{precontioned-symbolic-execution}
 
 % input state space
-{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution}, a technique for reducing the number of explored states by focusing the exploration to a subset of the input space that satisfies a precondition predicate. %: inputs that do not satisfy it will not be explored. 
-The intuition is that we can narrow down the state space we are exploring by specifying goal-oriented (e.g., exploitability) conditions as a precondition, e.g., all symbolic inputs should have the maximum size to expose buffer overflow bugs. The main benefit of preconditioned symbolic execution is simple: by limiting the size of the input state space before execution begins, we can prune program paths and therefore explore the target program more efficiently.
-Indeed, preconditions need to be selected carefully. If a precondition is too specific, no bug may be detected; if it is too general, almost the entire state space will be explored. %Thus, preconditions have to describe common characteristics among exploits (to capture as many as possible) and at the same time it should eliminate a significant portion of non-exploitable inputs.\\
-% Note that preconditions cannot be selected at random
-
-% Preconditioned symbolic execution enforces the precondition
-This technique enforces a precondition by adding the precondition constraints to the path predicate during initialization. Adding constraints may seem counterintuitive since there are more checks to perform at branch points during symbolic execution. However, the state space shrink caused by the precondition constraints outweighs the decision procedure overhead at branching points. When the precondition for a branch is unsatisfiable, neither further checks are made, nor a new execution engine instance is forked for the branch.% We note that while we focus only on exploitable paths, the overall technique is more generally applicable.\\
+{\sc AEG}~\cite{AEG-NDSS11} proposes {\em preconditioned symbolic execution}, a technique for reducing the number of explored states by directing the exploration to a subset of the input space that satisfies a precondition predicate. The rationale is to focus on inputs that may lead to certain behaviors of the program.
+For instance, we may be interested in narrowing down the exploration to inputs of maximum size to reveal potential buffer overflows. Preconditioned symbolic execution trades soundness for performance: well-designed preconditions should not be too specific, as they may miss interesting paths, and not too generic, since the speedups resulting from the space state reduction may not be significant enough to be of practical interest. Instead of starting from an empty path constraints set, the approach adds the preconditions to the initial $\pi$ so that the rest of the exploration will skip branches that do not satisfy them. While adding more constraints to $\pi$ at initialization time is likely to increase the burden on the solver, which would have to perform a larger number of checks at each branch instruction, this may be largely outweighted by the performance gains due to the smaller state space that needs to be explored.
 
 \begin{figure}[t]
 \centering
@@ -298,18 +293,16 @@ if (input[N+M-1] < 42) [...]
 \caption{\label{fig:preconditioned-and-merge} (a) Preconditioned symbolic execution example~\protect\cite{AEG-NDSS11}; (b) State merging example}
 \end{figure}
 
-Four prominent categories of preconditions are:
+\noindent Typical preconditions considered in symbolic execution include:
 \begin{itemize}
-\item {\em None}: there is no precondition, thus space exploration proceeds as normal;
 \item {\em Known length}: symbolic inputs are of known maximum length, e.g., a network packet has a fixed size, or static analysis can determine the input length;
 %Static analysis techniques can be used to automatically determine this precondition.
 \item {\em Known prefix}: symbolic inputs have a known prefix, e.g., a fixed header string such as the initial {\em magic code} in a binary, or a network packet header.
-\item {\em Fully known}: all input bytes are concrete, as in a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
+\item {\em Fully known}: all input bytes are concrete, leading to a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
 \end{itemize}
 
-\boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. The impact of preconditions on the state space size is as follows:
+\boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. Without any precodition, the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $S$ loop iterations. The impact of preconditions on the state space size is as follows:
 \begin{itemize}
-  \item {\em None}: the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $S$ loop iterations;
   \item {\em Known length}: if we assume a string length $s$, i.e., the first $(s-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{n+m}$;
   \item {\em Known prefix}: if a prefix of $p<n$ bytes is known for {\tt input}, the first $p$ branches and $p$ loop iterations are concrete, and the state space size becomes $2^{n-p}\cdot s\cdot 2^m$;
   \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
