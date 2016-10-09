@@ -5,14 +5,14 @@
   \includegraphics[width=.64\columnwidth]{images/compiler} % TODO was 0.7
   \vspace{-2mm}
   \caption{\label{fig:lowering} Lowering and lifting processes in native vs. source code processing.}
-  \vspace{-3mm} % TODO
+  \vspace{-1mm} % TODO
 \end{figure}
 
 \section{Symbolic execution of binary code}
 \label{se:symbolic-binary}
 
 The importance of performing symbolic analysis of program properties on binary code is on the rise for a number of reasons. Binary code analysis is attractive as it reasons on code that will actually execute: not requiring the source code significantly extends the applicability of such techniques (to, e.g., common off-the-shelf proprietary programs, firmwares for embedded systems, and malicious software), and it gives the ground truth important for security applications whereas source code analysis may yield misleading results due to compiler optimizations~\cite{BITBLAZE-ICISS08}. % compiler errors/defects too
-Binary analysis is relevant also for programs written in dynamic languages, as nowadays they are executed in modern runtimes that deeply transform and optimize their code before just-in-time compiling it.
+Binary analysis is relevant also for programs written in dynamic languages, typically executed in runtimes that deeply transform and optimize the code before just-in-time compilation.
 
 %Also, the recent advances in runtimes for programs written in dynamic languages brought just-in-time compilation to the masses, taking over on interpreters used when no efficient source-to-binary translation of code was statically possible. 
 
