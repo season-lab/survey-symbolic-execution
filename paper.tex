@@ -1,0 +1,183 @@
+% easychair.tex,v 3.4 2015/12/10
+
+%\documentclass{easychair}
+%\documentclass[EPiC]{easychair}
+%\documentclass[debug]{easychair}
+%\documentclass[verbose]{easychair}
+%\documentclass[notimes]{easychair}
+%\documentclass[withtimes]{easychair}
+\documentclass[a4paper]{easychair}
+%\documentclass[letterpaper]{easychair}
+
+\usepackage{doc}
+
+% use this if you have a long article and want to create an index
+% \usepackage{makeidx}
+
+% In order to save space or manage large tables or figures in a
+% landcape-like text, you can use the rotating and pdflscape
+% packages. Uncomment the desired from the below.
+%
+% \usepackage{rotating}
+% \usepackage{pdflscape}
+
+
+%\makeindex
+
+%% Front Matter
+%%
+% Regular title as in the article class.
+%
+\title{Securing Software Applications through Symbolic Execution: an Overview}
+
+% Authors are joined by \and. Their affiliations are given by \inst, which indexes
+% into the list defined using \institute
+%
+\author{
+	Roberto Baldoni\inst{1}
+\and
+	Emilio Coppa\inst{1}
+\and
+	Daniele Cono D'Elia\inst{1}
+\and
+	Camil Demetrescu\inst{1}
+\and
+	Irene Finocchi\inst{1}
+}
+
+% Institutes for affiliations are also joined by \and,
+\institute{
+  Sapienza University of Rome\\
+  \email{\{baldoni, coppa, delia, demetres\}@dis.uniroma1.it, finocchi@di.uniroma1.it}
+}
+
+%  \authorrunning{} has to be set for the shorter version of the authors' names;
+% otherwise a warning will be rendered in the running heads. When processed by
+% EasyChair, this command is mandatory: a document without \authorrunning
+% will be rejected by EasyChair
+
+\authorrunning{Baldoni, Coppa, D'Elia, Demetrescu, and Finocchi}
+
+% \titlerunning{} has to be set to either the main title or its shorter
+% version for the running heads. When processed by
+% EasyChair, this command is mandatory: a document without \titlerunning
+% will be rejected by EasyChair
+\titlerunning{Securing Software Applications through Symbolic Execution}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Many security and software testing applications require checking whether certain properties of a program hold for any possible usage scenario. For instance, a tool for vulnerability identification may need to rule out the existence of any backdoor to bypass a program's authentication. Random testing techniques typically fail at identifying such vulnerabilities, as a backdoor may only be hit for very specific program workloads.
+
+Symbolic execution provides an elegant solution for a systematic exploration of the input space, by analyzing many possible execution paths at the same time. Rather than taking on fully specified input values, the technique abstractly represents them as symbols, resorting to constraint solvers to construct actual instances that would cause property violations. Symbolic execution has been incubated in dozens of tools developed over the last four decades, leading to major practical breakthroughs in a number of prominent software reliability applications.
+
+In this paper we discuss the main ideas behind a symbolic executor and the scalability problems it typically encounters. We also describe the issues that arise when analyzing an application available only in binary form, and present prominent usage examples of symbolic execution in software testing and computer security applications.
+
+% leave white line above
+\end{abstract}
+
+% The table of contents below is added for your convenience. Please do not use
+% the table of contents if you are preparing your paper for publication in the
+% EPiC series
+
+%\setcounter{tocdepth}{2}
+%{\small
+%\tableofcontents}
+
+%\section{To mention}
+%
+%Processing in EasyChair - number of pages.
+%
+%Examples of how EasyChair processes papers. Caveats (replacement of EC
+%class, errors).
+
+\pagestyle{empty}
+
+%------------------------------------------------------------------------------
+\section{Introduction}
+\label{sect:introduction}
+
+The references list is condensed. The default bibliography styles, such as
+\texttt{plain}, \texttt{abbrv}, and \texttt{alpha}, are suggested.
+
+%------------------------------------------------------------------------------
+\subsection{Page Numbering}
+\label{sect:page-numbering}
+
+Page numbers are at the bottom of every page. Authors must leave the
+page numbers in as-is. When EasyChair proceedings and Procedia volumes are processed by
+EasyChair, the correct volume page numbers will be inserted
+automatically.
+
+%------------------------------------------------------------------------------
+\subsection{Section Headings and Capitalization}
+\label{sect:section-headings}
+
+Section and paragraph headings are invoked via the standard 
+commands, such as
+\verb+\section+,
+\verb+\subsection+,
+\verb+\subsubsection+, and
+\verb+\paragraph+.
+Generally, every non-trivial word in a heading must be capitalized according to
+general capitalization guidelines. A reasonable rule to use is that
+all prepositions, coordinating conjunctions and articles having four
+or fewer letters should not be capitalized. If you do not know what it
+means, simply do not capitalize the following words:
+\textit{amid, anti, as, at, atop, but, by, down, for, from, in, into, like,
+near, next, of, off, on, onto, out, over, pace, past, per, plus, qua,
+save, than, till, to, up, upon, via, with, for, and, nor, but, or,
+yet, so, a, an, the.} For example, if you want to call your paper
+``oldest but goldest'', then the proper title for it is ``Oldest but
+Goldest''. ``Oldest but goldest'' is wrong (since ``goldest'' is not
+capitalized) and ``Oldest But Goldest'' is wrong (``but'' should stay
+lower-cased since it belongs to the list of words above.) Needless to
+say, ``OLDEST BUT GOLDEST'' is very wrong.
+
+Paragraph headings should not be capitalized and should have a
+trailing period. That is, you should write
+
+\begin{quote}
+\verb|\paragraph{EasyChair is cool.}|
+\end{quote}
+rather than 
+
+\begin{quote}
+\verb|\paragraph{EasyChair is cool}|
+\end{quote}
+unless your aim was to write something like
+
+\begin{quote}
+\verb|\paragraph{EasyChair is cool} when you use it for publishing.| 
+\end{quote}
+
+%------------------------------------------------------------------------------
+\subsection{References}
+\label{sect:references}
+
+References must be provided in a {\tt .bib} file, so that \BibTeX\ can
+be used to generate the references in a consistent style in a volume.
+The preferred styles are {\tt plain} and {\tt alpha}.
+
+\bibliographystyle{plain}
+%\bibliographystyle{alpha}
+%\bibliographystyle{unsrt}
+%\bibliographystyle{abbrv}
+%\bibliography{easychair}
+
+%------------------------------------------------------------------------------
+\appendix
+\section{Requirements Specification}
+\label{sect:easychair-requirements}
+
+The text should look good on both A4 and letter paper.
+
+%------------------------------------------------------------------------------
+% Index
+%\printindex
+
+%------------------------------------------------------------------------------
+\end{document}
+

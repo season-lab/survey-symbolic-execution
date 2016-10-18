@@ -1,6 +1,5 @@
 *.log
 *.toc
-main.pdf
 *.out
 *.aux
 *.bbl
@@ -12,3 +11,5 @@ main.pdf
 Icon*
 *-eps-converted-to.pdf
 *-tree-eps-converted-to.pdf
+paper.pdf
+main.pdf
