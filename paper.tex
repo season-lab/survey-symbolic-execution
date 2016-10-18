@@ -11,6 +11,8 @@
 
 \usepackage{doc}
 
+\input{common}
+
 % use this if you have a long article and want to create an index
 % \usepackage{makeidx}
 
@@ -20,7 +22,6 @@
 %
 % \usepackage{rotating}
 % \usepackage{pdflscape}
-
 
 %\makeindex
 
@@ -96,66 +97,22 @@ In this paper we discuss the main ideas behind a symbolic executor and the scala
 \pagestyle{empty}
 
 %------------------------------------------------------------------------------
-\section{Introduction}
-\label{sect:introduction}
+\input{intro}
+
+%------------------------------------------------------------------------------
+\section{Misc}
+\label{se:misc}
 
 The references list is condensed. The default bibliography styles, such as
 \texttt{plain}, \texttt{abbrv}, and \texttt{alpha}, are suggested.
-
-%------------------------------------------------------------------------------
-\subsection{Page Numbering}
-\label{sect:page-numbering}
 
 Page numbers are at the bottom of every page. Authors must leave the
 page numbers in as-is. When EasyChair proceedings and Procedia volumes are processed by
 EasyChair, the correct volume page numbers will be inserted
 automatically.
 
-%------------------------------------------------------------------------------
-\subsection{Section Headings and Capitalization}
-\label{sect:section-headings}
-
-Section and paragraph headings are invoked via the standard 
-commands, such as
-\verb+\section+,
-\verb+\subsection+,
-\verb+\subsubsection+, and
-\verb+\paragraph+.
-Generally, every non-trivial word in a heading must be capitalized according to
-general capitalization guidelines. A reasonable rule to use is that
-all prepositions, coordinating conjunctions and articles having four
-or fewer letters should not be capitalized. If you do not know what it
-means, simply do not capitalize the following words:
-\textit{amid, anti, as, at, atop, but, by, down, for, from, in, into, like,
-near, next, of, off, on, onto, out, over, pace, past, per, plus, qua,
-save, than, till, to, up, upon, via, with, for, and, nor, but, or,
-yet, so, a, an, the.} For example, if you want to call your paper
-``oldest but goldest'', then the proper title for it is ``Oldest but
-Goldest''. ``Oldest but goldest'' is wrong (since ``goldest'' is not
-capitalized) and ``Oldest But Goldest'' is wrong (``but'' should stay
-lower-cased since it belongs to the list of words above.) Needless to
-say, ``OLDEST BUT GOLDEST'' is very wrong.
-
 Paragraph headings should not be capitalized and should have a
-trailing period. That is, you should write
-
-\begin{quote}
-\verb|\paragraph{EasyChair is cool.}|
-\end{quote}
-rather than 
-
-\begin{quote}
-\verb|\paragraph{EasyChair is cool}|
-\end{quote}
-unless your aim was to write something like
-
-\begin{quote}
-\verb|\paragraph{EasyChair is cool} when you use it for publishing.| 
-\end{quote}
-
-%------------------------------------------------------------------------------
-\subsection{References}
-\label{sect:references}
+trailing period. 
 
 References must be provided in a {\tt .bib} file, so that \BibTeX\ can
 be used to generate the references in a consistent style in a volume.
@@ -165,12 +122,12 @@ The preferred styles are {\tt plain} and {\tt alpha}.
 %\bibliographystyle{alpha}
 %\bibliographystyle{unsrt}
 %\bibliographystyle{abbrv}
-%\bibliography{easychair}
+\bibliography{symbolic}
 
 %------------------------------------------------------------------------------
 \appendix
-\section{Requirements Specification}
-\label{sect:easychair-requirements}
+\section{Appendix}
+\label{se:appendix}
 
 The text should look good on both A4 and letter paper.
 

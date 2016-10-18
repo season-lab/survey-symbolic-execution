@@ -1,8 +1,9 @@
-% !TEX root = main.tex
+% !TEX root = paper.tex
 
+\vspace{4mm}
 \epigraph{\textit{``Sometimes you can't see how important something is in its moment, even if it seems kind of important. This is probably one of those times.''}}{(Cyber Grand Challenge highlights from DEF CON 24, August 6, 2016)}
 
-\vspace{-2.5mm}
+\vspace{-4mm}
 \section{Introduction}
 \label{se:intro}
 
@@ -149,45 +150,10 @@ Language constructs such as loops might exponentially increase the number of exe
 
 \noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
 
-%\mynote{Better example?}
-
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
 % --------------------------------------------------------------------------------------------------------------------
 \subsection{Organization of the Article}
 \label{ss:article-organization}
 
-The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
-
-%\vspace{2cm}
-%\subsection{Removed stuff}
-%
-%\paragraph{Black-box approach versus white-box approach}
-%
-%Discussion\mynote{IF: do we really need this?} of black-box approach and white-box approach. Symbolic execution is a white-box technique. Black-box approaches can be very fast but not always effective. White-box approaches can be very effective but are typically slower than black-box techniques. An in-depth discussion of this aspect will be done when we will discuss~\cite{DRILLER-NDSS16}.
-%
-%\begin{figure}[H]
-%  \vspace{-3mm}
-%  \centering
-%  \begin{subfigure}{.5\textwidth}
-%    \centering
-%    \includegraphics[width=0.9\linewidth]{images/blackbox} 
-%    \caption{Black-box approach}
-%    %\label{fig:sub1}
-%  \end{subfigure}%
-%  \begin{subfigure}{.5\textwidth}
-%    \centering
-%    \includegraphics[width=0.9\linewidth]{images/whitebox} 
-%    \caption{White-box approach}
-%    %\label{fig:sub2}
-%  \end{subfigure}
-%  %\label{fig:example-symbolic-execution}
-%  \vspace{-3mm}
-%\end{figure}
-%
-%\paragraph{Taken from old Overview}
-%
-%Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H-TSE77}. A good introduction to symbolic execution is presented in~\cite{KLEE-OSDI08}.\mynote{Extend this paragraph}
-%%(while~\cite{EXE-CCS06} is a previous effort of the same authors).
-%\cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution and of taint analysis as well.
-%
+The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. 
