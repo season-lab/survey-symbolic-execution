@@ -110,22 +110,13 @@ In the example discussed in Section~\ref{symbolic-execution-example} symbolic ex
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. In the remainder of this section, we address a number of observations and questions that naturally arise.
 
 \input{memory}
+\input{environment}
+\input{loops}
+\input{explosion}
 
 \subsection{TODO}
 
 \begin{itemize}[itemsep=2mm]
-
-  \item {\em Environment}: how does the symbolic engine handle interactions with the environment?
-  Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects
-(such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
-
-  \item {\em Loops}: how does the symbolic engine handle loops?
-%A loop\mynote{IF: rimuoverei la prima frase, perche' va detto?} can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. 
-Choosing the number of loop iterations to analyze is especially critical when this number cannot be determined in advance (e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to some value $k$, thus trading speed for soundness. Other approaches infer loop invariants through static analysis  and use them to merge equivalent states. % \mynote{i.e. or e.g.?}  (e.g., when differences are not observable from outside the loop body).
-
-  \item {\em State space explosion and path selection}: how does symbolic execution deal with path explosion?
-Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, symbolic engines can implement efficient mechanisms for evaluating multiple states in parallel without running out of resources.
-  %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 
   \item {\em Constraint solver}: what can a constraint solver do in practice?
   %{\em What is a constraint solver in practice}? \\
@@ -142,9 +133,3 @@ Language constructs such as loops might exponentially increase the number of exe
 \noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
 
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
-
-% --------------------------------------------------------------------------------------------------------------------
-\subsection{Organization of the Article}
-\label{ss:article-organization}
-
-The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. 

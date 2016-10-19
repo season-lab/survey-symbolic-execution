@@ -1,9 +1,17 @@
-% !TEX root = main.tex
+% !TEX root = paper.tex
 
-\section{Path explosion}
-\label{se:path-explosion}
+\subsection{Path explosion}
+\label{ss:path-explosion}
 
-One of the main challenges of symbolic execution is the path explosion problem. As symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches in the program. This impacts both time and space, since a symbolic executor may need to keep track of an exponential number of pending branches to be explored. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+%Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, symbolic engines can implement efficient mechanisms for evaluating multiple states in parallel without running out of resources.
+
+One of the main challenges of symbolic execution is the path explosion problem. As symbolic execution may fork off a new execution engine instance at every branch, the total number of executors may be exponential in the number of branches in the program. This impacts both time and space, since a symbolic executor may need to keep track of an exponential number of pending branches to be explored.
+
+It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. In practice, a common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+
+
+
+  %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 %\mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
 
 \iffalse
