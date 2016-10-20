@@ -7,8 +7,8 @@
 \section{Introduction}
 \label{se:intro}
 
-%K-ICRS75
-Symbolic execution is a popular program analysis technique introduced in the mid '70s to test whether certain properties can be violated by a piece of software~\cite{K-CACM76, SELECT-ICRS75,H-TSE77}. Aspects of interest could be that no division by zero is ever performed, no {\tt NULL} pointer is ever dereferenced, no backdoor exists that can bypass authentication, etc. While in general there is no automated way to decide some properties (e.g., the target of an indirect jump), heuristics and approximate analyses can prove useful in practice in a variety of settings, including mission-critical and security applications.
+%K-ICRS75, SELECT-ICRS75,H-TSE77
+Symbolic execution is a popular program analysis technique introduced in the mid '70s to test whether certain properties can be violated by a piece of software~\cite{K-CACM76}. Aspects of interest could be that no division by zero is ever performed, no {\tt NULL} pointer is ever dereferenced, no backdoor exists that can bypass authentication, etc. While in general there is no automated way to decide some properties (e.g., the target of an indirect jump), heuristics and approximate analyses can prove useful in practice in a variety of settings, including mission-critical and security applications.
 
 %While in general there is no automated way to decide some properties (think, e.g., of the halting problem), decidable approximations often exist (e.g., ``does a program always terminate within a certain amount of time?''). Such approximations can prove useful in practice in a variety of settings, including mission-critical and security applications.
 
@@ -113,23 +113,3 @@ Challenges that symbolic execution has to face when processing real-world code c
 \input{environment}
 \input{loops}
 \input{explosion}
-
-\subsection{TODO}
-
-\begin{itemize}[itemsep=2mm]
-
-  \item {\em Constraint solver}: what can a constraint solver do in practice?
-  %{\em What is a constraint solver in practice}? \\
- Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of polynomial expressions over their constituents. Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
-
-  \item {\em Binary code}: what issues can arise when symbolically executing binary code?
-  %what are the disadvantages of symbolically executing binary code?
- While the warm-up example of Section~\ref{symbolic-execution-example} is written in C, in several scenarios binary code is the only available representation of a program. However, having the source code of an application can make symbolic execution significantly easier, as it can exploit high-level properties (e.g., object shapes) that can be inferred statically by analyzing the source code.
-  %(e.g., the maximum size of a buffer or the number of iterations for a loop).
-   
-\end{itemize}
-%Depending on the specific application context of symbolic execution
-
-\noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
-
-%different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).

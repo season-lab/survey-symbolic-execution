@@ -98,6 +98,8 @@ In this paper we discuss the main ideas behind a symbolic executor and the scala
 
 %------------------------------------------------------------------------------
 \input{intro}
+\input{binary}
+\input{applications}
 
 %------------------------------------------------------------------------------
 
@@ -121,13 +123,12 @@ References must be provided in a {\tt .bib} file, so that \BibTeX\ can be used t
 \bibliography{symbolic}
 
 %------------------------------------------------------------------------------
-\iffalse
 \appendix
 \section{Appendix}
 \label{se:appendix}
 
-The text should look good on both A4 and letter paper.
-\fi
+\noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
+
 %------------------------------------------------------------------------------
 % Index
 %\printindex
