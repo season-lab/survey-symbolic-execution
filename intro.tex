@@ -54,9 +54,10 @@ By evaluating the code using symbols for its inputs, instead of concrete values,
 \label{fig:example-1}
 \end{figure}
 
-In more detail, every value that cannot be determined by a static analysis of the code, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
+% be determined by a static analysis of the code
+In more detail, every value that cannot be determined with static analysis, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
-\begin{itemize}
+\begin{itemize}[itemsep=2pt,topsep=2pt] % ITASEC
 
 %\item $stmt$ is the next statement to evaluate. For the time being, we assume that $stmt$ can be an assignment, a conditional branch, or a jump (more complex constructs such as function calls and loops will be discussed in  Section~\ref{se:executors} and Section~\ref{se:loops}, respectively).
 \item $stmt$ is the next statement to evaluate. For the sake of simplicity, we assume that $stmt$ can be an assignment, a conditional branch, or a jump.
@@ -69,7 +70,7 @@ In more detail, every value that cannot be determined by a static analysis of th
 
 \noindent Depending on $stmt$, the symbolic engine changes the state as follows:
 
-\begin{itemize}[topsep=4pt] % TODO
+\begin{itemize}[itemsep=2pt,topsep=2pt] % ITASEC
   \item The evaluation of an assignment $x=e$ updates the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and concrete values.
   
 %   $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
@@ -86,7 +87,7 @@ In more detail, every value that cannot be determined by a static analysis of th
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=1.0\columnwidth]{images/execution-tree.eps} 
+  \includegraphics[width=1.0\columnwidth]{images/execution-tree.eps} % ITASEC
   \caption{Symbolic execution tree of function {\tt foobar} given in Figure~\ref{fig:example-1}. Each execution state, labeled with an upper case letter, shows the statement to be executed, the symbolic store $\sigma$, and the path constraints $\pi$. Leaves are evaluated against the condition in the {\tt assert} statement. }
 %For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
@@ -105,7 +106,7 @@ will make {\tt assert} fail. An instance of unsafe input parameters can be event
 \section{Challenges in Symbolic Execution}
 \label{example-discussion}
 
-In the example discussed in Section~\ref{symbolic-execution-example} symbolic execution can identify {\em all} the possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, exhaustive symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. As we will discuss later on, exhaustive symbolic execution is unlikely to scale beyond small applications. Hence, in practice we often settle for less ambitious goals, e.g., by trading soundness for performance.
+In our warm-up example symbolic execution can identify {\em all} the possible unsafe inputs that make the {\tt assert} fail. This is achieved through an exhaustive exploration of the possible execution states. From a theoretical perspective, exhaustive symbolic execution provides a {\em sound} and {\em complete} methodology for any decidable analysis. Soundness prevents false negatives, i.e., all possible unsafe inputs are guaranteed to be found, while completeness prevents false positives, i.e.,  input values deemed as unsafe are actually unsafe. As we will discuss later on, exhaustive symbolic execution is unlikely to scale beyond small applications. Hence, in practice we often settle for less ambitious goals, e.g., by trading soundness for performance.
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. In the remainder of this section, we address a number of observations and questions that naturally arise.
 
