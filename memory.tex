@@ -8,7 +8,7 @@
 % of Section~\ref{symbolic-execution-example}
 Our warm-up example presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values.
 %In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses with either expressions over concrete values or symbolic values.
-A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}. In fact, the {\em symbolic memory address} problem~\cite{SAB-SP10}  arises when the address referenced in the operation is a symbolic expression.
+A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving. In fact, the {\em symbolic memory address} problem~\cite{SAB-SP10}  arises when the address referenced in the operation is a symbolic expression.
 
 \myparagraph{Fully Symbolic Memory} At the one end of the design spectrum, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} and {\sc BAP}~\cite{BAP-CAV11}). Two mechanisms, pioneered by King in its seminal paper~\cite{K-CACM76}, can be used:
 
