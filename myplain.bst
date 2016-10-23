@@ -314,7 +314,7 @@ FUNCTION {format.bvolume}
 FUNCTION {format.number.series}
 { volume empty$
     { number empty$
-        { series field.or.null }
+        { series emphasize field.or.null }
         { output.state mid.sentence =
             { "number" }
             { "Number" }
@@ -663,15 +663,8 @@ FUNCTION {inproceedings}
   crossref missing$
     { format.number.series output
       format.pages output
-      address empty$
-        { organization publisher new.sentence.checkb
-          organization output
-          publisher output
-        }
-        { organization output
-          publisher output
-        }
-      if$
+      organization output
+      publisher output
     }
     { format.incoll.inproc.crossref output.nonnull
       format.pages output
