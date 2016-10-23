@@ -30,7 +30,7 @@ Reasoning at the intermediate representation level allows program analyses to be
 %. The reason for this is that VEX captures the side effects of some instructions only implicitly, such as the {\tt EFLAGS} bits set by instructions of the x86 ISA: translating it to a custom language simplified the development of {\sc BitBlaze}'s analysis framework.
 
 % guest operating systems
-{\sc \stwoe}~\cite{CKC-TOCS12} implements an x86-to-LLVM-IR lifter in order to use {\sc KLEE}~\cite{KLEE-OSDI08} for whole-system symbolic analysis of binary code in a virtualized environment. The translation is transparent to both the guest operating system and KLEE, thus enabling the analysis of binaries using the full power of {\sc KLEE}. Another lifter that can be used to run {\sc KLEE} on x86 binary code is {\tt mcsema}.%\footnote{\url{https://github.com/trailofbits/mcsema}.}.
+{\sc \stwoe}~\cite{CKC-TOCS12} implements an x86-to-LLVM-IR lifter in order to use {\sc KLEE}~\cite{KLEE-OSDI08} for whole-system symbolic analysis of binary code in a virtualized environment. The translation is transparent to both the guest operating system and KLEE, thus enabling the analysis of binaries using the full power of {\sc KLEE}. Another lifter that can be used to run {\sc KLEE} on x86 binary code is McSema~\cite{mcsema}.
 
 \subsection{Reconstructing the Control Flow Graph}
 

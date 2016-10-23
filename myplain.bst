@@ -267,13 +267,13 @@ FUNCTION {format.date}
     { month empty$
         { "" }
         { "there's a month but no year in " cite$ * warning$
-          month
+          ""
         }
       if$
     }
     { month empty$
         'year
-        { month " " * year * }
+        { "" " " * year * }
       if$
     }
   if$
@@ -661,20 +661,14 @@ FUNCTION {inproceedings}
   format.title "title" output.check
   new.block
   crossref missing$
-    { format.in.ed.booktitle "booktitle" output.check
-      format.bvolume output
-      format.number.series output
+    { format.number.series output
       format.pages output
       address empty$
         { organization publisher new.sentence.checkb
           organization output
           publisher output
-          format.date "year" output.check
         }
-        { address output.nonnull
-          format.date "year" output.check
-          new.sentence
-          organization output
+        { organization output
           publisher output
         }
       if$
