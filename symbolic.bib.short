@@ -172,6 +172,65 @@
  address = {Berlin, Heidelberg},
 }
 
+@inproceedings{Abraham15,
+ author = {Abraham, Erika},
+ title = {Building Bridges Between Symbolic Computation and Satisfiability Checking},
+ booktitle = {Proceedings of the 2015 ACM on International Symposium on Symbolic and Algebraic Computation},
+ series = {ISSAC '15},
+ year = {2015},
+ isbn = {978-1-4503-3435-8},
+ location = {Bath, United Kingdom},
+ pages = {1--6},
+ numpages = {6},
+ url = {http://doi.acm.org/10.1145/2755996.2756636},
+ doi = {10.1145/2755996.2756636},
+ acmid = {2756636},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {arithmetic, smt solving, symbolic computation},
+}
+
+@book{BKM14,
+  title = "Problem solving for the 21st century: Efficient solver for satisfiability modulo theories",
+  author = "Clark Barrett and Daniel Kroening and Thomas Melham",
+  year = "2014",
+  month = "6",
+  series = "Knowledge Transfer Report, Technical Report 3",
+  publisher = "London Mathematical Society and Smith Institute for Industrial Mathematics and System Engineering",
+}
+
+@Inbook{SC2,
+author="{\'A}brah{\'a}m, Erika
+and Abbott, John
+and Becker, Bernd
+and Bigatti, Anna M.
+and Brain, Martin
+and Buchberger, Bruno
+and Cimatti, Alessandro
+and Davenport, James H.
+and England, Matthew
+and Fontaine, Pascal
+and Forrest, Stephen
+and Griggio, Alberto
+and Kroening, Daniel
+and Seiler, Werner M.
+and Sturm, Thomas",
+editor="Kohlhase, Michael
+and Johansson, Moa
+and Miller, Bruce
+and de Moura, Leonardo
+and Tompa, Frank",
+title="SC2: Satisfiability Checking Meets Symbolic Computation",
+bookTitle="Intelligent Computer Mathematics: 9th International Conference, CICM 2016, Bialystok, Poland, July 25-29, 2016, Proceedings",
+year="2016",
+publisher="Springer International Publishing",
+address="Cham",
+pages="28--43",
+isbn="978-3-319-42547-4",
+doi="10.1007/978-3-319-42547-4_3",
+url="https://doi.org/10.1007/978-3-319-42547-4_3"
+}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
