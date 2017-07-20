@@ -231,6 +231,34 @@ doi="10.1007/978-3-319-42547-4_3",
 url="https://doi.org/10.1007/978-3-319-42547-4_3"
 }
 
+@Inbook{SMTRAT15,
+author="Corzilius, Florian
+and Kremer, Gereon
+and Junges, Sebastian
+and Schupp, Stefan
+and {\'A}brah{\'a}m, Erika",
+editor="Heule, Marijn
+and Weaver, Sean",
+title="SMT-RAT: An Open Source C++ Toolbox for Strategic and Parallel SMT Solving",
+bookTitle="Theory and Applications of Satisfiability Testing -- SAT 2015: 18th International Conference, Austin, TX, USA, September 24-27, 2015, Proceedings",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="360--368",
+doi="10.1007/978-3-319-24318-4_26",
+url="https://doi.org/10.1007/978-3-319-24318-4_26"
+}
+
+@book{HandbookOfCompAlgebra,
+  title={Computer Algebra Handbook: Foundations, Applications, Systems},
+  author={Grabmeier, Johannes and Kaltofen, Erich and Weispfenning, Volker},
+  volume={1},
+  year={2003},
+  pages={109-124},
+  numpages={16},
+  publisher={Springer Science \& Business Media}
+}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
