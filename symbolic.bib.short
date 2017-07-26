@@ -259,6 +259,66 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
   publisher={Springer Science \& Business Media}
 }
 
+@article{Craig1957,
+ author = "Craig, William",
+ fjournal = "Journal of Symbolic Logic",
+ journal = "J. Symbolic Logic",
+ month = "09",
+ number = "3",
+ pages = "269--285",
+ publisher = "Association for Symbolic Logic",
+ title = "Three Uses of the Herbrand-Gentzen Theorem in Relating Model Theory and Proof Theory",
+ url = "http://projecteuclid.org/euclid.jsl/1183732824",
+ volume = "22",
+ year = "1957"
+}
+
+@inproceedings{McMillan10,
+ author = {McMillan, Kenneth L.},
+ title = {Lazy Annotation for Program Testing and Verification},
+ booktitle = {Proceedings of the 22Nd International Conference on Computer Aided Verification},
+ series = {CAV'10},
+ year = {2010},
+ isbn = {3-642-14294-X, 978-3-642-14294-9},
+ location = {Edinburgh, UK},
+ pages = {104--118},
+ numpages = {15},
+ url = {http://dx.doi.org/10.1007/978-3-642-14295-6_10},
+ doi = {10.1007/978-3-642-14295-6_10},
+ acmid = {2144323},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+}
+
+@INPROCEEDINGS{YYG15, 
+ author={Q. Yi and Z. Yang and S. Guo and C. Wang and J. Liu and C. Zhao}, 
+ booktitle={2015 IEEE 8th International Conference on Software Testing, Verification and Validation (ICST)}, 
+ title={Postconditioned Symbolic Execution}, 
+ year={2015}, 
+ pages={1-10}, 
+ doi={10.1109/ICST.2015.7102601}, 
+ ISSN={2159-4848}, 
+ month={April},
+}
+
+@inproceedings{GLM08,
+ author = {Godefroid, Patrice and Levin, Michael Y. and Molnar, David A.},
+ title = {Active Property Checking},
+ booktitle = {Proceedings of the 8th ACM International Conference on Embedded Software},
+ series = {EMSOFT '08},
+ year = {2008},
+ isbn = {978-1-60558-468-3},
+ location = {Atlanta, GA, USA},
+ pages = {207--216},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/1450058.1450087},
+ doi = {10.1145/1450058.1450087},
+ acmid = {1450087},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {security, software testing, symbolic execution},
+}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
