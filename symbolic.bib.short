@@ -418,7 +418,33 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  acmid = {1789034},
  publisher = {Springer-Verlag},
  address = {Berlin, Heidelberg},
+}
 
+@inproceedings{SFS11,
+ author = {Sery, Ondrej and Fedyukovich, Grigory and Sharygina, Natasha},
+ title = {Interpolation-Based Function Summaries in Bounded Model Checking},
+ booktitle = {Proceedings of the 7th International Haifa Verification Conference on Hardware and Software: Verification and Testing},
+ series = {HVC'11},
+ year = {2012},
+ isbn = {978-3-642-34187-8},
+ location = {Haifa, Israel},
+ pages = {160--175},
+ numpages = {16},
+ url = {http://dx.doi.org/10.1007/978-3-642-34188-5_15},
+ doi = {10.1007/978-3-642-34188-5_15},
+ acmid = {2426005},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+}
+
+@INPROCEEDINGS{SFS12, 
+author={O. Sery and G. Fedyukovich and N. Sharygina}, 
+booktitle={2012 Formal Methods in Computer-Aided Design (FMCAD)}, 
+title={Incremental upgrade checking by means of interpolation-based function summaries}, 
+year={2012}, 
+pages={114-121}, 
+keywords={C language;formal verification;function approximation;hardware-software codesign;interpolation;Craig interpolation;bounded C model checking;evolving systems;function summaries;incremental changes;incremental upgrade checking;incremental verification;industrial programs;interpolation-based function summaries;local incremental check;software-hardware design;Algorithm design and analysis;Context;Design automation;Interpolation;Model checking;Optimization;Safety}, 
+month={Oct},}
 
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
