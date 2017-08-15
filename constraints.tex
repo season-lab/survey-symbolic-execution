@@ -141,12 +141,10 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA11} suggests to consider {\em all} the path constraints collectable over a path before binding one or more symbols to specific concrete values. Indeed, {\sc DART}~\cite{DART-PLDI05} concretizes symbols based on the path constraints collected up to a target branch. In this manner, a constraint contained in a subsequent branch in the same path is not considered and it may be not satisfiable due to already concretized symbols. If this happen, {\sc DART} restarts the execution with different random concrete values, hoping to be able to satisfy the subsequent branch. The approach presented in~\cite{PRV-ISSTA11} requires instead to detect {\em solvable} constraints along a full path and to delay concretization as much as possible.
 
 \mytempedit{\myparagraph{Handling Problematic Constraints}
-
 TODO
 \begin{itemize}
 \item concolic walk
 \item symcretic execution
-\item z3-str
 \end{itemize}
 }
 
