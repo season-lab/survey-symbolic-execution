@@ -566,6 +566,24 @@ month={Oct},}
  address = {Berlin, Heidelberg},
 }
 
+@inproceedings{RACERX-SOSP03,
+ author = {Engler, Dawson and Ashcraft, Ken},
+ title = {RacerX: Effective, Static Detection of Race Conditions and Deadlocks},
+ booktitle = {Proceedings of the Nineteenth ACM Symposium on Operating Systems Principles},
+ series = {SOSP '03},
+ year = {2003},
+ isbn = {1-58113-757-5},
+ location = {Bolton Landing, NY, USA},
+ pages = {237--252},
+ numpages = {16},
+ url = {http://doi.acm.org/10.1145/945445.945468},
+ doi = {10.1145/945445.945468},
+ acmid = {945468},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {deadlock detection, program checking, race detection},
+}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
