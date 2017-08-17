@@ -12,11 +12,11 @@ Observe that some problems are more naturally described with languages that are 
 
 
 In a symbolic executor, constraint solving plays a crucial role in checking the feasibility of a path, generating assignments to symbolic variables, and verifying assertions.
-\mytempedit{Over the years, different solvers have been employed by symbolic executors, depending on the supported theories and the relative performance at the time. For instance, the STP~\cite{STP-CAV07,STP-TR07} solver has been employed in, e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc MineSweeper}~\cite{MineSweeper-BOTNET08}, and {\sc AEG}~\cite{AEG-NDSS11}, which all leverage its support for bit-vector and array theories. Other executors such as {\sc Java PathFinder}~\cite{PATHFINDER-ASE10} have complemented SMT solving with additional decision procedures, e.g., libraries for constraint programming~\cite{CHOCO} and heuristics to handle complex mathematical constraints~\cite{CORAL-NFM11}.
+\mytempedit{Over the years, different solvers have been employed by symbolic executors, depending on the supported theories and the relative performance at the time. For instance, the STP~\cite{STP-CAV07,STP-TR07} solver has been employed in, e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc MineSweeper}~\cite{MineSweeper-BOTNET08}, and {\sc AEG}~\cite{AEG-NDSS11}, which all leverage its support for bit-vector and array theories. Other executors such as {\sc Java PathFinder}~\cite{PATHFINDER-ASE10} have complemented SMT solving with additional decision procedures, e.g., libraries for constraint programming~\cite{CHOCO} and heuristics to handle complex non-linear mathematical constraints~\cite{CORAL-NFM11}.
 
 Recently, Z3~\cite{Z3-TACS08} has emerged as leading solution for SMT solving. Developed at Microsoft Research, Z3 offers cutting-edge performance and supports a large number of theories, including bit-vectors, arrays, quantifiers, uninterpreted functions, linear integer and real arithmetic, and non-linear arithmetic. 
 %
-Effective support for strings has been recently offered by Z3-str~\cite{ZZG-FSE13}, an extension of Z3 that makes it possible to treat string as a primitive type, allowing the solver to reason on common string operations such as concatenation, sub-string, and replace.
+Effective support for strings has been recently offered by Z3-str~\cite{ZZG-FSE13}, an extension of Z3 that makes it possible to treat string as a primitive type, allowing the solver to reason on common string operations such as concatenation, substring, and replacement.
 %
 Z3 is employed in most recently appeared symbolic executors such as {\sc Mayhem}~\cite{MAYHEM-SP12}, {\sc SAGE}~\cite{SAGE-QUEUE12}, and {\sc Angr}~\cite{ANGR-SSP16}. Due to the extensive number of supported theories in Z3, such executors typically do not to resort to additional decision procedures.
 }
@@ -50,12 +50,14 @@ Z3 is employed in most recently appeared symbolic executors such as {\sc Mayhem}
 \end{figure}
 \fi
 
-However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains one of the main obstacles to the scalability of symbolic execution engines, \mytempedit{and also hinders its feasibility in the face of constraints that involve expensive theories (e.g., non-linear arithmetic)}.
+% feasibility or applicability? TODO
+However, despite the significant advances observed over the past few years -- which also made symbolic execution practical in the first place~\cite{CS-CACM13} -- constraint solving remains one of the main obstacles to the scalability of symbolic execution engines, \mytempedit{and also hinders its feasibility in the face of constraints that involve expensive theories (e.g., non-linear arithmetic) or opaque library calls.}
 
 %\subsection{Optimization Techniques}
 %\label{ss:constraint-opt}
 
-In the remainder of this section, we address different techniques to extend the range of programs \iffullver{that can be handled by}{amenable to} symbolic execution and to optimize the performance of constraint solving. Prominent approaches consist in: (i) reducing the size and complexity of the constraints to check, (ii) unburdening the solver by, e.g., resorting to constraint solution caching, deferring of \iffullver{constraint solver queries}{solver queries}, or concretization, \mytempedit{and (iii) augmenting symbolic execution with techniques aimed at handling or skipping over constraints that are problematic for the underlying decision procedure. We conclude the section by pointing out potential research directions to improve support for non-linear arithmetic}.
+% handling or skipping over
+In the remainder of this section, we address different techniques to extend the range of programs \iffullver{that can be handled by}{amenable to} symbolic execution and to optimize the performance of constraint solving. Prominent approaches consist in: (i) reducing the size and complexity of the constraints to check, (ii) unburdening the solver by, e.g., resorting to constraint solution caching, deferring of \iffullver{constraint solver queries}{solver queries}, or concretization, \mytempedit{and (iii) augmenting symbolic execution with techniques aimed at handling constraints that are problematic for the underlying decision procedure. We conclude the section by pointing out potential research directions to improve support for non-linear arithmetic}.
 
 %: (i) {\em constraint reduction} techniques aim at simplifying constraints fed to a solver by rewriting them into a shorter form: (ii) techniques for {\em reuse of constraint solutions} explore the space-time trade-off of retrieving previously computed query results rather than repeating expensive satisfiability checks.
 
@@ -136,12 +138,13 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 
 \boxedexample{In the code fragment of Figure~\ref{fi:non-linear-constraints}, the engine stores a non-linear constraint of the form $\alpha_x = (\alpha_y*\alpha_y)\,\%\,50$ for the $true$ branch at line 6. A solver that does not support non-linear arithmetic fails to generate any input for the program.}
 
-\noindent A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. For instance, in the presence of three nested branches with only one being nonlinear, {\sc DART}~\cite{DART-PLDI05} starts from a random valid input for the function, and then alters it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
+\noindent A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. For instance, in the presence of three nested branches with only one being non-linear, {\sc DART}~\cite{DART-PLDI05} starts from a random valid input for the function, and then alters it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
 
 To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA11} suggests to consider {\em all} the path constraints collectable over a path before binding one or more symbols to specific concrete values. Indeed, {\sc DART}~\cite{DART-PLDI05} concretizes symbols based on the path constraints collected up to a target branch. In this manner, a constraint contained in a subsequent branch in the same path is not considered and it may be not satisfiable due to already concretized symbols. If this happen, {\sc DART} restarts the execution with different random concrete values, hoping to be able to satisfy the subsequent branch. The approach presented in~\cite{PRV-ISSTA11} requires instead to detect {\em solvable} constraints along a full path and to delay concretization as much as possible.
 
 \mytempedit{\myparagraph{Handling Problematic Constraints}
-TODO
+Strong SMT solvers allow executors to handle more path constraints directly, reducing the need to resort to concretization. This also results in a lower risk to incur a {\em blind commitment} to concrete values~\cite{DA-FSE14}, which happens when the under-approximation of path conditions from a random choice of concrete values for some variables results in an arbitrary restriction of the search space. Unfortunately, some constraints remain prohibitive for SMT solvers: for instance, non-linear integer arithmetic is undecidable in general; also, a branch condition might contain calls to opaque library methods such as trigonometric functions that would require special extensions to the solver to reason about.  
+
 \begin{itemize}
 \item concolic walk
 \item symcretic execution

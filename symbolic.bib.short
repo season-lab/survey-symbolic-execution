@@ -584,6 +584,24 @@ month={Oct},}
  keywords = {deadlock detection, program checking, race detection},
 }
 
+@inproceedings{DA-FSE14,
+ author = {Dinges, Peter and Agha, Gul},
+ title = {Solving Complex Path Conditions Through Heuristic Search on Induced Polytopes},
+ booktitle = {Proceedings of the 22Nd ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+ series = {FSE 2014},
+ year = {2014},
+ isbn = {978-1-4503-3056-5},
+ location = {Hong Kong, China},
+ pages = {425--436},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2635868.2635889},
+ doi = {10.1145/2635868.2635889},
+ acmid = {2635889},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Concolic Testing, Local Search, Non-Linear Constraints},
+}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
