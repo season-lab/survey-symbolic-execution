@@ -333,7 +333,7 @@ if (input[N+M-1] < 42) [...]
 \item {\em Fully known}: all input bytes are concrete, leading to a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
 \end{itemize}
 
-\boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. Without any precodition, the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $S$ loop iterations. The impact of preconditions on the state space size is as follows:
+\boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. Without any precodition, the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $s$ loop iterations. The impact of preconditions on the state space size is as follows:
 \begin{itemize}
   \item {\em Known length}: if we assume a string length $s$, i.e., the first $(s-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{n+m}$;
   \item {\em Known prefix}: if a prefix of $p<n$ bytes is known for {\tt input}, the first $p$ branches and $p$ loop iterations are concrete, and the state space size becomes $2^{n-p}\cdot s\cdot 2^m$;
