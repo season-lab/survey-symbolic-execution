@@ -21,7 +21,10 @@ Symbolic execution techniques have been brought to the attention of a heterogeno
 % other static program
 More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly 30\% of all the bugs discovered during the development of Windows 7, which were missed by other program analyses and blackbox testing techniques~\cite{SAGE-QUEUE12}.
 
-In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in software testing and computer security applications, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
+In this article, we survey the main aspects of symbolic execution and discuss its extensive usage in software testing and computer security applications, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. \mytempedit{Our discussion is mainly focused on {\em forward} symbolic execution, where a symbolic engine analyzes many paths simultaneously starting its exploration from the main entry point of a program. A different approach is symbolic {\em backward} execution (SBE), where exploration is started from a specific point of the program (e.g., an {\tt assert} statement) and the engine proceeds backward, trying to reconstruct a valid path from an entry point of the program. Since forward symbolic execution is the mainline technique in literature, throughout this article we will always refer to this approach when using the term symbolic execution. Nonetheless, some benefits offered by  symbolic backward execution will be pointed out when relevant for the discussion.
+} 
+
+We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
 
 % --------------------------------------------------------------------------------------------------------------------
 \subsection{A Warm-up Example}
