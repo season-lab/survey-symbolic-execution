@@ -709,6 +709,25 @@ month={Oct},}
  keywords = {loop peeling, loop quasi invariant code motion, loop unrolling, quasi-index variable, quasi-invariant variable},
 }
 
+@inproceedings{AOH-TACAS07,
+	Author = {Anand, Saswat and Orso, Alessandro and Harrold, Mary Jean},
+	Booktitle = {Proceedings of the 13th International Conference on Tools and Algorithms for the Construction and Analysis of Systems},
+	Isbn = {978-3-540-71208-4},
+	Location = {Braga, Portugal},
+	Numpages = {17},
+	Pages = {117--133},
+	Series = {TACAS'07},
+	Title = {Type-dependence Analysis and Program Transformation for Symbolic Execution},
+	Year = {2007}}
+
+@techreport{EXE-TECH06,
+  author = {Cadar, Cristian and Twohey, Paul and Ganesh, Vijay and Engler, Dawson R.},
+  title = {{EXE}: A System for Automatically Generating Inputs of Death Using Symbolic Execution},
+  Institution = {Stanford University},
+  Number = {CSTR 2006-01},
+  url = {http://hci.stanford.edu/cstr/reports/2006-01.pdf},
+  Year = {2006}}
+
 @book{HandbookOfSAT2009,
 	Date-Added = {2016-08-25 16:13:31 +0000},
 	Date-Modified = {2016-08-25 16:13:31 +0000},
@@ -1873,17 +1892,6 @@ month={Oct},}
 	Series = {ESEC/FSE-9},
 	Title = {Using Symbolic Execution for Verifying Safety-critical Systems},
 	Year = {2001}}
-
-@inproceedings{AOH-TACAS07,
-	Author = {Anand, Saswat and Orso, Alessandro and Harrold, Mary Jean},
-	Booktitle = {Proceedings of the 13th International Conference on Tools and Algorithms for the Construction and Analysis of Systems},
-	Isbn = {978-3-540-71208-4},
-	Location = {Braga, Portugal},
-	Numpages = {17},
-	Pages = {117--133},
-	Series = {TACAS'07},
-	Title = {Type-dependence Analysis and Program Transformation for Symbolic Execution},
-	Year = {2007}}
 
 @inproceedings{S-FMCAD08,
 	Articleno = {19},

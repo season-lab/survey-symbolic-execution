@@ -1,7 +1,8 @@
 % !TEX root = main.tex
 %\vspace{-2mm} % TODO
-\section{Interaction with the environment}
+\section{Interaction with the environment and third-party components}
 
+\mytempedit{\myparagraph{Environment}}
 When a program interacts with its environment -- e.g., file system, environment variables, network - a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, drivers, etc.
 
 A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05},  {\sc CUTE}~\cite{CUTE-FSE13}, and {\sc EXE}~\cite{EXE-CCS06}) includes the environment in symbolic analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. 
@@ -25,3 +26,13 @@ In an online executor this choice also results in having external calls from dis
 {\sc DART}'s approach~\cite{DART-PLDI05} is different, as the goal is to enable automated unit testing. DART deems as foreign interfaces all the external variables and functions referenced in a C program along with the arguments for a top-level function.
 %External interfaces are identified by parsing the source code, and a random test driver is generated accordingly.
 External functions are simulated by nondeterministically returning any value of their specified return type. Library functions are normally not considered external functions as they are controlled by the program, but in practice the user can adjust the boundary between library and external functions to simulate the desired effects.
+
+\mytempedit{
+\myparagraph{Third-Party Components}
+Similar challenges are faced when in the analysis of real-world software symbolic values flow outside the boundaries of the code being symbolically executed. Common instances of this problem are calls to, e.g., native methods in Java, unmanaged code in the .NET framework, and third-party closed-source libraries~\cite{AOH-TACAS07}.
+
+% we should cite EXE-TECH06 but we get the same identifier :-(
+Early works such as {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE13} deal with third-party components as for the environment, i.e., by executing such calls using concrete arguments for them. This can result in an incomplete exploration, thus failing to generate test inputs for feasible program paths. {\sc EXE}~\cite{EXE-CCS06,EXE-TR06} instead devises a trial-and-error strategy so that calls with symbolic arguments to external library functions are logged, and the user has to manually intervene to instrument the external code and restart the exploration. This methodology aims at ensuring more complete constraint generation compared to concretization, but may require repeated interaction with the user and not scale with large functions.
+
+
+}
