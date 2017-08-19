@@ -884,6 +884,34 @@ month={Oct},}
  year = {2017}
 }
 
+@inproceedings{PR-POPL89,
+ author = {Pnueli, A. and Rosner, R.},
+ title = {On the Synthesis of a Reactive Module},
+ booktitle = {Proceedings of the 16th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+ series = {POPL '89},
+ year = {1989},
+ isbn = {0-89791-294-2},
+ location = {Austin, Texas, USA},
+ pages = {179--190},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/75277.75293},
+ doi = {10.1145/75277.75293},
+ acmid = {75293},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+}
+
+@phdthesis{Solar-Lezama08,
+ author = {Solar-Lezama, Armando},
+ advisor = {Bodik, Rastislav},
+ title = {Program Synthesis by Sketching},
+ year = {2008},
+ isbn = {978-1-109-09745-0},
+ note = {AAI3353225},
+ publisher = {University of California at Berkeley},
+ address = {Berkeley, CA, USA},
+}
+
 @techreport{EXE-TECH06,
   author = {Cadar, Cristian and Twohey, Paul and Ganesh, Vijay and Engler, Dawson R.},
   title = {{EXE}: A System for Automatically Generating Inputs of Death Using Symbolic Execution},
