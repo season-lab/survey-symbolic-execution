@@ -283,9 +283,9 @@ A list of constraint solvers\mynote{Table?}:
 
 \subsubsection{Constraint independence} tracks constraints into multiple independent subsets of constraints, This helps the system discards irrelevant constraints and adds additional cache hits.  \mynote{to be completed}
 
-\subsubsection{Irrelevant constraint optimization} Remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
+\subsubsection{Irrelevant constraint optimization} Remove from path constraints those constraints that are irrelevant in deciding the outcome of the current branch. In practice, this is done by computing the transitive closure of all the constraints. Pointer and array reference can make this hard: e.g., see details in~\cite{EXE-CCS06,EGL-ISSTA09,CUTE-FSE05}. In~\cite{KLEE-OSDI08}, this is called {\em constraint independence}: the main idea is to divide constraints in independent disjoint subsets based on the symbolic variables which they reference. Irrelevant constraints can detected and discarded.
 
-\subsubsection{Incremental solving} Many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE13}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
+\subsubsection{Incremental solving} Many paths common branches, then it can be beneficial to reason about subset or superset of constraints. See more details, e.g., in~\cite{KLEE-OSDI08,CUTE-FSE05}. In~\cite{KLEE-OSDI08}, they propose {\em counterexample caching} to keep a cache of counterexample based on past queries:
       \begin{itemize}
         \item if a subset of constraints has not solution, any superset does not have as well
         \item if a superset has a solution, any subset has a solution
@@ -333,7 +333,7 @@ Many optimization can be applied to constraints in order to make it more solver-
 
 \mynote{[D] TOCS page 24}\subsubsection{Page boundings on pointers} Whenever a memory access with a symbolic pointer occurs,~\cite{CKC-TOCS12} determines the page referenced by the pointer. This information is then passed to the solver to help it. To make this even more effective, the page size is reduced as much as possible (e.g., 128 bytes).
 
-%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE13}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
+%{\em Concolic execution} has been originally introduced in~\cite{DART-PLDI05} and then refined by~\cite{CUTE-FSE05}. A common disadvantage of symbolic execution is that the state space can be exponential. Moreover, even when the state space is tractable it may happen that complex constraints need to be solved but these constraints are too complex for the actual solver (e.g., non-linear constraints are typically hard to solve). For this reason, it is common to exploit concolic execution. 
 
 
 % ---------------------------------------------------------------------------------------------------

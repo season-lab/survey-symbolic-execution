@@ -1034,7 +1034,7 @@ month={Oct},}
  keywords = {automated test generation, interfaces, program verification, random testing, software testing},
 } 
 
-@inproceedings{CUTE-FSE13,
+@inproceedings{CUTE-FSE05,
  author = {Sen, Koushik and Marinov, Darko and Agha, Gul},
  title = {{CUTE}: A Concolic Unit Testing Engine for C},
  booktitle = {Proceedings of the 10th European Software Engineering Conf. Held Jointly with 13th ACM SIGSOFT Intern. Symp. on Foundations of Software Engineering},
