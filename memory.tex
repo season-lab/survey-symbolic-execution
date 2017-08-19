@@ -76,7 +76,9 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
-To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}. 
+To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}.
+
+\mytempedit{\cite{MEMSIGHT-ASE17} proposes a different approach to fully symbolic memory that maps symbolic address expressions to data, maintaining the possible alternative states resulting from the memory referenced by a symbolic address in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.}
 
 %\vspace{-2pt} % TODO
 \subsection{Address Concretization}

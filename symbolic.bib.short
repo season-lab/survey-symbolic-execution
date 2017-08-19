@@ -876,6 +876,14 @@ month={Oct},}
  keywords = {automatic test generation, formal methods, specification language, symbolic execution},
 }
 
+@inproceedings{MEMSIGHT-ASE17,
+ author = {Coppa, Emilio and D'Elia, Daniele Cono and Demetrescu, Camil},
+ title = {Rethinking Pointer Reasoning in Symbolic Execution},
+ booktitle = {Proceedings of the 32nd ACM/IEEE International Conference on Automated Software Engineering},
+ series = {ASE '17},
+ year = {2017}
+}
+
 @techreport{EXE-TECH06,
   author = {Cadar, Cristian and Twohey, Paul and Ganesh, Vijay and Engler, Dawson R.},
   title = {{EXE}: A System for Automatically Generating Inputs of Death Using Symbolic Execution},
