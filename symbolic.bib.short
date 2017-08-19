@@ -861,6 +861,21 @@ month={Oct},}
  keywords = {Android Application, Environment Generation},
 }
 
+@inproceedings{DBF-ISSTA16,
+ author = {David, Robin and Bardin, S{\'e}bastien and Feist, Josselin and Mounier, Laurent and Potet, Marie-Laure and Ta, Thanh Dinh and Marion, Jean-Yves},
+ title = {Specification of Concretization and Symbolization Policies in Symbolic Execution},
+ booktitle = {Proceedings of the 25th International Symposium on Software Testing and Analysis},
+ series = {ISSTA 2016},
+ year = {2016},
+ isbn = {978-1-4503-4390-9},
+ location = {Saarbr\&\#252;cken, Germany},
+ url = {https://doi.org/10.1145/2931037.2931048},
+ doi = {10.1145/2931037.2931048},
+ acmid = {2931048},
+ publisher = {ACM},
+ keywords = {automatic test generation, formal methods, specification language, symbolic execution},
+}
+
 @techreport{EXE-TECH06,
   author = {Cadar, Cristian and Twohey, Paul and Ganesh, Vijay and Engler, Dawson R.},
   title = {{EXE}: A System for Automatically Generating Inputs of Death Using Symbolic Execution},
