@@ -15,6 +15,11 @@ Software testing strategies typically attempt to execute a program with the inte
 % which uses preconstraining on the program states to ensure consistency
 \cite{DRILLER-NDSS16} refines this idea and devises a vulnerability excavation tool based on {\sc Angr}~\cite{ANGR-SSP16}, called Driller, that interleaves fuzzing and concolic execution to discover memory corruption vulnerabilities. The authors remark that user inputs can be categorized as {\em general} input, which has a wide range of valid values, and {\em specific} input: a check for particular values of a specific input then splits an application into {\em compartments}. Driller offloads the majority of unique path discovery to a fuzzy engine, and relies on concolic execution to move across compartments. During the fuzzy phase, Driller marks a number of inputs as interesting (for instance, when an input was the first to trigger some state transition) and once it gets stuck in the exploration, it passes the set of such paths to a concolic engine, which preconstraints the program states to ensure consistency with the results of the native execution. On the dataset used for the DARPA Cyber Grand Challenge qualifying event, Driller could identify crashing inputs in 77 applications, including both the 68 and 16 applications for which fuzzing and symbolic execution alone succeeded, respectively. For 6 applications, Driller was the only one to detect a vulnerability.
 
+% temporaneamente messo qui
+\mytempedit{
+	\cite{QRL-TOSEM12}, \cite{GDV-ISSTA12,FPV-ICSE13,CLL-ICSE16}
+}
+
 %As it is based on {\sc Angr}, Driller adopts an index-based memory model as in Section~\ref{ss:index-based-memory} where reads can be symbolic and writes are always concretized. % read/write addresses
 
 \subsection{Bug Exploitation}
