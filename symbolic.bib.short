@@ -773,7 +773,6 @@ month={Oct},}
 	Title = {Type-dependence Analysis and Program Transformation for Symbolic Execution},
 	Year = {2007}}
 
-
 @phdthesis{Anand12,
  author = {Anand, Saswat},
  advisor = {Harrold, Mary Jean},
@@ -909,6 +908,22 @@ month={Oct},}
     Month = {Dec},
     URL = {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-177.html},
     Number = {UCB/EECS-2008-177},
+}
+
+@inproceedings{AGT-TACAS08,
+ author = {Anand, Saswat and Godefroid, Patrice and Tillmann, Nikolai},
+ title = {Demand-driven Compositional Symbolic Execution},
+ booktitle = {Proceedings of the Theory and Practice of Software, 14th International Conference on Tools and Algorithms for the Construction and Analysis of Systems},
+ series = {TACAS'08/ETAPS'08},
+ year = {2008},
+ isbn = {3-540-78799-2, 978-3-540-78799-0},
+ location = {Budapest, Hungary},
+ pages = {367--381},
+ numpages = {15},
+ url = {http://dl.acm.org/citation.cfm?id=1792734.1792771},
+ acmid = {1792771},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
 }
 
 @techreport{EXE-TECH06,
