@@ -1,3 +1,17 @@
+@article{LHT-JSC04,
+  title = "Effective lattice point counting in rational convex polytopes",
+  journal = "Journal of Symbolic Computation",
+  volume = "38",
+  number = "4",
+  pages = "1273 - 1302",
+  year = "2004",
+  note = "Symbolic Computation in Algebra and Geometry",
+  issn = "0747-7171",
+  doi = "http://dx.doi.org/10.1016/j.jsc.2003.04.003",
+  url = "http://www.sciencedirect.com/science/article/pii/S0747717104000422",
+  author = "Jesús A. De Loera and Raymond Hemmecke and Jeremiah Tauzer and Ruriko Yoshida",
+}
+
 @inproceedings{CLL-ICSE16,
  author = {Chen, Bihuan and Liu, Yang and Le, Wei},
  title = {Generating Performance Distributions via Probabilistic Symbolic Execution},
