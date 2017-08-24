@@ -1,3 +1,21 @@
+@inproceedings{ARH-SOAP15,
+ author = {Arzt, Steven and Rasthofer, Siegfried and Hahn, Robert and Bodden, Eric},
+ title = {Using Targeted Symbolic Execution for Reducing False-positives in Dataflow Analysis},
+ booktitle = {Proceedings of the 4th ACM SIGPLAN International Workshop on State Of the Art in Program Analysis},
+ series = {SOAP 2015},
+ year = {2015},
+ isbn = {978-1-4503-3585-0},
+ location = {Portland, OR, USA},
+ pages = {1--6},
+ numpages = {6},
+ url = {http://doi.acm.org/10.1145/2771284.2771285},
+ doi = {10.1145/2771284.2771285},
+ acmid = {2771285},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+} 
+
+
 @article{LHT-JSC04,
   title = "Effective lattice point counting in rational convex polytopes",
   journal = "Journal of Symbolic Computation",
