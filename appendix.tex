@@ -53,7 +53,7 @@
 \markboth{R. Baldoni, E. Coppa, D. C. D'Elia, C. Demetrescu, and I. Finocchi}{A Survey of Symbolic Execution Techniques}
 
 % Title portion
-\title{A Survey of Symbolic Execution Techniques\\}
+\title{Appendix: A Survey of Symbolic Execution Techniques\\}
 \author{ROBERTO BALDONI
 \affil{\href{http://www.cis.uniroma1.it/}{Cyber Intelligence and Information Security Research Center}, Sapienza}
 EMILIO COPPA
@@ -72,11 +72,10 @@ IRENE FINOCCHI
 %       So for example, Mr. Abdelzaher, the bulk of the research was done at UIUC, and he is
 %       currently affiliated with NASA.
 
-\begin{abstract}
-Many security and software testing applications require checking whether certain properties of a program hold for any possible usage scenario. For instance, a tool for identifying software vulnerabilities may need to rule out the existence of any backdoor to bypass a program's authentication. One approach would be to test the program using different, possibly random inputs. As the backdoor may only be hit for very specific program workloads, automated exploration of the space of possible inputs is of the essence. Symbolic execution provides an elegant solution to the problem, by systematically exploring many possible execution paths at the same time without necessarily requiring concrete inputs. Rather than taking on fully specified input values, the technique abstractly represents them as symbols, resorting to constraint solvers to construct actual instances that would cause property violations. Symbolic execution has been incubated in dozens of tools developed over the last four decades, leading to major practical breakthroughs in a number of prominent software reliability applications. The goal of this survey is to provide an overview of the main ideas, challenges, and solutions developed in the area, distilling them for a broad audience.
-\end{abstract}
+%\begin{abstract}
+%\end{abstract}
 
-%\begin{comment}
+\begin{comment}
 \begin{CCSXML} % http://dl.acm.org/ccs.cfm
 <ccs2012>
 <concept>
@@ -106,15 +105,14 @@ Many security and software testing applications require checking whether certain
 \ccsdesc[300]{Software and its engineering~Dynamic analysis}
 \ccsdesc[300]{Software and its engineering~Software testing and debugging}
 \ccsdesc[100]{Security and privacy~Software and application security}
-%\end{comment}
+\end{comment}
 
 % We no longer use \terms command
 %\terms{Design, Algorithms, Performance}
 
-\keywords{Symbolic execution, static analysis, concolic execution, malware analysis}
+%\keywords{Symbolic execution, static analysis, concolic execution, malware analysis}
 
-\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu,
-and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
+%\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu, and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
 % At a minimum you need to supply the author names, year and a title.
 % IMPORTANT:
 % Full first names whenever they are known, surname last, followed by a period.
@@ -126,25 +124,20 @@ and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
 % is followed by a period and they are separated by a space.
 % The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
 
+
 \begin{bottomstuff}
+\begin{comment}
 %This work is supported by the National Science Foundation, under grant CNS-0435060, grant CCR-0325197 and grant EN-CS-0329609.
 
 Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. 
 This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
+\end{comment}
 \end{bottomstuff}
 
 \maketitle
 
-\input{intro}
-\myinput{executors}
-\myinput{memory}
-\myinput{environment}
-\myinput{explosion}
-\myinput{constraints}
-%\myinput{binary}
-%\input{applications}
-\input{conclusions}
-\input{glossary}
+\myinput{binary}
+\input{applications}
 
 % Bibliography
 %\bibliographystyle{abstract} 
