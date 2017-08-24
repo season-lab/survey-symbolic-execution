@@ -144,9 +144,10 @@ Choosing the number of loop iterations to analyze is especially critical when th
   %{\em What is a constraint solver in practice}? \\
  Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of polynomial expressions over their constituents. Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
 
-  \item {\em Binary code}: what issues can arise when symbolically executing binary code?
+\iffullver{  \item {\em Binary code}: what issues can arise when symbolically executing binary code?
   %what are the disadvantages of symbolically executing binary code?
  While the warm-up example of Section~\ref{symbolic-execution-example} is written in C, in several scenarios binary code is the only available representation of a program. However, having the source code of an application can make symbolic execution significantly easier, as it can exploit high-level properties (e.g., object shapes) that can be inferred statically by analyzing the source code.
+ }{}
   %(e.g., the maximum size of a buffer or the number of iterations for a loop).
    
 \end{itemize}
@@ -162,7 +163,13 @@ Choosing the number of loop iterations to analyze is especially critical when th
 \subsection{Organization of the Article}
 \label{ss:article-organization}
 
+\iffullver{
 The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
+}
+{
+The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
+}
+
 
 %\vspace{2cm}
 %\subsection{Removed stuff}
