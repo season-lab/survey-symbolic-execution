@@ -1,3 +1,23 @@
+@article{CHEN20131758,
+title = "State of the art: Dynamic symbolic execution for automated test generation",
+journal = "Future Generation Computer Systems",
+volume = "29",
+number = "7",
+pages = "1758 - 1773",
+year = "2013",
+issn = "0167-739X",
+doi = "http://dx.doi.org/10.1016/j.future.2012.02.006",
+url = "http://www.sciencedirect.com/science/article/pii/S0167739X12000398",
+author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue Wu",
+keywords = "Dynamic symbolic execution",
+keywords = "Automated test generation",
+keywords = "Low false positives",
+keywords = "High code-coverage",
+keywords = "Challenges and solutions",
+keywords = "Tools analysis",
+keywords = "Prospects"
+}
+
 @inproceedings{ARH-SOAP15,
  author = {Arzt, Steven and Rasthofer, Siegfried and Hahn, Robert and Bodden, Eric},
  title = {Using Targeted Symbolic Execution for Reducing False-positives in Dataflow Analysis},
