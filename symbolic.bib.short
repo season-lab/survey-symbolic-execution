@@ -18,6 +18,29 @@ keywords = "Tools analysis",
 keywords = "Prospects"
 }
 
+@article{QNR13,
+ author = {Qi, Dawei and Nguyen, Hoang D. T. and Roychoudhury, Abhik},
+ title = {Path Exploration Based on Symbolic Output},
+ journal = {ACM Trans. Softw. Eng. Methodol.},
+ volume = {22},
+ number = {4},
+ year = {2013},
+ issn = {1049-331X},
+ pages = {32:1--32:41},
+ articleno = {32},
+ } 
+
+
+@article{APV09,
+ author = {Anand, Saswat and P\&\#x0103;s\&\#x0103;reanu, Corina S. and Visser, Willem},
+ title = {Symbolic Execution with Abstraction},
+ journal = {Int. J. Softw. Tools Technol. Transf.},
+ volume = {11},
+ number = {1},
+ year = {2009},
+ pages = {53--67},
+}
+
 @inproceedings{ARH-SOAP15,
  author = {Arzt, Steven and Rasthofer, Siegfried and Hahn, Robert and Bodden, Eric},
  title = {Using Targeted Symbolic Execution for Reducing False-positives in Dataflow Analysis},
