@@ -1,3 +1,13 @@
+@INPROCEEDINGS{PPM-CSF18, 
+  author={C. S. Pasareanu and Q. S. Phan and P. Malacaria}, 
+  booktitle={2016 IEEE 29th Computer Security Foundations Symposium (CSF)}, 
+  title={Multi-run Side-Channel Analysis Using Symbolic Execution and Max-SMT}, 
+  year={2016}, 
+  pages={387-400}, 
+  doi={10.1109/CSF.2016.34}, 
+  month={June},
+}
+
 @article{CLH-SCN15,
  author = {Chen, Ting and Lin, Xiaodong and Huang, Jin and Bacchus, Abel and Zhang, Xiaosong},
  title = {An Empirical Investigation into Path Divergences for Concolic Execution Using CREST},
