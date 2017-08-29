@@ -1,6 +1,7 @@
 *.log
 *.toc
 main.pdf
+appendix.pdf
 *.out
 *.aux
 *.bbl
