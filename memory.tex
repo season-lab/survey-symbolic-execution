@@ -128,6 +128,15 @@ When an uninitialized reference field is accessed, the algorithm forks the curre
 
 \cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Preconditions are used to characterize those program input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative preconditions are used to ensure that incorrect heap configurations are eliminated during initialization, speeding up the symbolic execution process.
 
+\begin{figure*}[t]
+  %\vspace{-3mm}
+  %\centering
+  \includegraphics[width=0.9\columnwidth]{images/lazy-initialization} 
+  \caption{Example of lazy initialization}
+  \label{fig:example-lazy-initialization}
+  \vspace{-3mm}
+\end{figure*}
+
 Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}, which all share the goal of reducing the number of heap configurations to generate when forking the state.~\cite{DLR-ASE12} also provides a formal treatment of lazy initialization in Java.
 
 \mytempedit{\myparagraph{Verifying Client Code Only}}
