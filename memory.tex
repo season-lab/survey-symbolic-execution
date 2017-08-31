@@ -126,13 +126,13 @@ In particular, they generalize symbolic execution by introducing {\em lazy initi
 
 When an uninitialized reference field is accessed, the algorithm forks the current state with three different heap configurations, in which the field is initialized with: (1) {\tt null}, (2) a reference to a new object with all symbolic attributes, and (3) a previously introduced concrete object of the desired type, respectively. This on-demand concretization enables symbolic execution of methods without the need for any previous knowledge on the number of objects given as input. Also, forking the state as in (2) results into a systematic treatment for aliasing, i.e., when an object can be accessed through multiple references.
 
-\cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Preconditions are used to characterize those program input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative preconditions are used to ensure that incorrect heap configurations are eliminated during initialization, speeding up the symbolic execution process.
+\cite{KPV-TACAS03,SPF-ISSTA04} combine lazy initialization with user-provided \mytempedit{imperative} {\em method preconditions}, i.e., conditions which are assumed to be true before the execution of a method. Preconditions are used to characterize those program input states in which the method is expected to behave as intended by the programmer. For instance, we expect a binary tree data structure to be acyclic and with every node - except for the root - having exactly one parent. Conservative preconditions are used to ensure that incorrect heap configurations are eliminated during initialization, speeding up the symbolic execution process.
 
 \begin{figure*}[t]
   \vspace{-3mm}
   \centering
   \includegraphics[width=0.9\columnwidth]{images/lazy-initialization} 
-  \caption{Example of lazy initialization}
+  \caption{Example of lazy initialization} \cite{}
   \label{fig:example-lazy-initialization}
   \vspace{-3mm}
 \end{figure*}
@@ -143,7 +143,11 @@ Consider the C function {\tt add} shown in Figure~\ref{fig:example-lazy-initiali
 }
 }
 
-Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}, which all share the goal of reducing the number of heap configurations to generate when forking the state.~\cite{DLR-ASE12} also provides a formal treatment of lazy initialization in Java.
+\mytempedit{
+Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}. \cite{DLR-ASE12} besides providing a formalization of this technique, extends lazy initialization by adding support for subtypes and by deferring even further concretization when possible (e.g., a check for nullity does not always imply immediate materialization for an object). \cite{BLI-NFM13} presents {\em bounded lazy initialization} (BLI), which exploits {\em tight field bounds}~\cite{GRP-ISSTA10} to prune unfeasible heap configurations. BLISS~\cite{BLISS-TSE15} extends BLI by integrating two techniques: {\em bound refinement} and {\em satisfiability checks}. The former prunes uninteresting heap configurations by leveraging information from already-concretized fields, while the latter queries a SAT solver to check declarative preconditions, discarding unfeasible heap configurations.
+}
+
+%, which all share the goal of reducing the number of heap configurations to generate when forking the state. extends lazy initialization by handling subtypes and by making the approach even more lazier, provides a formal treatment of lazy initialization in Java.
 
 \mytempedit{\myparagraph{Verifying Client Code Only}}
 Of a different flavor is the technique presented in~\cite{SHZ-TAIC07} for symbolic execution over objects instantiated from commonly used libraries. The authors argue that performing symbolic execution at the representation level might be redundant if the aim is to only check the client code, thus trusting the correctness of the library implementation. They discuss the idea of symbolically executing methods of the Java {\tt String} class using a finite-state automaton that abstracts away the implementation details. They present a case study of an application that dynamically generates SQL queries: symbolic execution is used to check whether the statements conform to the SQL grammar and possibly match injection patterns. \iffullver{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps. It is worth mentioning that symbolic execution is used to detect SQL injection vulnerabilities also in~\cite{FLP-COMPSAC07}.}{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps.}
