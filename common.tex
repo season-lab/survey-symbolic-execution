@@ -29,6 +29,10 @@
 \newcommand{\iffullver}[2]{#2}
 \fi
 
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
 %\usepackage{titlesec}
  %\titlespacing{\section}{0pt}{*1.2}{*1.2}
  %\titlespacing{\subsection}{0pt}{*1.1}{*1.1}
