@@ -134,7 +134,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 
 
 \myparagraph{Concretization}
-\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that constraint solvers cannot solve, at least not efficiently. \mytempedit{A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of sacrificing soundness in the exploration. 
+\cite{CS-CACM13} discusses limitations of classical symbolic execution in the presence of formulas that constraint solvers cannot solve, at least not efficiently. \mytempedit{A concolic executor generates some random input for the program and executes it both concretely and symbolically: a possible value from the concrete execution can be used for a symbolic operand involved in a formula that is inherently hard for the solver, albeit at the cost of possibly sacrificing soundness in the exploration. 
 %For instance, in the presence of three nested branches with only one being non-linear, {\sc DART}~\cite{DART-PLDI05} starts from a random valid input for the function, and then alters it when symbolically exploring the two linear branches. The work resorts to concretization also to avoid performing expensive or imprecise alias analysis on pointers. % with only one of them being
 }
 
