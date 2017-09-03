@@ -17,17 +17,15 @@ In this section we describe some important principles for the design of symbolic
 \end{figure}
 
 %%% 
-\begin{comment}
-1) Main reasons why is hard to make symbolic execution to work in practice: 
-
-(a) Effects of any piece of code inside a program have to be handled by the engine. This requires a lot of effort since large applications are commonly built on top of very complex software stacks that are implemented in many different languages. Moreover, evaluating the effects of the interactions with the environment can be quite challenging. Section X discuss in detail how this has been done in practice.
-
-(b) SMT solvers have improved significantly during the last decades but they still can have issues when dealing with non-linear constraints. Querying the solver for each branch inside a path can be very time and memory consuming. Moreover, it could happen that some queries cannot be solved due to their constraint complexity, leaving the symbolic engine with no clear choice of how to proceed the exploration.
-
-2) An approach that have been proposed in literature that has significantly improved the applicability of symbolic execution is what is known as concolic execution. This is a combination of concrete execution and symbolic execution. The main idea is to start [...]
-
-3) Although the benefits given by concolic execution are quite evident in practice, there are disadvantages as well. Concretization drives the engine towards a specific path of a program. For any uninterpreted piece of code in the path, the engine is not able to understand how its side effects can be altered in order to exhibit different behaviors. As a first consequence, the engine may miss many interesting paths of the program, increasing the number of false negatives. Another critical consequence is known as path divergence. Whenever some piace of code is only executed concretely, then crucial side effects over the symbolic state may not be properly tracked an engine. This could result in imprecise path constraints, which in turn can lead the symbolic engine to generate new concrete inputs that do not actually follow the predicted path in the program. At the end, a concolic engine can waste quite a lot of resources due path divergence, resulting in reduced effectiveness.
-\end{comment}
+%1) Main reasons why is hard to make symbolic execution to work in practice: 
+%
+%(a) Effects of any piece of code inside a program have to be handled by the engine. This requires a lot of effort since large applications are commonly built on top of very complex software stacks that are implemented in many different languages. Moreover, evaluating the effects of the interactions with the environment can be quite challenging. Section X discuss in detail how this has been done in practice.
+%
+%(b) SMT solvers have improved significantly during the last decades but they still can have issues when dealing with non-linear constraints. Querying the solver for each branch inside a path can be very time and memory consuming. Moreover, it could happen that some queries cannot be solved due to their constraint complexity, leaving the symbolic engine with no clear choice of how to proceed the exploration.
+%
+%2) An approach that have been proposed in literature that has significantly improved the applicability of symbolic execution is what is known as concolic execution. This is a combination of concrete execution and symbolic execution. The main idea is to start [...]
+%
+%3) Although the benefits given by concolic execution are quite evident in practice, there are disadvantages as well. Concretization drives the engine towards a specific path of a program. For any uninterpreted piece of code in the path, the engine is not able to understand how its side effects can be altered in order to exhibit different behaviors. As a first consequence, the engine may miss many interesting paths of the program, increasing the number of false negatives. Another critical consequence is known as path divergence. Whenever some piace of code is only executed concretely, then crucial side effects over the symbolic state may not be properly tracked an engine. This could result in imprecise path constraints, which in turn can lead the symbolic engine to generate new concrete inputs that do not actually follow the predicted path in the program. At the end, a concolic engine can waste quite a lot of resources due path divergence, resulting in reduced effectiveness.
 %%%
 
 As shown in the warm-up example (Section~\ref{symbolic-execution-example}), a symbolic execution of a program can generate -- in theory -- all possible control flow paths that the program could take during its concrete executions on specific inputs. While modeling all possible runs allows for very interesting analyses, it is typically unfeasible in practice, especially on real-world software. %, for a variety of reasons. 
@@ -46,7 +44,7 @@ Indeed, complex applications are often built on top of very sophisticated softwa
 
 \end{enumerate}
 
-\noindent A fundamental idea that has been proposed in literature to cope with the above issues and make symbolic execution feasible in practice is to mix concrete and symbolic execution: this is dubbed {\em concolic execution}, where the term concolic is a portmanteau of the words ``concrete'' and ``symbolic'' (Figure~\ref{fig:concrete-symbolic}). This general principle has been explored along different angles, as described in the remainder of this section. We discuss advantages and disadvantages of the different approaches, deferring an additional discussion of issue~(\ref{it:smt-solver-issue}) to Section~\ref{se:constraint-solving}.
+\noindent A fundamental idea that has been proposed in literature to cope with the above issues and make symbolic execution feasible in practice is to mix concrete and symbolic execution: this is dubbed {\em concolic execution}, where the term concolic is a portmanteau of the words ``concrete'' and ``symbolic'' (Figure~\ref{fig:concrete-symbolic}). This general principle has been explored along different angles, as described in the remainder of this section. %We discuss advantages and disadvantages of the different approaches, deferring an additional discussion of issue~(\ref{it:smt-solver-issue}) to Section~\ref{se:constraint-solving}.
 
 \myparagraph{Dynamic Symbolic Execution} One popular concolic execution approach, known as {\em dynamic symbolic execution} or {\em dynamic test generation}~\cite{DART-PLDI05}, is to have concrete execution drive symbolic execution. This technique can be very effective in mitigating issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue}), and (\ref{it:smt-solver-issue}). Besides the symbolic store and the path constraints, the execution engine maintains a concrete store $\sigma_c$ as well. After choosing an arbitrary input to begin with, it executes the program both concretely and symbolically by simultaneously updating the two stores and the path constraints. Whenever the concrete execution takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraints. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. In order to explore different paths, the path conditions given by one or more branches can be negated and the SMT solver invoked to find a satisfying assignment for the new constraints, i.e., to generate a new input. This strategy can be repeated as much as needed to achieve the desired coverage. 
 }
@@ -189,7 +187,12 @@ As shown by the example, false negatives (i.e., missed paths) and path divergenc
 
 %Other techniques that could help reduce false negative will be later discussed in Section~\ref{se:constraint-solving}.
 
-\myparagraph{Execution-Generated Testing}\mynote{Is \cite{DBF-ISSTA16} crucial?} A common concolic approach used for mitigating issue (\ref{it:symbolic-performance-issue}) lets the symbolic engine always execute concretely the operations that involve only concrete values. This idea, adopted, e.g., by {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc EXE}~\cite{EXE-CCS06}, and~\cite{CS-CACM13}, can substantially speed up the computation and make it possible to reason even over complex (e.g., non-linear) operations if they involve only concrete values.
+\myparagraph{Execution-Generated Testing}\mynote{Is \cite{DBF-ISSTA16} crucial?} \mytempedit{A common concolic approach used for mitigating issues (\ref{it:smt-solver-issue}) and (\ref{it:symbolic-performance-issue}) lets the symbolic engine always execute concretely the operations that involve only concrete values. This idea, adopted, e.g., by {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc EXE}~\cite{EXE-CCS06}, and~\cite{CS-CACM13}, can substantially speed up the computation and make it possible to reason even over complex (e.g., non-linear) operations if they involve only concrete values. 
+
+\medskip
+\noindent
+We defer an additional discussion of issue~(\ref{it:smt-solver-issue}) to Section~\ref{se:constraint-solving}.\mynote{Give forward-pointer to sections on environment and path explosion for issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue})?}
+}
 
 %Throughout this article, we will see other uses of concretization (see, e.g., Section~\ref{memory-model} and Section~\ref{se:constraint-solving})  and of concolic execution (see Section~\ref{se:path-explosion}).
 
