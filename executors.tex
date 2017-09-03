@@ -370,6 +370,33 @@ Reasoning about a single path at a time, as in concolic execution, is the approa
 %\myparagraph{Search Heuristics} 
 Given a set of unexplored paths, a search heuristic should select the most promising path to explore. Many works have introduced novel search strategies, showing their effectiveness in specific application contexts. These heuristics have often been tailored to help the symbolic engine achieve a specific goal (e.g., overflow detection). Finding a universally optimal strategy for prioritizing path exploration remains an open problem. Table~\ref{tab:heuristics} provides a sample of prominent search heuristics discussed in prior works. 
 
+\begin{figure}[t]
+  \centering
+  \begin{adjustbox}{width=0.84\columnwidth} % TODO was 1; with 0.88 the last paragraph will fit
+  \begin{small}
+  \begin{tabular}{| l || l |}
+    \hline      
+    {\bf Heuristic} & {\bf Goal} \\ \hline\hline
+    \multirow{2}*{BFS} & {\em Maximize coverage} \\ & \cite{CKC-TOCS12,PEX-TAP08} \\\hline
+    \multirow{3}*{DFS} & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12}\\ & \cite{PEX-TAP08,DART-PLDI05} \\\hline
+    \multirow{2}*{Random path selection} & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
+    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
+    \multirow{3}*{Code coverage search} & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12}\\ & \cite{CKC-TOCS12,GV-ISSTA02} \\\hline
+    \multirow{2}*{Buggy-path-first} & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
+    \multirow{2}*{Loop exhaustion} & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
+    \multirow{2}*{Symbolic instruction pointers} & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
+    \multirow{2}*{Symbolic memory accesses} & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
+    \multirow{2}*{Fitness function} & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
+    \multirow{3}*{Subpath-guided search} & {\em Use frequency distributions of explored subpaths to prioritize}\\ & {\em less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
+    %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
+    \hline  
+  \end{tabular}
+  \end{small}
+  \end{adjustbox}
+  \caption{Common path selection heuristics discussed in literature.}
+  \label{tab:heuristics}
+\end{figure}
+
 The most common strategies are {\em depth-first search} (DFS) and {\em breadth-first search} (BFS). DFS continuously expands a path as much as possible, before backtracking to the deepest unexplored branch. BFS explores all unexplored paths in parallel, repeatedly expanding each of them by a fixed slice. DFS is often adopted for minimizing the memory usage of the symbolic engine: since the chosen path will be sooner or later fully explored, the memory needed for keeping its state will be released as well. Unfortunately, paths containing loops and recursive calls can easily stall the symbolic engine. For this reason, some tools prefer prioritizing paths using BFS. Although memory pressure can be higher, this strategy may allow an engine to quickly explore diverse paths and possibly detecting interesting behaviors. \iffullver{On the other hand, if the ultimate goal requires to fully terminate the exploration of one or more paths, BFS may take a very long time}{However, if the ultimate goal requires to fully terminate the exploration of one or more paths, BFS may take a very long time}.
 
 Another popular strategy is {\em random path selection} that, as its name would suggest, randomly picks a path for exploration. This heuristic has been refined in several variants. For instance, {\sc KLEE}~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and on the branch arity. Namely, it favors paths that have been explored fewer times, preventing starvation caused by loops and other path explosion factors.
