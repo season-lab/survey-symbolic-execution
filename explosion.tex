@@ -3,11 +3,32 @@
 \section{Path explosion}
 \label{se:path-explosion}
 
-One of the main challenges of symbolic execution is the path explosion problem: as a symbolic executor may fork off a new state at every branch of the program, the total number of states may be exponential in the number of branches. Keeping track of a large number of pending branches to be explored, in turn, might impact both time and space. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
-%\mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
+One of the main challenges of symbolic execution is the path explosion problem: a symbolic executor may fork off a new state at every branch of the program, and the total number of states may be thus exponential in the number of branches. Keeping track of a large number of pending branches to be explored, in turn, might impact both running time and space requirements of the symbolic executor. 
 
+The main sources of path explosion are loops and function calls. Each iteration of a loop can be seen as an {\tt if-goto} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite, as suggested by the following example. 
 
+\begin{figure}[t]
+\begin{center}
+\begin{tabular}{c}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+1.  int x = sym_input(); // e.g., read from file
+2.  while (x > 0) {
+3.     x = sym_input();  
+4.  }
+\end{lstlisting}
+\end{tabular}
+\end{center}
+\vspace{-2mm}
+\caption{Loop example with input read from the environment~\protect\cite{CS-CACM13}.}
+\label{fi:example-loop}
+\end{figure}
 
+\vspace{-2pt} % TODO
+\boxedexample{Consider the code fragment of Figure~\ref{fi:example-loop}~\cite{CS-CACM13}, where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form: 
+\[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \] 
+where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
+
+Many works have attempted to capture similarities across distinct loop iterations or function invocations, e.g., by devising summarization strategies that prevent repeated explorations of a code portion or by inferring invariants that inductively describe properties of a computation. In the reminder of this section we present a number of prominent techniques, which typically compute an under-approximation of the analysis aimed at exploring only a relevant subset of the state space.
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Pruning Unrealizable Paths}
@@ -50,21 +71,9 @@ One of the main challenges of symbolic execution is the path explosion problem: 
 
 \noindent This approach is commonly referred to as {\em eager evaluation} of path constraints, since constraints are eagerly checked at each branch, and is typically the default in most symbolic engines. We refer to Section~\ref{se:constraint-solving} for a discussion of the opposite strategy, called {\em lazy evaluation}, aimed at reducing the burden on the constraint solver.
 
-% From warm-up example\mynote{IF: I removed from the warm up the non-forking case. Must be explained here}:
-
-% The evaluation of a conditional branch ${\tt if}~e~{\tt then}~s_{true}~{\tt else}~s_{false}$ affects the path constraint. Two scenarios are possible:
-%     \begin{enumerate}
-%       \item {\em Non-forking}: if $e$ is evaluated as always true (resp., false) under the assumptions in the current state, the proper branch is taken and the symbolic execution advances to $s_{true}$ (resp., $s_{false}$);
-%       \item {\em Forking}: if $e$ cannot be evaluated without instantiating values for one or more of its symbols, the symbolic execution is forked by creating two execution states with path constraints $pct_{true}$ and $pct_{false}$, respectively, corresponding to the two {\tt if} branches. Namely, $pct_{true}=pct \wedge e_s$ and $pct_{false}=pct \wedge \neg e_s$, where $e_s$ is a symbolic expression obtained by evaluating $e$. 
-% %        \[ (s_{true}, pc_{true}) \text{ where } pc_{true} = pc \wedge e \]
-% %        \[ (s_{false}, pc_{false}) \text{ where } pc_{false} = pc \wedge \neg e \]
-%     Symbolic execution proceeds on both states in parallel.
-%     \end{enumerate}
 
 \subsection{Function calls} 
 \label{ss:functions}
-
-\mytempedit{Function calls and loops are the main sources of path explosion. Many works have attempted to capture similarities across distinct function invocations or loop iterations by devising {\em summarization} strategies that prevent repeated explorations of a code portion, or by inferring {\em invariants} that inductively describe properties of a computation. In this section we present a number of prominent techniques for handling function calls, treating loops separately in Section~\ref{ss:loops}.}
 
 % allowing the symbolic executor
 A function $f$ may be called multiple times during an execution, either at the same calling context or at different ones. Differently from traditional symbolic execution, which requires to symbolically execute $f$ at each invocation, the {\em compositional} approach described in~\cite{G-POPL07} dynamically generates {\em function summaries}, allowing \mynote{I: si intende function inputs?} the executor to effectively reuse prior discovered analysis results. \mytempedit{Proposed for concolic executors, the technique captures the effects of a function invocation with a formula $\phi_w$ that conjoins \mynote{I: Perche' w a pedice? Cosa indica?} constraints on the inputs, describing equivalence classes of concrete executions, with constraints observed on the output. A function summary is a propositional logic formula defined as the disjunction of $\phi_w$ formulas from distinct classes, and feasible inter-procedural paths are  modeled by composing symbolic executions of intra-procedural ones.
@@ -91,29 +100,6 @@ Function summaries \mynote{Da rivedere con Daniele o Emilio} have largely been e
 
 \subsection{Loops} 
 \label{ss:loops}
-
-Loops \mynote{I: sposterei queste 4 righe e l'esempio in 5.3: controindicazioni?} are one of the main causes of path explosion: each iteration of a loop can be seen as an {\tt if-goto} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite. 
-
-\begin{figure}[t]
-\begin{center}
-\begin{tabular}{c}
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
-1.  int x = sym_input(); // e.g., read from file
-2.  while (x > 0) {
-3.     x = sym_input();  
-4.  }
-\end{lstlisting}
-\end{tabular}
-\end{center}
-\vspace{-2mm}
-\caption{Loop example with input read from the environment~\protect\cite{CS-CACM13}.}
-\label{fi:example-loop}
-\end{figure}
-
-\vspace{-2pt} % TODO
-\boxedexample{Consider the code fragment of Figure~\ref{fi:example-loop}~\cite{CS-CACM13}, where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form: 
-\[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \] 
-where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
 
 
 
