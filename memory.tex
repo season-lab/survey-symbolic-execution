@@ -70,13 +70,13 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 \label{fi:memory-ite}
 \end{figure}
 
-\noindent In general, a symbolic address may reference any cell in memory, making the approaches described above intractable. Fortunately, in many practical cases the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08}, as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval. 
+\noindent To model fully symbolic pointers, an extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}.
 
-%Reasoning about all possible values a pointer may assume is notoriously hard, as in the worst case a symbolic address may reference any cell in memory. In most cases, however, symbolic memory accesses are typically already constrained to small ranges~\cite{BITBLAZE-ICISS08}. \mynote{Cite VSA \& aliasing as refinements? -- VSA is discussed below} Hence, an engine can ask the solver for the range of possible values for an address in order to restrict the exploration. 
+\mytempedit{
+In its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to provide compact state representations or trade soundness for performance, as discussed in the remainder of this section.
+}
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
-
-To model fully symbolic pointers, an extensive line of research  (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers, which can model operations on arrays as first-class entities in constraint formulas using {\em theories of arrays} in their decision procedures~\cite{STP-CAV07}.
 
 \mytempedit{\cite{MEMSIGHT-ASE17} proposes a different approach to fully symbolic memory that maps symbolic address expressions to data, maintaining the possible alternative states resulting from the memory referenced by a symbolic address in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.}
 
