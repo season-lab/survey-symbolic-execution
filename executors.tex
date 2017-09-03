@@ -31,10 +31,10 @@ In this section we describe some important principles for the design of symbolic
 As shown in the warm-up example (Section~\ref{symbolic-execution-example}), a symbolic execution of a program can generate -- in theory -- all possible control flow paths that the program could take during its concrete executions on specific inputs. While modeling all possible runs allows for very interesting analyses, it is typically unfeasible in practice, especially on real-world software. %, for a variety of reasons. 
 %
 \mytempedit{
-Indeed, complex applications are often built on top of very sophisticated software stacks. Implementing a symbolic execution engine able to statically analyze the whole stack can be rather challenging given the difficulty in accurately evaluating any possible side effects during an application execution. Several problems arise in this context, which can hardly be faced following the purely symbolic approach presented in Section~\ref{symbolic-execution-example}:
+Indeed, complex applications are often built on top of very sophisticated software stacks. Implementing a symbolic execution engine able to statically analyze the whole stack can be rather challenging given the difficulty in accurately evaluating any possible side effect during execution. Several problems arise in this context, which can hardly be faced following the purely symbolic approach presented in Section~\ref{symbolic-execution-example}:
 
 \begin{enumerate}
-\item\label{it:library-call-issue} An exhaustive exploration of external library calls may lead to an exponential explosion of states, preventing the analysis from reaching the interesting portions of the code. The problem is exacerbated by any interactions with the environment (files, network, etc.) made in the library.
+\item\label{it:library-call-issue} Exhaustive exploration of external library calls may lead to an exponential explosion of states, preventing the analysis from reaching the interesting portions of the code. The problem is exacerbated by any interactions with the environment (files, network, etc.) made in the library.
 
 \item\label{it:third-party-issue} Calls to external {\em third-party components} may not be traceable by the executor.
 
