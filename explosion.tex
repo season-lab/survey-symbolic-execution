@@ -3,7 +3,7 @@
 \section{Path explosion}
 \label{se:path-explosion}
 
-One of the main challenges of symbolic execution is the path explosion problem: as a symbolic executor may fork off a new state at every branch of the program, the total number of states may be exponential in the number of branches. Keeping track of a large number of pending branches to be explored, in turn, might impact both time and space. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
+One of the main challenges of symbolic execution is the path explosion problem: a symbolic executor may fork off a new state at every branch of the program, and the total number of states may be thus exponential in the number of branches. Keeping track of a large number of pending branches to be explored, in turn, might impact both time and space. A common approach is to compute an under-approximation of the analysis that only explores a relevant subset of the state space.
 %\mynote{I: We could add the following two examples to explain the causes of path explosion (Vechev)}
 
 
