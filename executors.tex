@@ -46,7 +46,7 @@ Indeed, complex applications are often built on top of very sophisticated softwa
 
 \noindent A fundamental idea that has been proposed in literature to cope with the above issues and make symbolic execution feasible in practice is to mix concrete and symbolic execution: this is dubbed {\em concolic execution}, where the term concolic is a portmanteau of the words ``concrete'' and ``symbolic'' (Figure~\ref{fig:concrete-symbolic}). This general principle has been explored along different angles, discussed in the remainder of this section. %We discuss advantages and disadvantages of the different approaches, deferring an additional discussion of issue~(\ref{it:smt-solver-issue}) to Section~\ref{se:constraint-solving}.
 
-\myparagraph{Dynamic Symbolic Execution} One popular concolic execution approach, known as {\em dynamic symbolic execution} or {\em dynamic test generation}~\cite{DART-PLDI05}, is to have concrete execution drive symbolic execution. This technique can be very effective in mitigating issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue}), and (\ref{it:smt-solver-issue}). In addition to the symbolic store and the path constraints, the execution engine maintains a concrete store $\sigma_c$ as well. After choosing an arbitrary input to begin with, it executes the program both concretely and symbolically by simultaneously updating the two stores and the path constraints. Whenever the concrete execution takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraints. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. In order to explore different paths, the path conditions given by one or more branches can be negated and the SMT solver invoked to find a satisfying assignment for the new constraints, i.e., to generate a new input. This strategy can be repeated as much as needed to achieve the desired coverage. 
+\myparagraph{Dynamic Symbolic Execution} One popular concolic execution approach, known as {\em dynamic symbolic execution} or {\em dynamic test generation}~\cite{DART-PLDI05}, is to have concrete execution drive symbolic execution. This technique can be very effective in mitigating issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue}), and (\ref{it:smt-solver-issue}). In addition to the symbolic store and the path constraints, the execution engine maintains a concrete store $\sigma_c$ as well. After choosing an arbitrary input to begin with, it executes the program both concretely and symbolically by simultaneously updating the two stores and the path constraints. Whenever the concrete execution takes a branch, the symbolic execution is directed toward the same branch and the constraints extracted from the branch condition are added to the current set of path constraints. In other words, the symbolic execution is driven by a specific concrete execution. A consequence of this approach is that the symbolic engine does not need to invoke the constraint solver to decide whether a branch condition is (un)satisfiable, since this is directly tested by the concrete execution. In order to explore different paths, the path conditions given by one or more branches can be negated and the SMT solver invoked to find a satisfying assignment for the new constraints, i.e., to generate a new input. This strategy can be repeated as much as needed to achieve the desired coverage. \mynote{fwd refs for 1, 2, 3?}
 }
 
 \vspace{-2pt} 
@@ -442,6 +442,7 @@ Symbolic backward execution (SBE)~\cite{DA-ASE14,CFS-PLDI09,MPF-SAS11} is a vari
 
 }
 
+\iffullver{
 \subsection{Tools}
 
 \begin{table}[t]
@@ -497,4 +498,4 @@ Symbolic backward execution (SBE)~\cite{DA-ASE14,CFS-PLDI09,MPF-SAS11} is a vari
 \end{table}
 
 Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the article.
-
+}{}
