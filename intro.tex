@@ -134,13 +134,15 @@ Challenges that symbolic execution has to face when processing real-world code c
 \mytempedit{Also, third-party closed-source components and popular frameworks such as Java Swing and Android pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}
 
 
-  \item {\em State space explosion and path selection}: how does symbolic execution deal with path explosion?
-\mynote{[D] I felt it was too long and loop-centric} Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, symbolic engines can implement efficient mechanisms for evaluating multiple states in parallel without running out of resources,
-\mytempedit{ 
-or for skipping over states subsumed by previously explored paths.
+  \item {\em State space explosion}: how does symbolic execution deal with path explosion?
+\mynote{[D] I felt it was too long and loop-centric} Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. %In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, 
+\mytempedit{Efficient mechanisms can be implemented for preventing repeated exploration of the same piece of code
+%\mytempedit{for skipping over states subsumed by previously explored paths} 
+and for evaluating multiple states in parallel without running out of resources.}
+
 %%A loop\mynote{IF: rimuoverei la prima frase, perche' va detto?} can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. 
 %Choosing the number of loop iterations to analyze is especially critical when this number cannot be determined in advance (e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to some value $k$, thus trading speed for soundness. Other approaches infer loop invariants through static analysis  and use them to merge equivalent states. % \mynote{i.e. or e.g.?}  (e.g., when differences are not observable from outside the loop body). 
-}
+
   %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
 
   \item {\em Constraint solver}: what can a constraint solver do in practice?
