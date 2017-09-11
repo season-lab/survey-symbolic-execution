@@ -77,7 +77,7 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \begin{itemize}
 
-\item {\em Representing states implicitly.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, maintaining the possible alternative states resulting from the memory referenced by a symbolic address in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
+\item {\em Representing memory in a compact form.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, maintaining the possible alternative states resulting from the memory referenced by a symbolic address in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
 
 \item {\em Trading soundness for performance.} The idea, discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:index-based-memory}, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
