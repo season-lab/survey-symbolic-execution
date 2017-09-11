@@ -157,8 +157,10 @@ Further refinements to lazy initialization are described in a number of works, e
 
 %, which all share the goal of reducing the number of heap configurations to generate when forking the state. extends lazy initialization by handling subtypes and by making the approach even more lazier, provides a formal treatment of lazy initialization in Java.
 
+\iffullver{
 \mytempedit{\myparagraph{Verifying Client Code Only}}
 Of a different flavor is the technique presented in~\cite{SHZ-TAIC07} for symbolic execution over objects instantiated from commonly used libraries. The authors argue that performing symbolic execution at the representation level might be redundant if the aim is to only check the client code, thus trusting the correctness of the library implementation. They discuss the idea of symbolically executing methods of the Java {\tt String} class using a finite-state automaton that abstracts away the implementation details. They present a case study of an application that dynamically generates SQL queries: symbolic execution is used to check whether the statements conform to the SQL grammar and possibly match injection patterns. \iffullver{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps. It is worth mentioning that symbolic execution is used to detect SQL injection vulnerabilities also in~\cite{FLP-COMPSAC07}.}{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps.}
+}{}
 
 \mytempedit{
 % Reynolds02,IO-POPL01
