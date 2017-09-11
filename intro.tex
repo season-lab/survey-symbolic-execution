@@ -135,7 +135,8 @@ Challenges that symbolic execution has to face when processing real-world code c
 
 
   \item {\em State space explosion}: how does symbolic execution deal with path explosion?
-\mynote{[D] I felt it was too long and loop-centric} Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. %In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, 
+%\mynote{[D] I felt it was too long and loop-centric} 
+Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. %In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, 
 \mytempedit{Efficient mechanisms can be implemented for preventing repeated exploration of the same piece of code
 %\mytempedit{for skipping over states subsumed by previously explored paths} 
 and for evaluating multiple states in parallel without running out of resources.}
