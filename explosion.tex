@@ -321,28 +321,39 @@ Suppose the symbolic engine maintains a worklist of states and a bounded history
 \subsection{Leveraging Program Analysis and Optimization Techniques}
 \label{ss:program-analysis}
 
-A deeper understanding of a program's behavior can help a symbolic engine to focus on promising states, e.g., by pruning uninteresting parts of the computation tree. Several classical program analysis techniques have been explored in the symbolic execution literature. Some prominent examples are listed below:
+A deeper understanding of a program's behavior can help a symbolic engine \mytempedit{to optimize its analysis and to focus on promising states}, e.g., by pruning uninteresting parts of the computation tree. Several classical program analysis techniques have been explored in the symbolic execution literature. \mytempedit{We now briefly discuss some prominent examples.}
 
 % \mytempedit{In this section we explore connections with other program analysis and verification techniques.}
 
-\begin{itemize}
+%is a method that, starting from a subset of a program's behavior, extracts from the program the minimal sequence of instructions that faithfully represents that behavior~\cite{Weiser84}.
+\mytempedit{
+\myparagraph{Program slicing} This analysis,} starting from a subset of a program's behavior, extracts from the program the minimal sequence of instructions that faithfully represents that behavior~\cite{Weiser84}. This information can help a symbolic engine in several ways: for instance, \cite{FIRMALICE-NDSS15} exploits backward program slicing to restrict symbolic exploration toward a specific target program point.
 
-\item {\em Program slicing} is a method that, starting from a subset of a program's behavior, extracts from the program the minimal sequence of instructions that faithfully represents that behavior~\cite{Weiser84}. This information can help a symbolic engine in several ways: for instance, given a program slice related to a target program point, symbolic exploration can be restricted to paths contained in the program slice. \iffullver{We discuss an example of use in Section~\ref{ss:auth-bypass}.}{}
+ %given a program slice related to a target program point, symbolic exploration can be restricted to paths contained in the program slice. \iffullver{We discuss an example of use in Section~\ref{ss:auth-bypass}.}{}
 
-\item {\em Taint analysis} attempts to check which variables of a program may hold values derived from potentially dangerous external sources such as user input. The analysis can be performed both statically and dynamically, with the latter yielding more accurate results. In the context of symbolic execution, taint analysis can help an engine skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space~\cite{SAB-SP10}.
+\mytempedit{
+\myparagraph{Taint analysis}} \mytempedit{This technique~\cite{SAB-SP10}} attempts to check which variables of a program may hold values derived from potentially dangerous external sources such as user input. The analysis can be performed both statically and dynamically, with the latter yielding more accurate results. \mytempedit{In the context of symbolic execution, taint analysis can help an engine to detects which paths depend on tainted values. For instance,~\cite{MAYHEM-SP12} focuses its analysis on paths where a jump instruction is tainted and uses symbolic execution to generate an exploit.
+% skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space.}
+%In the context of symbolic execution, taint analysis can help an engine skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space~\cite{SAB-SP10}.
+}
 
-\item {\em Fuzzing} is a software testing technique that randomly mutates user-provided test inputs to cause crashes or assertion failures and find potential memory leaks. Fuzzing, as discussed in Section~\ref{ss:heuristics}, can be augmented with symbolic execution to collect constraints for an input and negate them to generate new inputs. On the other hand, a symbolic executor can be augmented with fuzzing to reach deeper states in the exploration more quickly and efficiently\iffullver{: we present two embodiments of this approach in Section~\ref{ss:bug-detection}.}{.\mynote{CD: consider citing fuzzers formerly in the apps section}}
+\mytempedit{
+\myparagraph{Fuzzing} This software testing approach randomly mutates user-provided test inputs to cause crashes or assertion failures, possibly finding potential memory leaks.} Fuzzing can be augmented with symbolic execution to collect constraints for an input and negate them to generate new inputs. On the other hand, a symbolic executor can be augmented with fuzzing to reach deeper states in the exploration more quickly and efficiently. \mytempedit{Two notable embodiments of this idea are presented {\em hybrid concolic testing}~\cite{RK-ICSE07} and Driller~\cite{DRILLER-NDSS16}.}
+%\iffullver{: we present two embodiments of this approach in Section~\ref{ss:bug-detection}.} 
+
+%{.\mynote{CD: consider citing fuzzers formerly in the apps section}}
   %\mynote{C: crossref: dynamic test generation}
   %\footnote{\cite{DRILLER-NDSS16} classifies offline symbolic executors such as {\sc DART} and {\sc SAGE} as {\em whitebox fuzzers}.}
 
-\item {\em Branch predication} is a strategy for mitigating misprediction penalties in pipelined executions by avoiding jumps over very small sections of code: for instance, control-flow forking constructs such as the C ternary operator can be replaced with a predicated {\tt select} instruction. \cite{CCK-EUROSYS11} reports an exponential decrease in the number of paths to explore from the adoption of this strategy when cross-checking two implementations of a program using symbolic execution. % [D] alternative formulation: ~\cite{CCK-EUROSYS11} cross-checks two implementations of a program using symbolic execution and reports an exponential decrease in the number of paths to explore from the adoption of a simple form of this strategy; 
+\mytempedit{
+\myparagraph{Branch predication} This is a strategy for} mitigating misprediction penalties in pipelined executions by avoiding jumps over very small sections of code: for instance, control-flow forking constructs such as the C ternary operator can be replaced with a predicated {\tt select} instruction. \cite{CCK-EUROSYS11} reports an exponential decrease in the number of paths to explore from the adoption of this strategy when cross-checking two implementations of a program using symbolic execution. % [D] alternative formulation: ~\cite{CCK-EUROSYS11} cross-checks two implementations of a program using symbolic execution and reports an exponential decrease in the number of paths to explore from the adoption of a simple form of this strategy; 
 %  \item {\em source code analysis}: \mynote{TODO/drop?} extraction of input properties (e.g., size or contents of an array);
 
-  \item {\em Type checking} can be effectively mixed with symbolic analysis~\cite{KCF-PLDI10};  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{Interestingly,~\cite{KCF-PLDI10} discusses also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
+\mytempedit{
+\myparagraph{Type checking} Symbolic analysis can be effectively mixed with typed checking~\cite{KCF-PLDI10}}:  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{Interestingly,~\cite{KCF-PLDI10} discusses also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
 
-  \item {\em State matching} determines whether an abstract state is subsumed by another, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
-
-\end{itemize}
+\mytempedit{
+\myparagraph{State matching} This approach determines whether an abstract state is subsumed by another}, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
 
 \mytempedit{
 \myparagraph{Classic Compiler Optimizations}
