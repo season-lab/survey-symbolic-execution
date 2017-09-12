@@ -76,7 +76,7 @@ This approach is commonly referred to as {\em eager evaluation} of path constrai
 \mytempedit{
 % This can can be seen as a set of learned conflicts and 
 An orthogonal approach that can help reduce the number of paths to check is presented in~\cite{SSJ-NFM15}. While a SMT solver can be used to explore a large search space one path at a time, it will often end up reasoning over control flows shared by many paths. This work exploits this observation by extracting a minimal {\em unsat core} from each path that is proved to be unsatisfiable,
-removing as many statements as possible while preserving unsatisfiability. An engine could thus exploit unsat cores to discard paths that share common (unsatisfiable) sequences of statements.
+removing as many statements as possible while preserving unsatisfiability. An engine could thus exploit unsat cores to discard paths that share the same (unsatisfiable) statements.
 }
 
 \subsection{Function and Loop Summarization} 
