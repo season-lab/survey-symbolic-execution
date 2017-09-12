@@ -74,9 +74,9 @@ A first natural strategy to reduce the path space is to invoke the constraint so
 This approach is commonly referred to as {\em eager evaluation} of path constraints, since constraints are eagerly checked at each branch, and is typically the default in most symbolic engines. We refer to Section~\ref{se:constraint-solving} for a discussion of the opposite strategy, called {\em lazy evaluation}, aimed at reducing the burden on the constraint solver.
 
 \mytempedit{
-A recent orthogonal approach that can help reduce the number of paths to check is presented in~\cite{SSJ-NFM15}. The main intuition is that even if the solver is used for reasoning over a single path, it will often ends up reasoning over statements shared by many paths. ~\cite{SSJ-NFM15} exploits this observation by extracting a minimal {\em unsat core} from each path that is proved to be unsatisfiable. 
 % This can can be seen as a set of learned conflicts and 
-This is obtained by removing as many as possible statements from the path while keeping unsatisfiability. An engine can exploit unsat cores to discard paths that share common (unsatisfiable) statements.
+An orthogonal approach that can help reduce the number of paths to check is presented in~\cite{SSJ-NFM15}. While a SMT solver can be used to explore a large search space one path at a time, it will often end up reasoning over control flows shared by many paths. This work exploits this observation by extracting a minimal {\em unsat core} from each path that is proved to be unsatisfiable,
+removing as many statements as possible while preserving unsatisfiability. An engine could thus exploit unsat cores to discard paths that share common (unsatisfiable) sequences of statements.
 }
 
 \subsection{Function and Loop Summarization} 
