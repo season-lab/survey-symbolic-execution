@@ -7,7 +7,6 @@ In this section we describe some important principles for the design of symbolic
 
 \subsection{Mixing Symbolic and Concrete Execution}
 \label{ss:concrete-concolic-symbolic}
-\label{ss:dynamic-symbolic-execution}
 
 \begin{figure}[t]
 \centering
@@ -183,7 +182,22 @@ As shown by the example, false negatives (i.e., missed paths) and path divergenc
 %\mytempedit{
 %To mitigate the problem of false negatives, several works have exploited variants of concolic execution or different ways of mixing concrete and symbolic runs. \cite{DBF-ISSTA16} presents a framework for the specification of mixed concrete/symbolic policies, allowing for a better understanding of their impact and trade-offs in terms of correctness, completeness and efficiency of the approach.} 
 
-\myparagraph{Selective Symbolic Execution} \mytempedit{{\sc \stwoe}~\cite{CKC-TOCS12} takes a different approach to issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue}), and (\ref{it:smt-solver-issue}), by interleaving portions of code that are concretely run with fully symbolic phases.} The interleaving must be done carefully in order to preserve the meaningfulness of the whole exploration. When an argument $x$ for a function call to be concretized is symbolic, the engine converts it to some concrete value in order to perform the call, which is equivalent to corseting the exploration to a single path in the callee. When the call returns and the symbolic phase resumes, the concrete value for $x$ becomes part of the path constraints for the remainder of the exploration. However, a large number of paths may be then excluded. {\sc \stwoe} presents a systematic approach to consistently cross the symbolic/concrete boundary in both directions: it describes a strategy to deal with constraints introduced on symbolic values as a consequence of concretization, and introduces a number of consistency models -- where a state is {\em consistent} when there exists a feasible path to it from the initial state -- which suit different analyses. Constraints that are updated to account for concrete values are marked as {\em soft}. Whenever a branch is made inoperative by such a constraint in the symbolic territory, execution goes back and picks a value for the concrete call that would enable that branch. %\mytempedit{Similarly to dynamic symbolic execution, this technique may incur in false negatives due to concretization.}
+\myparagraph{Selective Symbolic Execution}
+\mytempedit{{\sc \stwoe}~\cite{CKC-TOCS12} takes a different approach to mixing symbolic and concrete execution based on the observation that one may want to explore only some components of a software stack in full, but not to care about others. {\em Selective symbolic execution} carefully interleaves portions of code that are concretely run with fully symbolic phases, while keeping the exploration meaningful.
+
+Going from the concrete to the symbolic domain is easy: the called function is executed both concretely and symbolically, with the result from the first execution simply returned to the concrete domain, while  symbolic execution explores the component of interest in full by turning the arguments for the call into purely symbolic ones.
+
+When calling instead from the symbolic to the concrete domain, the arguments for the call are concretized and added to the path constraints, as the return value and any possible side effects are implicitly tied to the choice of values for the arguments. This results however in future symbolic execution paths possibly being lost because of (a) the values chosen for the arguments or (b) the constrained return value and side effects. Constraints of kind (a) and (b) are thus marked by the engine as soft, and whenever a branch in the symbolic domain is made inoperative by such a constraint, the execution can backtrack and a different choice of concrete values can be made.
+
+The concrete-symbolic boundary traversal is ruled by an {\em execution consistency model} that balances path over- and under-approximation (i.e., false negatives/positives) with scalability. {\sc \stwoe} offers six models targeting different use cases (e.g., systematic testing, reverse engineering, analysis of cryptographic code with hard-to-solve constraints).
+
+%A transition from the symbolic domain is more complicated:
+
+%Executions within the symbolic and concrete domains are dubbed multi-path and single-path, respectively.
+}
+
+%%% v0
+%\myparagraph{Selective Symbolic Execution} \mytempedit{{\sc \stwoe}~\cite{CKC-TOCS12} takes a different approach to issues (\ref{it:library-call-issue}), (\ref{it:third-party-issue}), and (\ref{it:smt-solver-issue}), by interleaving portions of code that are concretely run with fully symbolic phases.} The interleaving must be done carefully in order to preserve the meaningfulness of the whole exploration. When an argument $x$ for a function call to be concretized is symbolic, the engine converts it to some concrete value in order to perform the call, which is equivalent to corseting the exploration to a single path in the callee. When the call returns and the symbolic phase resumes, the concrete value for $x$ becomes part of the path constraints for the remainder of the exploration. However, a large number of paths may be then excluded. {\sc \stwoe} presents a systematic approach to consistently cross the symbolic/concrete boundary in both directions: it describes a strategy to deal with constraints introduced on symbolic values as a consequence of concretization, and introduces a number of consistency models -- where a state is {\em consistent} when there exists a feasible path to it from the initial state -- which suit different analyses. Constraints that are updated to account for concrete values are marked as {\em soft}. Whenever a branch is made inoperative by such a constraint in the symbolic territory, execution goes back and picks a value for the concrete call that would enable that branch. %\mytempedit{Similarly to dynamic symbolic execution, this technique may incur in false negatives due to concretization.}
 
 %Other techniques that could help reduce false negative will be later discussed in Section~\ref{se:constraint-solving}.
 
