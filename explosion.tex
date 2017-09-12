@@ -114,7 +114,7 @@ Of a different flavor is the compaction technique introduced in~\cite{SST-ATVA13
 \mytempedit{
 Modern SAT solvers rely on a mutual reinforcing combination of search and deduction, using the latter to drive the former away from a conflict when it becomes blocked. In a similar manner, symbolic execution can benefit from {\em interpolation} techniques to derive properties from program paths that did not show a desired property, so to prevent the execution from exploring other paths that would lead to a failure in the same way.
 
-{\em Craig interpolants}~\cite{Craig1957} allow deciding what information about a formula is relevant to a property. Assuming a formula $P\rightarrow Q$ holds in some logic, it is possible to construct an interpolant $I$ such that $P\rightarrow I$ and $I\rightarrow Q$ are valid, and every non-logical symbol in $I$ occurs in both $P$ and $Q$. In program verification, interpolants are typically devised as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, an interpolant $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.
+{\em Craig interpolants}~\cite{Craig1957} allow deciding what information about a formula is relevant to a property. Assuming a formula $P\rightarrow Q$ holds in some logic, it is possible to construct an interpolant $I$ such \mynote{I: ma la freccia cosa indica?} that $P\rightarrow I$ and $I\rightarrow Q$ are valid, and every non-logical symbol in $I$ occurs in both $P$ and $Q$. In program verification, interpolants are typically devised as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, an interpolant $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.
 
 Interpolation has largely been employed in model checking, predicate abstraction, predicate refinement, theorem proving, and other areas. For instance, interpolants provide a methodology to extend {\em bounded model checking} -- which aims at the falsification of safety properties of a program for which the transition relation is unrolled up to a given bound -- to the unbounded case. In particular, since bounded proofs often contains the ingredients of unbounded proofs, interpolation can help construct an over-approximation of all reachable final states from the refutation proof for the bounded case, obtaining an over-approximation that is strong enough to prove absence of errors.
 % given a refutation proof for the bounded case, 
@@ -139,6 +139,12 @@ We believe that the idea of using abstract interpretation in this setting -- ori
 %has been fully explored and no error is found, interpolation is used to compute a weaker formula that 
 %interpolation is used to compute conditions that are eventually propagated to their ancestors. 
 }
+
+
+\myparagraph{Subsumption with Abstraction} \cite{APV09} proposes a {\em state matching} technique to compare symbolic states and to determine whether a state is subsumed by another one. The technique considers both heap shapes, by traversing the symbolic heap graphs in the symbolic states and trying to match their nodes, and state constraints due to numeric data stored in the symbolic states. State matching goes thus beyond bounded model checking and can handle un-initialized, or partially initialized, recursive data structures (such as linked lists or trees) as well as arrays.
+
+Even with subsumption, the number of symbolic states may still be unbounded. Hence, \cite{APV09} adds {\em abstractions} to limit the model checker's search space: for each explored state, the model checker computes and stores an abstract version of the state, as specified by suitable abstraction mappings, and subsumption checking is performed on the abstract states, effectively exploring an under-approximation of the feasible paths. 
+
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Under-Constrained Symbolic Execution} 
