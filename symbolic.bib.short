@@ -1,3 +1,4 @@
+
 @inproceedings{SSJ-NFM15,
     author={Schwartz-Narbonne, Daniel
     and Sch{\"a}f, Martin
@@ -98,7 +99,7 @@ keywords = "Prospects"
 
 
 @article{APV09,
- author = {Anand, Saswat and P\&\#x0103;s\&\#x0103;reanu, Corina S. and Visser, Willem},
+ author = {Anand, Saswat and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
  title = {Symbolic Execution with Abstraction},
  journal = {Int. J. Softw. Tools Technol. Transf.},
  volume = {11},
