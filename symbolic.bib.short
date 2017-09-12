@@ -289,8 +289,6 @@ keywords = "Prospects"
  series = {ATEC '05},
  year = {2005},
  location = {Anaheim, CA},
- pages = {41--41},
- numpages = {1},
  url = {http://dl.acm.org/citation.cfm?id=1247360.1247401},
  acmid = {1247401},
  publisher = {USENIX Association},
