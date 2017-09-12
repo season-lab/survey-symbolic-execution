@@ -126,11 +126,11 @@ Challenges that symbolic execution has to face when processing real-world code c
 
 \begin{itemize}[itemsep=2mm]
 
-\item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects?\mynote{CD: extend}
+\item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Code manipulating pointers and data structures may give rise not only to symbolic stored data, but also to addresses being described by symbolic expressions.
 %Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
 
 \item {\em Environment and Third-Party Components}: how does the symbolic engine handle interactions with the environment?
-  Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects
+\mynote{[D] keep it shorter?} Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects
 (such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. %A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
 \mytempedit{Also, third-party closed-source components and popular frameworks (e.g., Java Swing and Android) pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}\mynote{CD: may be dropped if we run out of space}
 
@@ -183,7 +183,8 @@ The remainder of this article is organized as follows. In Section~\ref{se:execut
 }
 {
 \mytempedit{
-The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
+\mynote{[D] Cite supplementary material?}
+The remainder of this article is organized as follows. In Section~\ref{se:executors} we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while Section~\ref{se:hang} speculates about how recent advances in other areas could be applied to enhance symbolic execution techniques. Concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
 }
 }
 
