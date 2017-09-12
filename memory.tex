@@ -124,10 +124,13 @@ To mitigate the scalability problems of fully symbolic memory and the loss of so
 This algorithm comes with a number of caveats: for instance, querying the solver on each symbolic dereference is expensive, the memory range may not be continuous, and the values within the memory region of a symbolic pointer might have structure. {\sc Mayhem}~\cite{MAYHEM-SP12} thus performs a number of optimizations, including Value Set Analysis~\cite{VSA-CC04} and forms of query caching (Section~\ref{se:constraint-solving}), to refine ranges efficiently. If at the end of the process the range size exceeds a given threshold (e.g., 1024), the address is concretized. {\sc Angr}~\cite{ANGR-SSP16} also adopts the partial memory model idea and extends it by optionally supporting write operations on symbolic pointers that range within small contiguous intervals (up to 128 addresses). % [D] ptr may also be redirected to symbolic data
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Complex Objects}
+%\subsection{Complex Objects}
+%
+
+%\mytempedit{\myparagraph{Lazy Initialization}}
+\mytempedit{\subsection{Lazy Initialization}}
 \label{ss:complex-objects}
 
-\mytempedit{\myparagraph{Lazy Initialization}}
 \cite{KPV-TACAS03} propose symbolic execution techniques for advanced object-oriented language constructs, such as those offered by C++ and Java. The authors describe a framework for software verification that combines symbolic execution and model checking to handle linked data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
 
 In particular, they generalize symbolic execution by introducing {\em lazy initialization} to effectively handle dynamically allocated objects. Compared to our warm-up example (Section~\ref{symbolic-execution-example}), the state representation is extended with a {\em heap configuration} used to maintain such objects. Symbolic execution of a method taking complex objects as inputs starts with uninitialized fields, and assigns values to them in a lazy fashion, i.e., they are initialized when first accessed during execution.
