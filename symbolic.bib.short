@@ -1,3 +1,21 @@
+@inproceedings{SSJ-NFM15,
+    author={Schwartz-Narbonne, Daniel
+    and Sch{\"a}f, Martin
+    and Jovanovi{\'{c}}, Dejan
+    and R{\"u}mmer, Philipp
+    and Wies, Thomas},
+  title= {Conflict-Directed Graph Coverage},
+  bookTitle= {NASA Formal Methods: 7th International Symposium},
+  series = {NFM '15},
+  year= {2015},
+  publisher={Springer International Publishing},
+  pages={327--342},
+  isbn={978-3-319-17524-9},
+  doi={10.1007/978-3-319-17524-9\_23},
+  url={https://doi.org/10.1007/978-3-319-17524-9\_23}
+}
+
+
 @inproceedings{GRP-ISSTA10,
  author = {Galeotti, Juan Pablo and Rosner, Nicol\'{a}s and L\'{o}pez Pombo, Carlos Gustavo and Frias, Marcelo Fabian},
  title = {Analysis of Invariants for Efficient Bounded Verification},
