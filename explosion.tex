@@ -150,10 +150,11 @@ We believe that the idea of using abstract interpretation in this setting -- ori
 }
 
 
+\mytempedit{
 \myparagraph{Subsumption with Abstraction} \cite{APV09} proposes a {\em state matching} technique to compare symbolic states and to determine whether a state is subsumed by another one. The technique considers both heap shapes, by traversing the symbolic heap graphs in the symbolic states and trying to match their nodes, and state constraints due to numeric data stored in the symbolic states. State matching goes thus beyond bounded model checking and can handle un-initialized, or partially initialized, recursive data structures (such as linked lists or trees) as well as arrays.
 
 Even with subsumption, the number of symbolic states may still be unbounded. Hence, \cite{APV09} adds {\em abstractions} to limit the model checker's search space: for each explored state, the model checker computes and stores an abstract version of the state, as specified by suitable abstraction mappings, and subsumption checking is performed on the abstract states, effectively exploring an under-approximation of the feasible paths. 
-
+}
 
 % ---------------------------------------------------------------------------------------------------
 \subsection{Under-Constrained Symbolic Execution} 
