@@ -376,34 +376,9 @@ Reasoning about a single path at a time, as in concolic execution, is the approa
 %
 % many prior works
 %\myparagraph{Search Heuristics} 
-We remark that path selection heuristics are often tailored to help the symbolic engine achieve specific goals (e.g., overflow detection). Finding a universally \mynote{I: ma e' fattibile?}  optimal strategy remains an open problem. Table~\ref{tab:heuristics} provides a sample of prominent approaches. 
+We remark that path selection heuristics are often tailored to help the symbolic engine achieve specific goals (e.g., overflow detection). Finding a universally \mynote{I: ma e' fattibile?}  optimal strategy remains an open problem. %Table~\ref{tab:heuristics} provides a sample of prominent approaches. 
 
-\begin{figure}[t]
-  \centering
-  \begin{adjustbox}{width=0.84\columnwidth} % TODO was 1; with 0.88 the last paragraph will fit
-  \begin{small}
-  \begin{tabular}{| l || l |}
-    \hline      
-    {\bf Heuristic} & {\bf Goal} \\ \hline\hline
-    \multirow{2}*{BFS} & {\em Maximize coverage} \\ & \cite{CKC-TOCS12,PEX-TAP08} \\\hline
-    \multirow{3}*{DFS} & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12}\\ & \cite{PEX-TAP08,DART-PLDI05} \\\hline
-    \multirow{2}*{Random path selection} & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
-    %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    \multirow{3}*{Code coverage search} & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12}\\ & \cite{CKC-TOCS12,GV-ISSTA02} \\\hline
-    \multirow{2}*{Buggy-path-first} & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
-    \multirow{2}*{Loop exhaustion} & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
-    \multirow{2}*{Symbolic instruction pointers} & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
-    \multirow{2}*{Symbolic memory accesses} & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
-    \multirow{2}*{Fitness function} & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
-    \multirow{3}*{Subpath-guided search} & {\em Use frequency distributions of explored subpaths to prioritize}\\ & {\em less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
-    %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
-    \hline  
-  \end{tabular}
-  \end{small}
-  \end{adjustbox}
-  \caption{Common path selection heuristics discussed in the literature.}
-  \label{tab:heuristics}
-\end{figure}
+% "Common path selection heuristics" table moved to Appendix
 
 {\em Depth-first search} (DFS), which \mynote{I: ridotta all'osso questa parte} expands a path as much as possible before backtracking to the deepest unexplored branch, and {\em breadth-first search} (BFS), which expands all paths in parallel, are the most common strategies. DFS is often adopted when memory usage is at a premium, but is hampered by paths containing loops and recursive calls. Hence,  in spite of the higher memory pressure and of the long time required to complete the exploration of specific paths, some tools resort to BFS, which allows the engine to quickly explore diverse paths  detecting interesting behaviors early. \iffullver{On the other hand, if the ultimate goal requires to fully terminate the exploration of one or more paths, BFS may take a very long time} Another popular strategy is {\em random path selection}, that has been refined in several variants. For instance, {\sc KLEE}~\cite{KLEE-OSDI08} assigns probabilities to paths based on their length and on the branch arity: it favors paths that have been explored fewer times, preventing starvation caused by loops and other path explosion factors.
 
@@ -475,60 +450,4 @@ A crucial requirement for the reversed exploration in SBE, as well as in CCBSE, 
 
 }
 
-\iffullver{
-\subsection{Tools}
-
-\begin{table}[t]
-  \centering
-  \begin{adjustbox}{width=0.98\columnwidth} % TODO was 1
-  %\begin{small}
-  \begin{tabular}{| l || c || l |}
-    \hline      
-    {\bf Symbolic engine} & {\bf References} & {\bf Project URL} (last retrieved: August 2016)  \\ \hline\hline
-    
-    % CNC is not a symbolic engine but it uses constrained solver
-    %{\sc Check 'n' Crash} & \cite{CS-ICSE05} & \url{http://ranger.uta.edu/~csallner/cnc/}\\
-    
-    {\sc CUTE} & \cite{CUTE-FSE05} & -- \\
-    {\sc DART} & \cite{DART-PLDI05} & -- \\
-    {\sc jCUTE} & \cite{SA-CAV06} & \url{https://github.com/osl/jcute} \\ % : Java Concolic Unit Testing Engine
-    {\sc KLEE} & \cite{EXE-CCS06,KLEE-OSDI08} & \url{https://klee.github.io/} \\ % : a LLVM Execution Engine
-    {\sc SAGE} & \cite{SAGE-NDSS08,EGL-ISSTA09} & -- \\
-    {\sc BitBlaze} & \cite{BITBLAZE-ICISS08} & \url{http://bitblaze.cs.berkeley.edu/} \\ % , BHK-TR07
-    {\sc CREST} & \cite{CREST-ASE08} & \url{https://github.com/jburnim/crest} \\ % : a concolic test generation tool for C
-    {\sc PEX} & \cite{PEX-TAP08} & \url{http://research.microsoft.com/en-us/projects/pex/} \\
-    {\sc Rubyx} & \cite{CF-CCS10} & -- \\
-    {\sc Java PathFinder} & \cite{PATHFINDER-ASE10} & \url{http://babelfish.arc.nasa.gov/trac/jpf}\\
-    {\sc Otter} & \cite{RSM-ICSE10} & \url{https://bitbucket.org/khooyp/otter/} \\
-    {\sc BAP} & \cite{BAP-CAV11} & \url{https://github.com/BinaryAnalysisPlatform/bap} \\
-    {\sc Cloud9} & \cite{CLOUD9-EUROSYS11} & \url{http://cloud9.epfl.ch/} \\
-    {\sc Mayhem} & \cite{MAYHEM-SP12} & -- \\
-    {\sc SymDroid} & \cite{JMF-TECH12} & -- \\
-    {\sc \stwoe} & \cite{CKC-TOCS12} & \url{http://s2e.epfl.ch/} \\
-    {\sc FuzzBALL} & \cite{MMP-ASPLOS12,FUZZBALL-ESORICS13} & \url{http://bitblaze.cs.berkeley.edu/fuzzball.html} \\
-    {\sc Jalangi} & \cite{SKB-FSE13} & \url{https://github.com/Samsung/jalangi2} \\
-    {\sc Pathgrind} & \cite{S-ICSE04} & \url{https://github.com/codelion/pathgrind} \\
-    {\sc Kite} & \cite{V-THESIS14} & \url{http://www.cs.ubc.ca/labs/isd/Projects/Kite} \\
-    {\sc SymJS} & \cite{LAG-FSE14} & -- \\
-    {\sc CIVL} & \cite{CIVL-SC15} & \url{http://vsl.cis.udel.edu/civl/}\\ % : The Concurrency Intermediate Verification Language 
-    {\sc KeY} & \cite{HBR-RV14} & \url{http://www.key-project.org/} \\
-    {\sc Angr} & \cite{FIRMALICE-NDSS15,ANGR-SSP16} & \url{http://angr.io/} \\
-    {\sc Triton} & \cite{TRITON-SSTIC15} & \url{http://triton.quarkslab.com/} \\
-    {\sc PyExZ3} & \cite{BD-TECH15} & \url{https://github.com/thomasjball/PyExZ3} \\
-    {\sc JDart} & \cite{JDART-TACAS16} & \url{https://github.com/psycopaths/jdart} \\
-
-    {\sc CATG} & -- & \url{https://github.com/ksen007/janala2} \\
-    {\sc PySymEmu} & -- & \url{https://github.com/feliam/pysymemu/} \\
-    {\sc Miasm} & -- & \url{https://github.com/cea-sec/miasm} \\
-    
-    \hline  
-  \end{tabular}
-  %\end{small}
-  \end{adjustbox}
-  \caption{Selection of symbolic execution engines, along with their reference article(s) and software project web site (if any).}
-  \label{tab:symbolic-engines}
-  \vspace{-3mm} % TODO
-\end{table}
-
-Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the article.
-}{}
+% "Tools" moved to Appendix
