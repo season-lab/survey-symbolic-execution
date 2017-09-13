@@ -105,6 +105,7 @@ In more detail, every value that cannot be determined by a static analysis of th
   \caption{Symbolic execution tree of function {\tt foobar} given in Figure~\ref{fig:example-1}. Each execution state, labeled with an upper case letter, shows the statement to be executed, the symbolic store $\sigma$, and the path constraints $\pi$. Leaves are evaluated against the condition in the {\tt assert} statement. }
 %For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
+  %\vspace{-2mm}
 \end{figure}
 
 \noindent A symbolic execution of function {\tt foobar}, which can be effectively represented as a tree, is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraints are {\tt true} and input arguments {\tt a} and {\tt b} are associated with symbolic values. 
