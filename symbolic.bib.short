@@ -465,7 +465,7 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
 @inproceedings{Abraham15,
  author = {Abraham, Erika},
  title = {Building Bridges Between Symbolic Computation and Satisfiability Checking},
- booktitle = {Proceedings of the 2015 ACM on Int. Symposium on Symbolic and Algebraic Computation},
+ booktitle = {Proc. of the 2015 ACM on Int. Symp. on Symbolic and Algebraic Computation},
  series = {ISSAC '15},
  year = {2015},
  isbn = {978-1-4503-3435-8},
@@ -1081,7 +1081,7 @@ month={Oct},}
 @inproceedings{MEMSIGHT-ASE17,
  author = {Coppa, Emilio and D'Elia, Daniele Cono and Demetrescu, Camil},
  title = {Rethinking Pointer Reasoning in Symbolic Execution},
- booktitle = {Proceedings of the 32nd ACM/IEEE Int. Conf. on Automated Software Engineering},
+ booktitle = {Proc. of the 32nd ACM/IEEE Int. Conf. on Automated Software Engineering},
  series = {ASE '17},
  year = {2017}
 }
