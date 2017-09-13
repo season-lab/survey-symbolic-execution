@@ -514,7 +514,7 @@ title="SC2: Satisfiability Checking Meets Symbolic Computation",
 bookTitle="Intelligent Computer Mathematics: 9th Int. Conference, CICM 2016, Bialystok, Poland, July 25-29, 2016, Proceedings",
 year="2016",
 publisher="Springer Int. Publishing",
-address="Cham",
+AddressCHAM = {Cham},
 pages="28--43",
 isbn="978-3-319-42547-4",
 doi="10.1007/978-3-319-42547-4_3",
@@ -533,7 +533,7 @@ title="SMT-RAT: An Open Source C++ Toolbox for Strategic and Parallel SMT Solvin
 bookTitle="Theory and Applications of Satisfiability Testing -- SAT 2015: 18th Int. Conference, Austin, TX, USA, September 24-27, 2015, Proceedings",
 year="2015",
 publisher="Springer Int. Publishing",
-address="Cham",
+AddressCHAM = {Cham},
 pages="360--368",
 doi="10.1007/978-3-319-24318-4_26",
 url="https://doi.org/10.1007/978-3-319-24318-4_26"
@@ -899,8 +899,6 @@ month={Oct},}
  series = {HotOS'13},
  year = {2013},
  location = {Santa Ana Pueblo, New Mexcio},
- pages = {18--18},
- numpages = {1},
  url = {http://dl.acm.org/citation.cfm?id=2490483.2490501},
  acmid = {2490501},
  publisher = {USENIX Association},
@@ -2662,7 +2660,7 @@ month={Oct},}
 } 
 
 @inbook{TS-ATVA14,
-	Address = {Cham},
+	AddressCHAM = {Cham},
 	Author = {Trt{\'\i}k, Marek and Strej{\v{c}}ek, Jan},
 	Booktitle = {Proceedings of 12th Int. Symposium on Automated Technology for Verification and Analysis},
 	series = {ATVA 2014},
@@ -2878,7 +2876,7 @@ month={Oct},}
 	Bdsk-Url-1 = {http://dx.doi.org/10.1007/978-3-642-23822-2_12}}
 
 @inbook{HOT-FPS15,
-	Address = {Cham},
+	AddressCHAM = {Cham},
 	Author = {Hai, Nguyen Minh and Ogawa, Mizuhito and Tho, Quan Thanh},
 	Booktitle = {Foundations and Practice of Security: 8th Int. Symposium, FPS 2015, Clermont-Ferrand, France, October 26-28, 2015, Revised Selected Papers},
 	Doi = {10.1007/978-3-319-30303-1_14},
@@ -3179,7 +3177,7 @@ month={Oct},}
 	
 @article{Weiser84, 
   author = {Weiser, Mark},
-  journal = {IEEE Transactions on Software Engineering}, 
+  journal = {IEEE Trans. on Software Engineering}, 
   title = {{Program Slicing}}, 
   year = {1984}, 
   volume = {SE-10}, 
