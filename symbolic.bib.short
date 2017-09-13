@@ -253,7 +253,7 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
  url = {http://dl.acm.org/citation.cfm?id=2041552.2041563},
  acmid = {2041563},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 
@@ -330,7 +330,7 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
  	pages = {55--74},
  	numpages = {20},
 	publisher = {IEEE Computer Society},
- 	address = {Washington, DC, USA},
+ 	AddressIEEE = {Washington, DC, USA},
 }
 
 @inproceedings{IO-POPL01,
@@ -415,7 +415,7 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
  url = {http://dl.acm.org/citation.cfm?id=2032305.2032320},
  acmid = {2032320},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @misc{INFER,
@@ -459,7 +459,7 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
  doi = {10.1007/978-3-642-39799-8_54},
  acmid = {2526927},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{Abraham15,
@@ -577,7 +577,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  doi = {10.1007/978-3-642-14295-6_10},
  acmid = {2144323},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @INPROCEEDINGS{YYG15, 
@@ -641,7 +641,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  doi = {10.1007/978-3-642-29860-8_32},
  acmid = {2341659},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{JMN12,
@@ -658,7 +658,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  doi = {10.1007/978-3-642-31424-7_61},
  acmid = {2362291},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{JSV09,
@@ -674,7 +674,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  url = {http://dl.acm.org/citation.cfm?id=1788994.1789034},
  acmid = {1789034},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{SFS11,
@@ -691,7 +691,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
  doi = {10.1007/978-3-642-34188-5_15},
  acmid = {2426005},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @INPROCEEDINGS{SFS12, 
@@ -768,7 +768,7 @@ month={Oct},}
  doi = {10.1007/978-3-540-88387-6_10},
  acmid = {1478291},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{CPR-PLDI06,
@@ -820,7 +820,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1987389.1987400},
  acmid = {1987400},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 }
 
 @inproceedings{RACERX-SOSP03,
@@ -889,7 +889,7 @@ month={Oct},}
  doi = {10.1109/ISSRE.2015.7381814},
  acmid = {2922841},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
 }
 
 @inproceedings{WKC-HOTOS13,
@@ -1172,7 +1172,7 @@ month={Oct},}
 
 @article{PV-JSTTT09,
 	Acmid = {1667869},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
 	Doi = {10.1007/s10009-009-0118-1},
 	Issn = {1433-2779},
@@ -1308,7 +1308,7 @@ month={Oct},}
  doi = {10.1007/11817963_38},
  acmid = {2135962},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 @inproceedings{FIRMALICE-NDSS15,
@@ -1342,7 +1342,7 @@ month={Oct},}
  doi = {10.1109/SP.2012.31},
  acmid = {2310692},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
  keywords = {hybrid execution, symbolic memory, index-based memory modeling, exploit generation},
 }
 	
@@ -1415,7 +1415,7 @@ month={Oct},}
  doi = {10.1109/SP.2010.26},
  acmid = {1849981},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
  keywords = {taint analysis, symbolic execution, dynamic analysis},
 } 
 
@@ -1755,7 +1755,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=2032305.2032342},
  acmid = {2032342},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 @phdthesis{STP-TR07,
@@ -1769,7 +1769,7 @@ month={Oct},}
 
 @inproceedings{STP-CAV07,
 	Acmid = {1770421},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Ganesh, Vijay and Dill, David L.},
 	Booktitle = {Proceedings of the 19th Int. Conference on Computer Aided Verification},
 	Isbn = {978-3-540-73367-6},
@@ -1798,7 +1798,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1792734.1792766},
  acmid = {1792766},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 @techreport{DISSOLVER-TR03,
@@ -2106,7 +2106,7 @@ month={Oct},}
 @inproceedings{RK-ICSE07,
 	//Url = {http://dx.doi.org/10.1109/ICSE.2007.41},
 	Acmid = {1248874},
-	Address = {Washington, DC, USA},
+	AddressIEEE = {Washington, DC, USA},
 	Author = {Majumdar, Rupak and Sen, Koushik},
 	Booktitle = {Proceedings of the 29th Intern. Conf. on Software Engineering},
 	Doi = {10.1109/ICSE.2007.41},
@@ -2140,7 +2140,7 @@ month={Oct},}
 
 @incollection{HSS-RV09,
 	Acmid = {1690877},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Hansen, Trevor and Schachte, Peter and S{\o}ndergaard, Harald},
 	Chapter = {State Joining and Splitting for the Symbolic Execution of Binaries},
 	Doi = {10.1007/978-3-642-04694-0_6},
@@ -2216,7 +2216,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1792786.1792798},
  acmid = {1792798},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 
@@ -2311,7 +2311,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1308173.1308254},
  acmid = {1308254},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
 } 
 
 
@@ -2344,7 +2344,7 @@ month={Oct},}
 
 @inproceedings{APV-SPIN06,
 	Acmid = {2182170},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Anand, Saswat and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
 	Booktitle = {Proceedings of the 13th Int. Conference on Model Checking Software},
 	Doi = {10.1007/11691617_10},
@@ -2439,7 +2439,7 @@ month={Oct},}
 
 @inproceedings{BITBLAZE-ICISS08,
 	Acmid = {1496257},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Song, Dawn and Brumley, David and Yin, Heng and Caballero, Juan and Jager, Ivan and Kang, Min Gyung and Liang, Zhenkai and Newsome, James and Poosankam, Pongsin and Saxena, Prateek},
 	Booktitle = {Proceedings of the 4th Int. Conference on Information Systems Security},
 	Doi = {10.1007/978-3-540-89862-7_1},
@@ -2492,7 +2492,7 @@ month={Oct},}
 
 @inproceedings{KPV-TACAS03,
 	Acmid = {1765924},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Khurshid, Sarfraz and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
 	Booktitle = {Proceedings of the 9th Int. Conference on Tools and Algorithms for the Construction and Analysis of Systems},
 	Isbn = {3-540-00898-5},
@@ -2527,7 +2527,7 @@ month={Oct},}
 	Bdsk-Url-2 = {http://dx.doi.org/10.1145/1007512.1007526}}
 
 @inproceedings{BLI-NFM13,
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Geldenhuys, Jaco and Aguirre, Nazareno and Frias, Marcelo F. and Visser, Willem},
 	Booktitle = {5th Int. NASA Formal Methods Symposium},
 	series = {NFM 2013},
@@ -2543,7 +2543,7 @@ month={Oct},}
 
 @inproceedings{TLL-CAV10,
 	Acmid = {2144345},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Thakur, Aditya and Lim, Junghee and Lal, Akash and Burton, Amanda and Driscoll, Evan and Elder, Matt and Andersen, Tycho and Reps, Thomas},
 	Booktitle = {Proceedings of the 22nd Intern. Conf. on Computer Aided Verification},
 	Doi = {10.1007/978-3-642-14295-6_27},
@@ -2560,7 +2560,7 @@ month={Oct},}
 
 @inproceedings{CREST-ASE08,
 	Acmid = {1642995},
-	Address = {Washington, DC, USA},
+	AddressIEEE = {Washington, DC, USA},
 	Author = {Jacob Burnim and Koushik Sen},
 	Booktitle = {Proceedings of the 2008 23rd IEEE/ACM Int. Conference on Automated Software Engineering},
 	Date-Modified = {2016-08-25 16:15:56 +0000},
@@ -2765,7 +2765,7 @@ month={Oct},}
 
 @inproceedings{FLP-COMPSAC07,
 	Acmid = {1299784},
-	Address = {Washington, DC, USA},
+	AddressIEEE = {Washington, DC, USA},
 	Author = {Fu, Xiang and Lu, Xin and Peltsverger, Boris and Chen, Shijun and Qian, Kai and Tao, Lixin},
 	Booktitle = {Proceedings of the 31st Annual Int. Computer Software and Applications Conference},
 	Doi = {10.1109/COMPSAC.2007.43},
@@ -2798,7 +2798,7 @@ month={Oct},}
 }
 
 @proceedings{VSA-CC04,
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Balakrishnan, Gogul and Reps, Thomas},
 	Booktitle = {13th Int. Conference on Compiler Construction},
 	series = {CC 2004},
@@ -2843,7 +2843,7 @@ month={Oct},}
  doi = {10.1109/WCRE.2005.13},
  acmid = {1108171},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
 } 
 
 @inproceedings{YJW-SSP15,
@@ -2859,12 +2859,12 @@ month={Oct},}
  doi = {10.1109/SP.2015.47},
  acmid = {2867679},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
  keywords = {Deobfuscation, Virtualization-Obfuscation, Return Oriented Programming},
 } 
 
 @inbook{WMJ-ESORICS11,
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Wang, Zhi and Ming, Jiang and Jia, Chunfu and Gao, Debin},
 	Booktitle = {Computer Security -- ESORICS 2011: 16th European Symposium on Research in Computer Security, Leuven, Belgium, September 12-14,2011. Proceedings},
 	Doi = {10.1007/978-3-642-23822-2_12},
@@ -2970,7 +2970,7 @@ month={Oct},}
 
 @inproceedings{CVC3-CAV07,
 	Acmid = {1770397},
-	AddressSpringer = {Berlin Heidelberg},,
+	AddressSpringer = {Berlin Heidelberg},
 	Author = {Barrett, Clark and Tinelli, Cesare},
 	Booktitle = {Proceedings of the 19th Int. Conference on Computer Aided Verification},
 	Isbn = {978-3-540-73367-6},
@@ -3008,7 +3008,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1986308.1986337},
  acmid = {1986337},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 
@@ -3314,7 +3314,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=776261.776281},
  acmid = {776281},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
+ AddressIEEE = {Washington, DC, USA},
 } 
 
 @inproceedings{TRITON-SSTIC15,
@@ -3356,7 +3356,7 @@ month={Oct},}
   url = {http://dl.acm.org/citation.cfm?id=977395.977673},
   acmid = {977673},
   publisher = {IEEE Computer Society},
-  address = {Washington, DC, USA},
+  AddressIEEE = {Washington, DC, USA},
 }
 
 @inproceedings{CLOUD9-EUROSYS11,
@@ -3539,7 +3539,7 @@ month={Oct},}
  url = {http://dl.acm.org/citation.cfm?id=1928028.1928039},
  acmid = {1928039},
  publisher = {Springer-Verlag},
- AddressSpringer = {Berlin Heidelberg},,
+ AddressSpringer = {Berlin Heidelberg},
 } 
 
 @article{RPW-SIGSOFT15,
