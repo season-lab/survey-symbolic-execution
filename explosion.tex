@@ -230,7 +230,7 @@ For instance, we may be interested in narrowing down the exploration to inputs o
 % \caption{\label{fig:preconditioned-and-merge} (a) Preconditioned symbolic execution example~\protect\cite{AEG-NDSS11}; (b) State merging example}
 % \end{figure}
 
-\mytempedit{Common types of preconditions considered in symbolic execution are: {\em Known length} (i.e., the size of a buffer is known), {\em Known prefix} (i.e., a buffer has a known prefix), and {\em Fully known} (i.e., the content of a buffer is fully concrete). These preconditions can be very common when dealing with code that operates over input data with well-defined structure, such as string parsers or packet processing tools. 
+\mytempedit{Common types of preconditions considered in symbolic execution are: {\em known-length} (i.e., the size of a buffer is known), {\em known-prefix} (i.e., a buffer has a known prefix), and {\em fully known} (i.e., the content of a buffer is fully concrete). These preconditions are rather natural when dealing with code that operates over inputs with a well-known or predefined structure, such as string parsers or packet processing tools. 
 %Nonetheless, preconditions may prevent an engine to discover errors due to utterly malformed inputs, leading to false positives in the analysis.
 }
 % \begin{itemize}
