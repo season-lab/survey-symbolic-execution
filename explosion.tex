@@ -7,7 +7,7 @@ One of the main challenges of symbolic execution is the path explosion problem: 
 
 The main sources of path explosion are loops and function calls. Each iteration of a loop can be seen as an {\tt if-goto} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite, as suggested by the following example. 
 
-\vspace{-2pt} % TODO
+\vspace{-3pt} % TODO
 \begin{shaded}\mytempedit{\noindent{\bf\small Example.} Consider the following code fragment~\cite{CS-CACM13}:}
   \vspace{-1mm}
   \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -15,12 +15,12 @@ The main sources of path explosion are loops and function calls. Each iteration 
                 while (x > 0) x = sym_input();  
   \end{lstlisting}
   \vspace{-1mm}
-\mytempedit{\noindent where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form: 
+\mytempedit{\noindent where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form:
 \vspace{-1mm}
 \[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \]
-\vspace{-1mm}
-where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
+\noindent where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
 \end{shaded}
+\vspace{-3pt} 
 
 While it would be simple (and is indeed common) to bound the loop exploration up to a limited number of iterations, interesting paths could be easily missed with this approach.  A large number of works have thus explored more advanced strategies, e.g., by characterizing similarities across distinct loop iterations or function invocations through summarization strategies that prevent repeated explorations of a code portion or by inferring invariants that inductively describe the properties of a computation. In the remainder of this section we present a variety of prominent techniques, often based on the computation of an under-approximation of the analysis with the aim of exploring only a relevant subset of the state space.
 
