@@ -83,7 +83,8 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \item {\em Trading soundness for performance.} The idea, discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:index-based-memory}, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
-\item {\em Leveraging language-specific features.} Differently from languages with arbitrary memory access, such as C or assembly, references in object-oriented languages can be assumed to be either null or point to previously allocated objects, rather than to any generic memory location. This allows significantly reducing the exploration space in symbolic execution as discussed in Section~\ref{ss:complex-objects}.
+\item {\em Leveraging language-specific features.} Differently from languages with unrestricted memory access, such as C or assembly, some object-oriented languages restrict references to 
+be either null or point to previously allocated objects, rather than to any generic memory location. This assumption can significantly reduce the exploration space in symbolic execution, as discussed in Section~\ref{ss:complex-objects}.
 
 \end{itemize}
 }
