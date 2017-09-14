@@ -69,7 +69,7 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \begin{itemize}
 
-\item {\em Representing memory in a compact form.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, maintaining the possible alternative states resulting from referencing memory using symbolic addresses in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
+\item {\em Representing memory in a compact form.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, representing the possible alternative states resulting from referencing memory using symbolic addresses in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
 
 \item {\em Trading soundness for performance.} The idea, discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:index-based-memory}, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
@@ -101,6 +101,7 @@ In all cases where the combinatorial complexity of the analysis explodes as poin
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
 Concretization arises naturally in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and early {\sc SAGE} releases~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
 Systems such as {\sc CUTE}~\cite{CUTE-FSE05} and {\sc CREST}~\cite{CREST-ASE08} are capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references. % equality and inequality
+\mytempedit{ DART concretizes a reference of type {\tt T*} to either {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. The choice is made randomly. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of the object. [...]}
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
