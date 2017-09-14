@@ -1,3 +1,17 @@
+@inproceedings{ZCWDL15,
+ author = {Zhang, Yufeng and Clien, Zhenbang and Wang, Ji and Dong, Wei and Liu, Zhiming},
+ title = {Regular Property Guided Dynamic Symbolic Execution},
+ booktitle = {Proc. 37th Int. Conf. on Software Engineering},
+ year = {2015},
+ isbn = {978-1-4799-1934-5},
+ location = {Florence, Italy},
+ pages = {643--653},
+ numpages = {11},
+ url = {http://dl.acm.org/citation.cfm?id=2818754.2818833},
+ acmid = {2818833},
+ address = {Piscataway, NJ, USA},
+} 
+
 @inproceedings{SSJ-NFM15,
     author={Schwartz-Narbonne, Daniel
     and Sch{\"a}f, Martin
