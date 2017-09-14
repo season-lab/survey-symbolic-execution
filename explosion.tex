@@ -7,26 +7,20 @@ One of the main challenges of symbolic execution is the path explosion problem: 
 
 The main sources of path explosion are loops and function calls. Each iteration of a loop can be seen as an {\tt if-goto} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite, as suggested by the following example. 
 
-\begin{figure}[t]
-\begin{center}
-\begin{tabular}{c}
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
-1.  int x = sym_input(); // e.g., read from file
-2.  while (x > 0) {
-3.     x = sym_input();  
-4.  }
-\end{lstlisting}
-\end{tabular}
-\end{center}
-\vspace{-2mm}
-\caption{Loop example with input read from the environment~\protect\cite{CS-CACM13}.}
-\label{fi:example-loop}
-\end{figure}
-
-\vspace{-2pt} % TODO
-\boxedexample{Consider the code fragment of Figure~\ref{fi:example-loop}~\cite{CS-CACM13}, where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form: 
-\[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \] 
-where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
+\vspace{-3pt} % TODO
+\begin{shaded}\mytempedit{\noindent{\bf\small Example.} Consider the following code fragment~\cite{CS-CACM13}:}
+  \vspace{-1mm}
+  \begin{lstlisting}[basicstyle=\ttfamily\small]
+                int x = sym_input(); // e.g., read from file
+                while (x > 0) x = sym_input();  
+  \end{lstlisting}
+  \vspace{-1mm}
+\mytempedit{\noindent where \texttt{sym\_input()} is an external routine that interacts with the environment (e.g., by reading input data from a network) and returns a fresh symbolic input. The path constraint set at any final state has the form:
+\vspace{-1mm}
+\[ \pi = \left ( \bigwedge_{i \in [1, k]} \alpha_i > 0 \right ) \wedge (\alpha_{k+1} \leq 0) \]
+\noindent where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.}
+\end{shaded}
+\vspace{-3pt} 
 
 While it would be simple (and is indeed common) to bound the loop exploration up to a limited number of iterations, interesting paths could be easily missed with this approach.  A large number of works have thus explored more advanced strategies, e.g., by characterizing similarities across distinct loop iterations or function invocations through summarization strategies that prevent repeated explorations of a code portion or by inferring invariants that inductively describe the properties of a computation. In the remainder of this section we present a variety of prominent techniques, often based on the computation of an under-approximation of the analysis with the aim of exploring only a relevant subset of the state space.
 
