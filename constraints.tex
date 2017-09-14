@@ -122,22 +122,21 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 2.    return (v*v) % 50;
 3. }
     \end{lstlisting}
-    \vspace{8.5mm}
+    %\vspace{8.5mm}
     %\caption{}
   \end{subfigure}%
     \begin{subfigure}{.4\textwidth}
-    \vspace{-5.2mm}
+    %\vspace{-5.2mm}
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
 4. void test(int x, int y) {
 5.    if (non_linear(y) == x) 
-6.      if (x > y + 10) ERROR;  
-7. }
+6.      if (x > y + 10) ERROR; }
     \end{lstlisting}
     %\vspace{3.5mm}
     %\caption{}
   \end{subfigure}%
   \end{center}
-  \vspace{-10.0mm}
+  \vspace{-4.0mm}
   \caption{Example with non-linear constraints.}
   \label{fi:non-linear-constraints}
 \end{figure}
