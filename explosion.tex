@@ -124,7 +124,7 @@ Modern SAT solvers rely on a mutual reinforcing combination of search and deduct
 
 {\em Craig interpolants}~\cite{Craig1957} allow deciding what information about a formula is relevant to a property. Assuming a formula $P\rightarrow Q$ holds in some logic, it is possible to construct an interpolant $I$ such \mynote{I: ma la freccia cosa indica?} that $P\rightarrow I$ and $I\rightarrow Q$ are valid, and every non-logical symbol in $I$ occurs in both $P$ and $Q$. In program verification, interpolants are typically devised as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, an interpolant $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.
 
-Interpolation has largely been employed in model checking, predicate abstraction, predicate refinement, theorem proving, and other areas. For instance, interpolants provide a methodology to extend {\em bounded model checking} -- which aims at the falsification of safety properties of a program for which the transition relation is unrolled up to a given bound -- to the unbounded case. In particular, since bounded proofs often contains the ingredients of unbounded proofs, interpolation can help construct an over-approximation of all reachable final states from the refutation proof for the bounded case, obtaining an over-approximation that is strong enough to prove absence of errors.
+Interpolation has largely been employed in model checking, predicate abstraction, predicate refinement, theorem proving, and other areas. For instance, interpolants provide a methodology to extend {\em bounded model checking} -- which aims at the falsification of safety properties of a program for which the transition relation is unrolled up to a given bound -- to the unbounded case. In particular, since bounded proofs often contain the ingredients of unbounded proofs, interpolation can help construct an over-approximation of all reachable final states from the refutation proof for the bounded case, obtaining an over-approximation that is strong enough to prove absence of errors.
 % given a refutation proof for the bounded case, 
 % that is strong enough to provide guarantees on the absence of errors, but also loose enough to allow for an efficient computation.
 
@@ -230,7 +230,7 @@ For instance, we may be interested in narrowing down the exploration to inputs o
 % \caption{\label{fig:preconditioned-and-merge} (a) Preconditioned symbolic execution example~\protect\cite{AEG-NDSS11}; (b) State merging example}
 % \end{figure}
 
-\noindent \mytempedit{Typical types of preconditions considered in symbolic execution are: {\em Known length} (i.e., the size of a buffer is known), {\em Known prefix} (i.e., a buffer has a known prefix), and {\em Fully known} (i.e., the content of a buffer is fully concrete). These preconditions can be very common when dealing with code that operates over input data with well-known structures, such as string parsers or packet processing tools. 
+\mytempedit{Common types of preconditions considered in symbolic execution are: {\em known-length} (i.e., the size of a buffer is known), {\em known-prefix} (i.e., a buffer has a known prefix), and {\em fully known} (i.e., the content of a buffer is fully concrete). These preconditions are rather natural when dealing with code that operates over inputs with a well-known or predefined structure, such as string parsers or packet processing tools. 
 %Nonetheless, preconditions may prevent an engine to discover errors due to utterly malformed inputs, leading to false positives in the analysis.
 }
 % \begin{itemize}
@@ -248,13 +248,28 @@ For instance, we may be interested in narrowing down the exploration to inputs o
 % \item {\em Fully known}: all input bytes are concrete, leading to a concolic execution; it can be used, for instance, to generate a working exploit from a known crashing input. 
 % \end{itemize}
 
-\boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. Without any precodition, the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $s$ loop iterations. The impact of preconditions on the state space size is as follows:
-\begin{itemize}
-  \item {\em Known length}: if we assume a string length $s$, i.e., the first $(s-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{n+m}$;
-  \item {\em Known prefix}: if a prefix of $p<n$ bytes is known for {\tt input}, the first $p$ branches and $p$ loop iterations are concrete, and the state space size becomes $2^{n-p}\cdot s\cdot 2^m$;
-  \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
-\end{itemize}}
+% \boxedexample{Consider the code fragment in Figure~\ref{fig:preconditioned} where {\tt input} is an array of $s\ge n+m$ bytes. Without any precodition, the input space size is $256^s$, and up to $2^n\cdot s\cdot 2^m$ execution engine instances are needed, due to $n+m$ symbolic branches and up to $s$ loop iterations. The impact of preconditions on the state space size is as follows:
+% \begin{itemize}
+%   \item {\em Known length}: if we assume a string length $s$, i.e., the first $(s-1)$ bytes of {\tt input} are not $\setminus0$, the loop is concretized, and the state space size is reduced to $2^{n+m}$;
+%   \item {\em Known prefix}: if a prefix of $p<n$ bytes is known for {\tt input}, the first $p$ branches and $p$ loop iterations are concrete, and the state space size becomes $2^{n-p}\cdot s\cdot 2^m$;
+%   \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
+% \end{itemize}}
 
+
+\begin{shaded}\mytempedit{\noindent{\bf\small Example.} Consider the following simplified packet header processing code: {\tt pkt} points to the input buffer, while {\tt header} to the fixed expected content. If no}
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \vspace{-4.2mm}
+  \begin{lstlisting}[basicstyle=\ttfamily\small]
+start: get_input(&pkt);
+for(k = 0; k < 128; k++)
+  if (pkt[k] != header[k])
+    goto start;
+parse_payload(&pkt)
+\end{lstlisting}
+\vspace{-5.8mm}
+\end{wrapfigure}
+\mytempedit{precondition is considered, then this code can generate an exponential number of paths since any mismatch forces a new call to {\tt get\_input}. On the other hand, if a {\em known prefix} precondition is set on the input, then only a single path is generated when exploring the loop. The engine can thus focus its exploration on {\tt parse\_payload()}.}
+\end{shaded}
 
 By using static or dynamic analysis techniques, it may be possible to derive properties over a loop that can be exploited by the symbolic engine to significantly prune branching paths. For instance, knowledge of the exact number of loop iterations - or at least an upper bound on it - can significantly help the engine.  Based on the observation \mynote{I: Ha senso qui? Altrimenti dove?} that loop executions may strictly depend on input features, \cite{SPM-ISSTA09} presents a technique, called {\em loop-extended symbolic execution}, which is able to effectively explore a loop whenever a grammar describing the input program is available. Relating the number of iterations with features of the program input can profitably guide the exploration of the program states generated by a loop.
 
@@ -327,7 +342,7 @@ Note that the path constraints of the execution states $D$ and $E$ can be merged
     \caption{}
   \end{subfigure}
   \vspace{-3mm}
-  \caption{Symbolic execution of function \texttt{foo}: (a) without state merging; (b) with state merging.}
+  \caption{Symbolic execution of function \texttt{foo}: (a) without and (b) with state merging.}
   \label{fig:example-state-merging}
 \end{figure}
 
@@ -386,8 +401,7 @@ A deeper understanding of a program's behavior can help a symbolic engine \mytem
 \mytempedit{
 \myparagraph{Type checking} Symbolic analysis can be effectively mixed with typed checking~\cite{KCF-PLDI10}}:  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{Interestingly,~\cite{KCF-PLDI10} discusses also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
 
-\mytempedit{
-\myparagraph{State matching} This approach determines whether an abstract state is subsumed by another}, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
+%\mytempedit{\myparagraph{State matching} This approach determines whether an abstract state is subsumed by another}, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
 
 \mytempedit{
 \myparagraph{Classic Compiler Optimizations}

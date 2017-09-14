@@ -125,40 +125,41 @@ In the example discussed in Section~\ref{symbolic-execution-example} symbolic ex
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
+\mytempedit{
 \begin{itemize}[itemsep=2mm]
-
+%%%
 \item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Code manipulating pointers and data structures may give rise not only to symbolic stored data, but also to addresses being described by symbolic expressions.
 %Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
-
-\item {\em Environment and Third-Party Components}: how does the symbolic engine handle interactions with the environment?
-\mynote{[D] keep it shorter?} Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects
-(such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. %A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
-\mytempedit{Also, third-party closed-source components and popular frameworks (e.g., Java Swing and Android) pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}\mynote{CD: may be dropped if we run out of space}
-
+%%%
+\item {\em Environment and third-party components}: how does the symbolic engine handle interactions across the software stack? Call to libraries and system code can cause side-effects such as the creation of a file that could later affect the execution and must thus be taken into account. However, evaluating any possible interaction outcome may be unfeasible: it would give rise to a large number of states, while only a fraction of them can \mynote{[D] likely?}actually happen in a non-symbolic scenario.
+%%\mytempedit{Also, third-party closed-source components and popular frameworks (e.g., Java Swing and Android) pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}\mynote{CD: may be dropped if we run out of space}
+% Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects (such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. %A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
+%%%
   \item {\em State space explosion}: how does symbolic execution deal with path explosion?
 %\mynote{[D] I felt it was too long and loop-centric} 
 Language constructs such as loops might exponentially increase the number of execution states. It is thus unlikely that a symbolic execution engine can exhaustively explore all the possible states within a reasonable amount of time. %In practice, heuristics are used to guide exploration and prioritize certain states first (e.g., to maximize code coverage). In addition, 
 %\mytempedit{Efficient mechanisms can be implemented for preventing repeated exploration of the same piece of code
 %\mytempedit{for skipping over states subsumed by previously explored paths} 
 %and for evaluating multiple states in parallel without running out of resources.}
-
 %%A loop\mynote{IF: rimuoverei la prima frase, perche' va detto?} can be encoded using conditional branches and {\tt goto} statements, which is typical  when compiling high-level languages to an intermediate representation or native code. 
 %Choosing the number of loop iterations to analyze is especially critical when this number cannot be determined in advance (e.g., depends on an input parameter). The naive approach of unrolling iterations for every valid bound would result in a prohibitively large number of states. Typical solutions are to compute an underapproximation of the analysis by limiting the number of iterations to some value $k$, thus trading speed for soundness. Other approaches infer loop invariants through static analysis  and use them to merge equivalent states. % \mynote{i.e. or e.g.?}  (e.g., when differences are not observable from outside the loop body). 
-
   %In practice, several heuristics must be exploited to prioritize evaluation of some states, hoping to still be able to spot interesting things. Moreover, the symbolic execution engine should include efficient mechanism for efficiently evaluating in parallel different execution states without running out of computational resources.
-
-  \item {\em Constraint solver}: what can a constraint solver do in practice?
+%%%
+  \item {\em Constraint solving}: what can a constraint solver do in practice?
   %{\em What is a constraint solver in practice}? \\
-Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents. %Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
-
+SMT solvers can scale to complex combinations of constraints over hundreds of variables. However, constructs such as non-linear arithmetic pose a major obstacle to efficiency.
+%Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents.
+%Constraint solvers suffer from a number of limitations. They can typically handle complex constraints in a reasonable amount of time only if they are made of linear expressions over their constituents. %Symbolic execution engines normally implement a number of optimizations to make queries as much {\em solver-friendly} as possible, for instance by splitting queries into independent components to be processed separately or by performing algebraic simplifications.
+%%%
 \iffullver{  \item {\em Binary code}: what issues can arise when symbolically executing binary code?
   %what are the disadvantages of symbolically executing binary code?
  While the warm-up example of Section~\ref{symbolic-execution-example} is written in C, in several scenarios binary code is the only available representation of a program. However, having the source code of an application can make symbolic execution significantly easier, as it can exploit high-level properties (e.g., object shapes) that can be inferred statically by analyzing the source code.
  }{}
-  %(e.g., the maximum size of a buffer or the number of iterations for a loop).
-   
+%(e.g., the maximum size of a buffer or the number of iterations for a loop).
+%%%   
 \end{itemize}
 %Depending on the specific application context of symbolic execution
+}
 
 \noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
 
