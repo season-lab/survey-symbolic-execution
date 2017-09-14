@@ -19,7 +19,7 @@ At the highest level of generality, an engine may treat memory addresses as full
 \item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
 \boxedexample{Consider the code shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assignment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
 
-\begin{figure}[ht]
+\begin{figure}[t]
 \begin{center}
 \begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
@@ -37,7 +37,7 @@ At the highest level of generality, an engine may treat memory addresses as full
 \label{fi:example-mem}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[t]
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
 \vspace{-4.5mm}
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
@@ -60,19 +60,9 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 \end{itemize}
 
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width=0.7\columnwidth]{images/memory-ite} % TODO 0.7
-\end{center}
-\vspace{-2.5mm}
-\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
-%\vspace{-1mm} % TODO
-\label{fi:memory-ite}
-\end{figure}
-
 %\noindent To model fully symbolic pointers, an extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of SMT solvers to model array operations as first-class entities in constraint formulas using a {\em theory of arrays} in the decision procedure~\cite{STP-CAV07}.
 
-\noindent \mynote{[D] rephrased} An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
+\noindent An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
 
 \mytempedit{
 Due to its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to improve scalability, which fall into three main categories:
@@ -88,6 +78,17 @@ be either null or point to previously allocated objects, rather than to any gene
 
 \end{itemize}
 }
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.7\columnwidth]{images/memory-ite} % TODO 0.7
+\end{center}
+\vspace{-2.5mm}
+\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
+%\vspace{-1mm} % TODO
+\label{fi:memory-ite}
+\end{figure}
+
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 

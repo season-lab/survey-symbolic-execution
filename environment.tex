@@ -3,9 +3,10 @@
 \section{Interaction with the environment and third-party components}
 \label{se:environment-thirdparty}
 
+When a \mynote{I: aggiunto cappello spostando altre frasi} program interacts with its environment -- e.g., file system, environment variables, network -- a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, and drivers.
+Third-party closed-source components and popular frameworks (such as Java Swing and Android) pose further challenges discussed throughout this section.
+ 
 \mytempedit{\myparagraph{Environment}}
-When a program interacts with its environment -- e.g., file system, environment variables, network - a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, drivers, etc.
-
 A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05},  {\sc CUTE}~\cite{CUTE-FSE05}, and {\sc EXE}~\cite{EXE-CCS06}) includes the environment in symbolic analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. 
 \mytempedit{
 In an online executor this choice also results in having external calls from distinct paths of execution interfere with each other. Indeed, since there is no mechanism for tracking the side effects of each external call, there is potentially a risk of state inconsistency, e.g., an execution path may read from a file while at the same time another execution path is trying to delete it.
@@ -33,7 +34,7 @@ External functions are simulated by nondeterministically returning any value of 
 \mytempedit{
 % symbolically analyzed
 \myparagraph{Third-Party Components}
-Calls to native Java methods, unmanaged code in .NET, or closed-source components are typical instances of a scenario where symbolic values may flow outside the boundaries of the code being analyzed~\cite{AOH-TACAS07}. While the challenges such scenarios pose are related to the ones from environment modeling, specific ones arise too. For instance, the Swing and Android frameworks have control flows occurring within them (e.g., via callbacks) that could be missed by an engine~\cite{JQF-ICSE16}. Furthermore, native methods and reflection features in Java  depend on the internals of the underlying Java virtual machine~\cite{Anand12}
+Calls to native Java methods, unmanaged code in .NET, or closed-source components are typical instances of a scenario where symbolic values may flow outside the boundaries of the code being analyzed~\cite{AOH-TACAS07}. The Swing and Android frameworks, for instance, have control flows occurring within them (e.g., via callbacks) that could be missed by an engine~\cite{JQF-ICSE16}. Furthermore, native methods and reflection features in Java  depend on the internals of the underlying Java virtual machine~\cite{Anand12}
 
 %For instance, an engine must account for the fact that native methods and reflection features in Java depend on the internals of the underlying Java virtual machine~\cite{Anand12}. Moreover, frameworks like Java Swing or the Android platform have important control and data flows occurring within the framework, such as callbacks for events, that would be missed by a symbolic execution of the application code only~\cite{JQF-ICSE16}.
 
@@ -43,11 +44,13 @@ Calls to native Java methods, unmanaged code in .NET, or closed-source component
 %{\sc EXE}~\cite{EXE-CCS06} instead devises a trial-and-error strategy so that calls with symbolic arguments to external library functions are logged, and the user has to manually intervene to instrument the external code and restart the exploration. This methodology aims at ensuring more complete constraint generation compared to concretization, but may require repeated interaction with the user and not scale for large functions.
 
 %possibly resulting in an incomplete exploration and in turn failing to generate test inputs for feasible program paths
-Similarly as in environment modeling, early works such as {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05} deal with calls to third-party components by executing them with concrete arguments. This may result in an incomplete exploration, failing to generate test inputs for feasible program paths. On the other hand, a symbolic execution of their code is unlikely to succeed for a number of reasons: for instance, the implementation of externally simple behaviors is often complex as it has to allow for extensibility and maintainability, or may contain details irrelevant to the exploration such as how a button that triggers a callback is displayed~\cite{JQF-ICSE16}.
-
+Similarly as in environment modeling, early works such as {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05} deal with calls to third-party components by executing them with concrete arguments. This may result in an incomplete exploration, failing to generate test inputs for feasible program paths. On the other hand, a symbolic execution of their code is unlikely to succeed for a number of reasons: for instance, the implementation of externally simple behaviors is often complex as it has to allow for extensibility and maintainability, or may contain details irrelevant to the exploration, such as how to display a button triggering a callback~\cite{JQF-ICSE16}.
+%
 %such components often devise complex implementations of externally simple behaviors in order to allow for extensibility and maintainability, or may contain details irrelevant to the exploration such as the graphical representation of a feature.
+%
+One solution would be to mimic external components with simpler and more abstract models. However, writing component models manually -- which can be a daunting task per se -- might be hard due to the \mynote{I: rephrased} unavailability of the source code, and applications using unsupported models would remain out of reach.
 
-One solution would be to mimic external components with simpler and more abstract models. However, writing models manually -- which can be a daunting task per se -- for a component might be harder due to the unavailability of its source code,  and as in general models cannot be reused across components, applications that use unsupported ones remain out of reach. 
+%as in general models cannot be reused across components, applications that use unsupported ones remain out of reach. 
 
 % flows within them
 Some\mynote{[D] work in progress}  works (e.g., \cite{AOH-TACAS07,XXT-ICSE11}) have explored techniques to pinpoint which functions in a component a symbolic exploration would need a model for. A different line of research has instead attempted to generate models automatically, which can also be valuable for closed-source components. For instance, program slicing has been used to generate models for Android~\cite{VTV-SEN15} and Swing~\cite{CT-SEN14}. \cite{JQF-ICSE16} takes a step further by using program synthesis to produce models for Java frameworks that make use of design patterns, which are heavily used in many components, often also to carry out control and data flows. An advantage of program synthesis is that it can generate more concise models than slicing, as it is not constrained by the structure of the implementation. %We further elaborate on program synthesis at the end of Section~\ref{ss:program-analysis}.
