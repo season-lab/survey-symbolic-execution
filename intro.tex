@@ -127,12 +127,12 @@ In the example discussed in Section~\ref{symbolic-execution-example} symbolic ex
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
 \mytempedit{
-\begin{itemize}[itemsep=2mm]
+\begin{itemize}[itemsep=1mm]
 %%%
 \item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Code manipulating pointers and data structures may give rise not only to symbolic stored data, but also to addresses being described by symbolic expressions.
 %Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
 %%%
-\item {\em Environment and third-party components}: how does the symbolic engine handle interactions across the software stack? Calls to libraries and system code can cause side-effects, such as the creation of a file, that could later affect the execution and must be taken into account. However, evaluating any possible interaction outcome may be unfeasible.
+\item {\em Environment and third-party components}: how does the engine handle interactions across the software stack? Calls to library and system code can cause side-effects, e.g., the creation of a file, that could later affect the execution and must be accounted for. However, evaluating any possible interaction outcome may be unfeasible.
 %: it would give rise to a large number of states, while only a fraction of them can \mynote{[D] likely?}actually happen in a non-symbolic scenario.
 %%\mytempedit{Also, third-party closed-source components and popular frameworks (e.g., Java Swing and Android) pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}\mynote{CD: may be dropped if we run out of space}
 % Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects (such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. %A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
