@@ -10,9 +10,11 @@ In this section we describe some important principles for the design of symbolic
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.35\columnwidth]{images/concrete-abstract.eps} 
+\vspace{-0.75mm}
+\includegraphics[width=0.34\columnwidth]{images/concrete-abstract.eps} 
 \caption{Concrete and abstract execution machine models.}
 \label{fig:concrete-symbolic}
+\vspace{-1.5mm}
 \end{figure}
 
 %%% 
@@ -32,7 +34,7 @@ As shown in the warm-up example (Section~\ref{symbolic-execution-example}), a sy
 \mytempedit{
 Indeed, complex applications are often built on top of very sophisticated software stacks. Implementing a symbolic execution engine able to statically analyze the whole stack can be rather challenging given the difficulty in accurately evaluating any possible side effect during execution. Several problems arise in this context, which can hardly be faced following the purely symbolic approach of Section~\ref{symbolic-execution-example}:
 
-\begin{enumerate}
+\begin{enumerate}[topsep=4pt]
 \item\label{it:library-call-issue} Exhaustive exploration of external library calls may lead to an exponential explosion of states, preventing the analysis from reaching interesting code portions. %The problem is exacerbated by any interactions with the environment (files, network, etc.) made in the library.
 
 \item\label{it:third-party-issue} Calls to external {\em third-party components} may not be traceable by the executor.
@@ -123,7 +125,7 @@ A related issue is presented by Figure~\ref{fig:example-concolic-problems}c. Fun
 }
 
 \begin{figure*}[t]
-  %\vspace{-3mm}
+  \vspace{-2.5mm}
   %\centering
   \begin{subfigure}[t]{.33\textwidth}
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
@@ -183,7 +185,7 @@ void baz(int x) {
   \vspace{-3mm}
 \end{figure*}
 
-\vspace{-2pt} 
+%\vspace{-2pt} 
 \mytempedit{
 \noindent 
 %Using concolic execution, many symbolic frameworks have been able to scale their analysis over large and complex applications. 
@@ -364,7 +366,7 @@ Suppose a function A calls a function B and the execution mode changes at the ca
 A number %\mynote{[D] why MAYHEM?}  
 of performance-related design principles that a symbolic execution engine should follow are  summarized in %{\sc Mayhem}
 \cite{MAYHEM-SP12}. Most notably:
-\begin{enumerate}
+\begin{enumerate}[topsep=5pt,itemsep=2pt]
   \item {\em Progress}: the executor should be able to proceed for an arbitrarily long time without exceeding the given resources. Memory consumption can be especially critical, due to the potentially gargantuan number of distinct control flow paths.
   \item {\em Work repetition}: no execution work should be repeated, avoiding to restart a program several times from its very beginning in order to analyze different paths that might have a  common prefix.
   \item {\em Analysis reuse}: analysis results from previous runs should be reused as much as possible. In particular, costly invocations to the SMT solver on  previously solved path constraints should be avoided.
@@ -399,7 +401,8 @@ We remark that path selection heuristics are often tailored to help the symbolic
 % have instead presented
 Several works, such as {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc Mayhem}~\cite{MAYHEM-SP12}, and {\sc \stwoe}~\cite{CKC-TOCS12}, have discussed heuristics aimed at maximizing code coverage. For instance, the {\em coverage optimize search} discussed in {\sc KLEE}~\cite{KLEE-OSDI08} computes for each state a weight, which is later used to randomly select states. The weight is obtained by considering how far the nearest uncovered instruction is, whether new code was recently covered by the state, and the state's call stack. Of a similar flavor is the heuristic proposed in~\cite{LZL-OOPSLA13}, called {\em subpath-guided search}, which attempts to explore {\it less traveled} parts of a program by selecting the subpath of the control flow graph that has been explored fewer times. This is achieved by maintaining a frequency distribution of explored subpaths, where a subpath is defined as a consecutive subsequence of length $n$ from a complete path. Interestingly, the value $n$ plays a crucial role with respect to the code coverage achieved by a symbolic engine using this heuristic and no specific value has been shown to be universally optimal. %
 \mytempedit{
-  Another interesting search strategy is the {\em shortest-distance symbolic execution} heuristic presented in~\cite{MPF-SAS11}. The work does not target coverage, but aims at identifying program inputs that trigger the execution of a specific point in a program. However, similarly to coverage-based strategies, it is based on a metric for evaluating the shortest distance to the target point. This is computed as the length of the shortest path in the inter-procedural control-flow graph, and paths with the shortest distance are prioritized by the engine. 
+%Another interesting search strategy is the {\em shortest-distance symbolic execution} heuristic presented in~\cite{MPF-SAS11}. The work does not target coverage, but aims at identifying program inputs that trigger the execution of a specific point in a program. However, similarly to coverage-based strategies, it is based on a metric for evaluating the shortest distance to the target point. This is computed as the length of the shortest path in the inter-procedural control-flow graph, and paths with the shortest distance are prioritized by the engine. 
+{\em Shortest-distance symbolic execution}~\cite{MPF-SAS11} does not target coverage, but aims at identifying program inputs that trigger the execution of a specific point in a program. The heuristic is based however, as in coverage-based strategies, on a metric for evaluating the shortest distance to the target point. This is computed as the length of the shortest path in the inter-procedural control-flow graph, and paths with the shortest distance are prioritized by the engine. 
 }
 
 %Other search heuristics try to prioritize paths likely leading to states that are {\em interesting} according to some goal. For instance, the {\em buggy-path first} strategy in {\sc AEG}~\cite{AEG-NDSS11} picks paths whose past states have contained small but unexploitable bugs. The intuition is that if a path contains some small errors, it is likely that it has not been properly tested. There is thus a good chance that future states may contain interesting, and hopefully exploitable, bugs. Similarly, the {\em loop exhaustion} strategy discussed in {\sc AEG}~\cite{AEG-NDSS11} explores paths that visit loops. This approach is inspired by the practical observation that common programming mistakes in loops may lead to buffer overflows or other memory-related errors. In order to find exploitable bugs, {\sc Mayhem}~\cite{MAYHEM-SP12} instead gives priority to paths where symbolic memory accesses are identified or symbolic instruction pointers are detected. 
@@ -449,9 +452,9 @@ In more detail, given a target branch with an associated condition of the form $
 
 %\end{itemize}
 
-\mytempedit{
-\subsection{Symbolic Backward Execution}
+\subsection{\mytempedit{Symbolic Backward Execution}}
 \label{ss:backward}
+\mytempedit{
 % Symbolic backward execution (SBE)~\cite{CFS-PLDI09,DA-ASE14} is a variant of symbolic execution that proceeds its exploration backward from a target point of a program to an entry point of a program. In other words, the analysis is performed in the reversed direction with respect to a traditional (forward) symbolic execution.
 Symbolic backward execution (SBE)~\cite{CFS-PLDI09,DA-ASE14} is a variant of symbolic execution in which the exploration proceeds from a target point to an entry point of a program. The analysis is thus performed in the reverse direction than in canonical (forward) symbolic execution. The main purpose of this approach is typically to identify a test input instance that can trigger the execution of a specific line of code (e.g., an {\tt assert} or {\tt throw} statement). %  
 This can very useful for a developer when performing debugging or regression testing over a program.
