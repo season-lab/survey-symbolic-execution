@@ -76,8 +76,11 @@
 \setlength{\FrameSep}{2pt}
 \newcommand{\myparagraph}[1]{\medskip\noindent{\bf\small #1.} }
 \newcommand{\myparagraphnoperiod}[1]{\medskip\noindent{\bf\small #1} }
-%\newcommand{\mynote}[1]{}
-\newcommand{\mynote}[1]{\marginpar{\raggedleft{\fontfamily{pbk}\selectfont\scriptsize{\em #1}}}}
+
+% EDIT TO ENABLE NOTES
+\newcommand{\mynote}[1]{}
+%\newcommand{\mynote}[1]{\marginpar{\raggedleft{\fontfamily{pbk}\selectfont\scriptsize{\em #1}}}}
+
 \newcommand{\stwoe}{\text{S\textsuperscript{2}E}}
 \newcommand{\myinput}[1]{\ifdefined\internalrep \input{../#1} \else \input{#1} \fi}
 \newcommand{\missing}{\textbf{XXX}}
