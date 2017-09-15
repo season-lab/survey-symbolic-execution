@@ -30,7 +30,8 @@ In an online executor this choice may also result in having external calls from 
 
 {\sc DART}'s approach~\cite{DART-PLDI05} is different, as the goal is to enable automated unit testing. DART deems as foreign interfaces all the external variables and functions referenced in a C program along with the arguments for a top-level function.
 %External interfaces are identified by parsing the source code, and a random test driver is generated accordingly.
-External functions are simulated by nondeterministically returning any value of their specified return type. Library functions are normally not considered external functions as they are controlled by the program, but in practice the user can adjust the boundary between library and external functions to simulate the desired effects.
+External functions are simulated by nondeterministically returning any value of their specified return type. \mytempedit{To allow the symbolic exploration of library functions that do not depend on the environment, the user can adjust the boundary between external and non-external functions to tune the scope of the symbolic analysis.}
+%Library functions are normally not considered external functions as they are controlled by the program, but in practice the user can adjust the boundary between library and external functions to simulate the desired effects.
 
 \mytempedit{
 % symbolically analyzed
