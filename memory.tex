@@ -65,16 +65,16 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 \noindent An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
 
 \mytempedit{
-Due to its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to improve scalability, which fall into three main categories:
+Due to its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to improve scalability, which elaborate along the following main lines:
 
 \begin{itemize}
 
 \item {\em Representing memory in a compact form.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, representing the possible alternative states resulting from referencing memory using symbolic addresses in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
 
-\item {\em Trading soundness for performance.} The idea, discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:index-based-memory}, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
+\item {\em Trading soundness for performance.} The idea, discussed in the remainder of this section, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
 \item {\em Leveraging language-specific features.} Differently from languages with unrestricted memory access, such as C or assembly, some object-oriented languages restrict references to either
-be null or point to previously allocated objects, rather than to any generic memory location. This assumption can significantly reduce the exploration space in symbolic execution, as discussed in Section~\ref{ss:complex-objects}.
+be null or point to previously allocated objects, rather than to any generic memory location. This assumption can significantly reduce the exploration space in symbolic execution, as discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}.
 
 \end{itemize}
 }
@@ -98,10 +98,16 @@ be null or point to previously allocated objects, rather than to any generic mem
 
 In all cases where the combinatorial complexity of the analysis explodes as pointer values cannot be bounded to sufficiently small ranges, {\em address concretization}, which consists in concretizing a pointer to a single specific address, is a popular alternative. This can reduce the number of states and the complexity of the formulas fed to the solver and thus improve running time, although may cause the engine to miss paths that, for instance, depend on specific values for some pointers. 
 
+
+%Systems such as {\sc CUTE}~\cite{CUTE-FSE05} and {\sc CREST}~\cite{CREST-ASE08} are capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references. % equality and inequality
+
+
+
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
-Concretization arises naturally in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and early {\sc SAGE} releases~\cite{SAGE-NDSS08} that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
-Systems such as {\sc CUTE}~\cite{CUTE-FSE05} and {\sc CREST}~\cite{CREST-ASE08} are capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references. % equality and inequality
-\mytempedit{ DART concretizes a reference of type {\tt T*} to either {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. The choice is made randomly. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of the object. [...]}
+\mytempedit{ Concretization naturally arises in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05},
+%and early {\sc SAGE} releases~\cite{SAGE-NDSS08}. % that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
+which handle memory initialization by concretizing a reference of type {\tt T*} either to {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. DART makes the choice randomly, while CUTE first tries {\tt NULL}, and then, in a subsequent execution, a concrete address. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of a pointed object. Since memory addresses (e.g., returned by {\tt malloc}) may non-deterministically change at different concrete executions, CREST uses {\em logical addresses}\mynote{troppo sintetico?} in symbolic formulas to maintain consistency across different runs. Another reason for concretization is due to limitations in constraint handling: for instance, CUTE is capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
+}
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
@@ -133,7 +139,7 @@ This algorithm comes with a number of caveats: for instance, querying the solver
 %
 
 %\mytempedit{\myparagraph{Lazy Initialization}}
-\mytempedit{\subsection{Lazy Initialization}}
+\subsection{\mytempedit{Lazy Initialization}}
 \label{ss:complex-objects}
 
 \cite{KPV-TACAS03} propose symbolic execution techniques for advanced object-oriented language constructs, such as those offered by C++ and Java. The authors describe a framework for software verification that combines symbolic execution and model checking to handle linked data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
