@@ -23,6 +23,7 @@ At the highest level of generality, an engine may treat memory addresses as full
 \boxedexample{Consider the code shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assignment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
 
 \begin{figure}[t]
+\vspace{-1mm}
 \begin{center}
 \begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]

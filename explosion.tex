@@ -57,7 +57,7 @@ A first natural strategy to reduce the path space is to invoke the constraint so
     \caption{}
   \end{subfigure}%
   \vspace{-2mm}
-  \caption{Pruning unrealizable paths example: (a) Code fragment; (b) symbolic execution of the code fragment: the {\em true} branch at node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable.}
+  \caption{Pruning unrealizable paths example: (a) code fragment; (b) symbolic execution of the code fragment: the {\em true} branch at node D is not explored since its path constraints $(\alpha_a \leq 0 \wedge \alpha_a > 1)$ are not satisfiable.}
   \label{fig:eager-evaluation}
 \end{figure}
 
@@ -255,7 +255,6 @@ For instance, we may be interested in narrowing down the exploration to inputs o
 %   \item {\em Fully known}: as all input bytes are concrete, the state space size is trivially $1$.
 % \end{itemize}}
 
-
 \begin{shaded}\mytempedit{\noindent{\bf\small Example.} Consider the following simplified packet header processing code: {\tt pkt} points to the input buffer, while {\tt header} to the fixed expected content. If no}
 \begin{wrapfigure}{r}{0.4\textwidth}
   \vspace{-4.2mm}
@@ -282,8 +281,9 @@ parse_payload(&pkt)
 %Dynamic symbolic execution refers to a body of techniques that exploit execution with concrete values to explore [...].
 
 % ---------------------------------------------------------------------------------------------------
-\subsection{State Merging}
 
+\subsection{State Merging}
+\newpage %%%%% TODO TODO TODO
 State merging is a powerful technique that fuses different paths into a single state. A merged state is be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate. Differently from other static program analysis techniques such as abstract interpretation, merging in symbolic execution does not lead to over-approximation.
 
 %Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. The notion of state merging was also explored in the context of symbolic execution
