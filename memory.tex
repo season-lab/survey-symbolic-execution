@@ -5,8 +5,11 @@
 \section{Memory model}
 \label{memory-model}
 
-Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses (indexes) with either expressions over concrete values or symbolic values. We can still support variables by using their address rather than their name in the mapping. In the following, when we write $x\mapsto e$ for a variable $x$ and an expression $e$ we mean $\&x\mapsto e$, where $\&x$ is the concrete address of variable $x$. Also, if $v$ is an array and $c$ is an integer constant, by $v[c]\mapsto e$ we mean $\&v+c\mapsto e$. A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+Our warm-up example of Section~\ref{symbolic-execution-example} presented a simplified memory model where data are stored in scalar variables only, with no indirection. A crucial aspect of symbolic execution is how memory should be modeled to support programs with pointers and arrays. This requires extending our notion of memory store by mapping not only variables, but also memory addresses to symbolic expressions or concrete values. In general, a store $\sigma$ that explicitly models memory addresses can be thought as a mapping that associates memory addresses (indexes) with either expressions over concrete values or symbolic values. We can still support variables by using their address rather than their name in the mapping. In the following, when we write $x\mapsto e$ for a variable $x$ and an expression $e$ we mean $\&x\mapsto e$, where $\&x$ is the concrete address of variable $x$. Also, if $v$ is an array and $c$ is an integer constant, by $v[c]\mapsto e$ we mean $\&v+c\mapsto e$.
 
+%A memory model is an important design choice for a symbolic engine, as it can have a significant influence on the coverage achieved by symbolic execution, as well as on the scalability of constraint solving~\cite{CS-CACM13}.
+\mynote{[D] shorter}A memory model is an important design choice for a symbolic engine, as it can significantly affect the coverage achieved by the exploration and the scalability of constraint solving~\cite{CS-CACM13}.
+%
 The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the address referenced in the operation is a symbolic expression. In the remainder of this section, we discuss a number of popular solutions.
 
 \subsection{Fully Symbolic Memory}
@@ -32,7 +35,7 @@ At the highest level of generality, an engine may treat memory addresses as full
 \end{lstlisting}
 \end{tabular}
 \end{center}
-\vspace{-2mm}
+\vspace{-2.5mm}
 \caption{Memory modeling example: which values of \texttt{i} and \texttt{j} make the \texttt{assert} fail?}
 \label{fi:example-mem}
 \end{figure}
@@ -42,9 +45,11 @@ At the highest level of generality, an engine may treat memory addresses as full
 \vspace{-4.5mm}
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
+%\vspace{-1mm}
 \end{figure}
 
-\item {\em if-then-else formulas.} An alternative approach consists in encoding the uncertainty on the possible values of a symbolic pointer into the expressions kept in the symbolic store and in the path constraints, without forking any new states. The key idea is to exploit the capability of some solvers to reason on formulas that contain if-then-else expressions of the form $ite(\texttt{c}, \texttt{t}, \texttt{f})$, which yields \texttt{t} if \texttt{c} is true, and \texttt{f} otherwise\footnote{In propositional logic, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$.}.
+% otherwise\footnote{In propositional logic, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$.}.
+\item {\em if-then-else formulas.} An alternative approach consists in encoding the uncertainty on the possible values of a symbolic pointer into the expressions kept in the symbolic store and in the path constraints, without forking any new states. The key idea is to exploit the capability of some solvers to reason on formulas that contain if-then-else expressions of the form $ite(\texttt{c}, \texttt{t}, \texttt{f})$, which yields \texttt{t} if \texttt{c} is true, and \texttt{f} otherwise.
 The approach works differently for memory read and write operations. Let $\alpha$ be a symbolic address that may assume the concrete values $a_1, a_2, \ldots$:
 \begin{itemize}
 \item reading from $\alpha$ yields the expression $ite(\alpha=a_1,\sigma(a_1), ite(\alpha=a_2,\sigma(a_2), \ldots))$;
@@ -73,8 +78,7 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \item {\em Trading soundness for performance.} The idea, discussed in the remainder of this section, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
-\item {\em Leveraging language-specific features.} Differently from languages with unrestricted memory access, such as C or assembly, some object-oriented languages restrict references to either
-be null or point to previously allocated objects, rather than to any generic memory location. This assumption can significantly reduce the exploration space in symbolic execution, as discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}.
+\item {\em Heap modeling.} Another effective technique is to corset the exploration to states where pointers are restricted to be either null, or point to previously heap-allocated objects, rather than to any generic memory location (\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}).
 
 \end{itemize}
 }
