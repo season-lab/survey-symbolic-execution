@@ -45,9 +45,11 @@ At the highest level of generality, an engine may treat memory addresses as full
 \vspace{-4.5mm}
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
+%\vspace{-1mm}
 \end{figure}
 
-\item {\em if-then-else formulas.} An alternative approach consists in encoding the uncertainty on the possible values of a symbolic pointer into the expressions kept in the symbolic store and in the path constraints, without forking any new states. The key idea is to exploit the capability of some solvers to reason on formulas that contain if-then-else expressions of the form $ite(\texttt{c}, \texttt{t}, \texttt{f})$, which yields \texttt{t} if \texttt{c} is true, and \texttt{f} otherwise\footnote{In propositional logic, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$.}.
+% otherwise\footnote{In propositional logic, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$.}.
+\item {\em if-then-else formulas.} An alternative approach consists in encoding the uncertainty on the possible values of a symbolic pointer into the expressions kept in the symbolic store and in the path constraints, without forking any new states. The key idea is to exploit the capability of some solvers to reason on formulas that contain if-then-else expressions of the form $ite(\texttt{c}, \texttt{t}, \texttt{f})$, which yields \texttt{t} if \texttt{c} is true, and \texttt{f} otherwise.
 The approach works differently for memory read and write operations. Let $\alpha$ be a symbolic address that may assume the concrete values $a_1, a_2, \ldots$:
 \begin{itemize}
 \item reading from $\alpha$ yields the expression $ite(\alpha=a_1,\sigma(a_1), ite(\alpha=a_2,\sigma(a_2), \ldots))$;
@@ -76,7 +78,7 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \item {\em Trading soundness for performance.} The idea, discussed in Section~\ref{ss:address-concretization} and Section~\ref{ss:index-based-memory}, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
-\item {\em Leveraging language-specific features.} Differently from languages with unrestricted memory access, such as C or assembly, some object-oriented languages restrict references to either
+\item {\em Leveraging language-specific features.} \mynote{[D] assumption can be used to?} Differently from languages with unrestricted memory access, such as C or assembly, some object-oriented languages restrict references to either
 be null or point to previously allocated objects, rather than to any generic memory location. This assumption can significantly reduce the exploration space in symbolic execution, as discussed in Section~\ref{ss:complex-objects}.
 \end{itemize}}
 
