@@ -78,7 +78,7 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \item {\em Trading soundness for performance.} The idea, discussed in the remainder of this section, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
-\item {\em Heap modeling.} An additional idea is to corset the exploration to states where pointers are restricted to be either null, or point to previously heap-allocated objects, rather than to any generic memory location (\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}).
+\item {\em Heap modeling.} An additional idea is to corset the exploration to states where pointers are restricted to be either null, or point to previously heap-allocated objects, rather than to any generic memory location (Section~\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}).
 
 \end{itemize}
 }
@@ -110,7 +110,8 @@ In all cases where the combinatorial complexity of the analysis explodes as poin
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
 \mytempedit{ Concretization naturally arises in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05},
 %and early {\sc SAGE} releases~\cite{SAGE-NDSS08}. % that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
-which handle memory initialization by concretizing a reference of type {\tt T*} either to {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. DART makes the choice randomly, while CUTE first tries {\tt NULL}, and then, in a subsequent execution, a concrete address. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of a pointed object. Since memory addresses (e.g., returned by {\tt malloc}) may non-deterministically change at different concrete executions, CREST uses {\em logical addresses}\mynote{troppo sintetico?} in symbolic formulas to maintain consistency across different runs. Another reason for concretization is due to limitations in constraint handling: for instance, CUTE is capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
+which handle memory initialization by concretizing a reference of type {\tt T*} either to {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. DART makes the choice randomly, while CUTE first tries {\tt NULL}, and then, in a subsequent execution, a concrete address. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of a pointed object. Since memory addresses (e.g., returned by {\tt malloc}) may non-deterministically change at different concrete executions, CUTE uses {\em logical addresses} in symbolic formulas to maintain consistency across different runs. %For efficiency reasons, CUTE underapproximates 
+Another reason for concretization is due to limitations in constraint handling: for instance, CUTE is capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
 }
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
