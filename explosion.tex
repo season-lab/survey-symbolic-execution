@@ -284,7 +284,11 @@ parse_payload(&pkt)
 % ---------------------------------------------------------------------------------------------------
 \subsection{State Merging}
 
-Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. In a precise symbolic execution, however, merging is not allowed \mynote{over--approxim?} to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate.
+State merging is a powerful technique that fuses different paths into a single state. A merged state is be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate. Differently from other static program analysis techniques such as abstract interpretation, merging in symbolic execution does not lead to over-approximation.
+
+%Several static program analysis techniques such as abstract interpretation merge states corresponding to different paths into a state that over-approximates them. The notion of state merging was also explored in the context of symbolic execution
+%In a precise symbolic execution, however, merging is not allowed \mynote{over--approxim?} to introduce any approximation or abstraction, and therefore can only change formulas to have them characterize sets of execution paths. 
+%In other words, a merged state will be described by a formula that represents the disjunction of the formulas that would have described the individual states if they were kept separate.
 
 \begin{shaded}\noindent{\bf\small Example.} Consider function {\tt foo} \mytempedit{shown below} and its symbolic execution tree shown in Figure~\ref{fig:example-state-merging}a. Initially (execution state $A$) the path constraints are {\em true} and input arguments {\tt x} and {\tt y} are associated with symbolic values $\alpha_x$ and $\alpha_y$, respectively.
 \begin{wrapfigure}{l}{0.4\textwidth}
