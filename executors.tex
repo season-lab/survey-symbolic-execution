@@ -198,19 +198,19 @@ As shown by the example, false negatives (i.e., missed paths) and path divergenc
 %{\em Selective symbolic execution} carefully interleaves concrete executions of functions with fully symbolic phases, while keeping the exploration meaningful.
 
 Suppose a function A calls a function B and the execution mode changes at the call site. Two scenarios arise:
-(1) {\em From concrete to symbolic and back}: the arguments of B are made symbolic and B is explored symbolically. B is also executed concretely and its concrete result is returned to A. After that, A resumes concretely. 
-(2) {\em From symbolic to concrete and back}: the arguments of B are concretized, B is executed concretely, and execution resumes symbolically in A. This may impact both soundness and completeness of the analysis: (i) {\em Completeness}: to make sure that symbolic execution skips any paths that would not be realizable due to the performed concretization (possibly leading to false positives), {\sc \stwoe} collects path constraints that keep track of how arguments are concretized, what side effects are made by B, and what returned value it produces. (ii) {\em Soundness}: concretization may cause missed branches after A is resumed (possibly leading to false negatives). To remedy this, the collected constraints are marked as {\em soft}: whenever a branch after returning to A is made inoperative by a soft constraint, the execution backtracks and a different choice of arguments for B is attempted. To guide re-concretization of B's arguments, {\sc \stwoe} also collects the branch conditions during the concrete execution of B, and chooses the concrete values so that they enable a different concrete execution path in B.
-
+(1) {\em From concrete to symbolic and back}: the arguments of B are made symbolic and B is explored symbolically in full. B is also executed concretely and its concrete result is returned to A. After that, A resumes concretely. 
+(2) {\em From symbolic to concrete and back}: the arguments of B are concretized, B is executed concretely, and execution resumes symbolically in A. This may impact both soundness and completeness of the analysis: (i) {\em Completeness}: to make sure that symbolic execution skips any paths that would not be realizable due to the performed concretization (possibly leading to false positives), {\sc \stwoe} collects path constraints that keep track of how arguments are concretized, what side effects are made by B, and what return value it produces. (ii) {\em Soundness}: concretization may cause missed branches after A is resumed (possibly leading to false negatives). To remedy this, the collected constraints are marked as {\em soft}: whenever a branch after returning to A is made inoperative by a soft constraint, the execution backtracks and a different choice of arguments for B is attempted. To guide re-concretization of B's arguments, {\sc \stwoe} also collects the branch conditions during the concrete execution of B, and chooses the concrete values so that they enable a different concrete execution path in B.
+%
 %Going from the concrete to the symbolic domain is easy: the called function is executed both concretely and symbolically, with the result from the former simply returned to the concrete domain, while symbolic execution explores the component of interest in full by turning the arguments for the call into purely symbolic ones.
-
+%
 %Going instead from the symbolic to the concrete domain, the arguments for a call are concretized and added to the path constraints, as the return value and any possible side effects are a consequence of the values chosen for the arguments. This may result in missing future paths because of the constraints over the arguments values or the return value and side effects. The engine marks such constraints as {\em soft}: whenever a branch in the symbolic domain is made inoperative by a soft constraint, the execution backtracks and a different choice of arguments is attempted, possibly leveraging branch conditions tracked during the concrete execution.
-
+%
 %\mynote{I: inglese non fluido. and side effects a che si riferisce? Si intende because of side effects? Girare frase (prima side effects poi constraints)?}  
-
+%
 %The concrete-symbolic boundary traversal is ruled by an {\em execution consistency model} that balances path over- and under-approximation (i.e., false negatives/positives) with scalability. {\sc \stwoe} offers six models targeting different use cases (e.g., systematic testing, reverse engineering, analysis of cryptographic code with hard-to-solve constraints). 
-
+%
 %A transition from the symbolic domain is more complicated:
-
+%
 %Executions within the symbolic and concrete domains are dubbed multi-path and single-path, respectively.
 }
 
@@ -411,8 +411,6 @@ Other search heuristics try to prioritize paths likely leading to states that ar
 
 {\em Fitness functions} have been largely used in the context of search-based test generation~\cite{M-STVR04}. %\mynote{[D] Check and rephrase 2nd sentence}
 A fitness function measures how close an explored path is to achieve the target test coverage. Several papers, e.g.,~\cite{XTD-DSN09,CS-CACM13}, have applied this idea in the context of symbolic execution. As an example,~\cite{XTD-DSN09} introduces {\em fitnex}, a strategy for concolic execution that prioritizes paths that are {\em closer} to take a specific branch. In more detail, given a branch condition of the form $|a - c| == 0$ and a \mynote{I: l'inglese (e il concetto) non e' molto chiaro, si puo' spiegare meglio?}  path that has reached the branch, {\em fitnex} computes a closeness equal to $|a - c|$ by leveraging the concrete values \iffullver{of the two}{of} variables $a$ and $c$ in that path. Similar fitness values can be computed for other kinds of branch conditions. The path with the lowest fitness value for a branch is selected by the symbolic engine. Paths that have not reached the branch yet get the worst-case fitness value. 
-
-\mytempedit{Based on the observation that a large number of paths can be considered ``equivalent'' since the symbolic expressions describing the output are the same, \cite{QNR13} proposes a path partitioning approach where two program paths are placed in the same partition if they have the same relevant slice with respect to the program output. A relevant slice is the transitive closure of dynamic data and control dependencies as well as potential dependencies, which capture statements that affect the output by not getting executed. Paths are partitioned on-the-fly during their exploration, computing a concise semantic signature for a program, which describes all the different symbolic expressions that the output can assume along different paths.}
 
 % \mytempedit{
 % Different works~\cite{DA-ASE14,MPF-SAS11} aim at identifying program inputs that trigger the execution of a specific target point in a program.
