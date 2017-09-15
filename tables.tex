@@ -1,12 +1,12 @@
 % !TEX root = appendix.tex
 
-\subsection{Additional Tables}
+\section{Additional Tables}
 
-\subsubsection{Tools}
+\subsection{Tools}
 
 \begin{table}[t]
   \centering
-  \begin{adjustbox}{width=0.98\columnwidth} % TODO was 1
+  \begin{adjustbox}{width=1.01\columnwidth} % TODO was 1
   %\begin{small}
   \begin{tabular}{| l || c || l |}
     \hline      
@@ -56,13 +56,14 @@
   \vspace{-3mm} % TODO
 \end{table}
 
-Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the article.
+Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the main article.
 
-\subsubsection{Path Selection Heuristics}
+\subsection{Path Selection Heuristics}
+Table~\ref{tab:heuristics} provides a categorization of the search heuristics that have been discussed in Section 2.3 of the main article. For each category, we list several works that have proposed interesting embodiments of the category.
 
-\begin{figure}[t]
+\begin{table}[t]
   \centering
-  \begin{adjustbox}{width=0.84\columnwidth} % TODO was 1; with 0.88 the last paragraph will fit
+  \begin{adjustbox}{width=0.99\columnwidth} % TODO was 1; with 0.88 the last paragraph will fit
   \begin{small}
   \begin{tabular}{| l || l |}
     \hline      
@@ -71,18 +72,19 @@ Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic e
     \multirow{3}*{DFS} & {\em Exhaust paths, minimize memory usage} \\ & \cite{EXE-CCS06,CKC-TOCS12}\\ & \cite{PEX-TAP08,DART-PLDI05} \\\hline
     \multirow{2}*{Random path selection} & {\em Randomly pick a path with probability based on its length} \\ & \cite{KLEE-OSDI08} \\\hline
     %low-covered code & prioritize paths that execute low-covered code  & \cite{EXE-CCS06} \\
-    \multirow{3}*{Code coverage search} & {\em Prioritize paths that may explore unexplored code} \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12}\\ & \cite{CKC-TOCS12,GV-ISSTA02} \\\hline
+    \multirow{4}*{Code coverage search} & {\em Prioritize paths that may explore unexplored code or that may} \\ & {\em soon reach a particular target program point}  \\ & \cite{EXE-CCS06,KLEE-OSDI08,MAYHEM-SP12}\\ & \cite{CKC-TOCS12,GV-ISSTA02,MPF-SAS11} \\\hline
     \multirow{2}*{Buggy-path-first} & {\em Prioritize bug-friendly path} \\ & \cite{AEG-NDSS11} \\\hline
     \multirow{2}*{Loop exhaustion} & {\em Fully explore specific loops} \\ & \cite{AEG-NDSS11} \\\hline
     \multirow{2}*{Symbolic instruction pointers} & {\em Prioritize paths with symbolic instruction pointers} \\ & \cite{MAYHEM-SP12} \\\hline
     \multirow{2}*{Symbolic memory accesses} & {\em Prioritize paths with symbolic memory accesses} \\ & \cite{MAYHEM-SP12} \\ \hline
     \multirow{2}*{Fitness function} & {\em Prioritize paths based on a fitness function} \\ & \cite{XTD-DSN09,CS-CACM13,XTD-DSN09} \\ \hline
-    \multirow{3}*{Subpath-guided search} & {\em Use frequency distributions of explored subpaths to prioritize}\\ & {\em less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\
+    \multirow{3}*{Subpath-guided search} & {\em Use frequency distributions of explored subpaths to prioritize}\\ & {\em less covered parts of a program} \\ & \cite{LZL-OOPSLA13} \\ \hline
+    \multirow{2}*{Property-guided search} & {\em Prioritize paths that are most likely to satisfy the target property} \\ & \cite{ZCWDL15} \\ 
     %kill path & filter uninteresting path & \cite{CKC-TOCS12} \\
     \hline  
   \end{tabular}
   \end{small}
   \end{adjustbox}
-  \caption{Common path selection heuristics discussed in the literature.}
+  \caption{Common path selection heuristics discussed in Section 2.3 of the main article.}
   \label{tab:heuristics}
-\end{figure}
+\end{table}
