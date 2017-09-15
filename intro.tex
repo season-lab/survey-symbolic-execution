@@ -57,6 +57,7 @@ By evaluating the code using symbols for its inputs, instead of concrete values,
 \vspace{-2mm}
 \caption{Warm-up example: which values of \texttt{a} and \texttt{b} make the \texttt{assert} fail?}
 \label{fig:example-1}
+\vspace{-1.5mm}
 \end{figure}
 
 In more detail, every value that cannot be determined by a static analysis of the code, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
