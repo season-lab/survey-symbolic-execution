@@ -488,7 +488,8 @@ author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue 
 }
 
 @Inbook{SC2,
-author="{\'A}brah{\'a}m, Erika
+oldFirstAuthor="{\'A}brah{\'a}m, Erika",
+author="Abraham, Erika
 and Abbott, John
 and Becker, Bernd
 and Bigatti, Anna M.

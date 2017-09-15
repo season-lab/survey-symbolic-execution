@@ -4,12 +4,12 @@
 \label{se:hang}
 \mytempedit{
 In this section we \myedit{discuss} how recent advances in related research areas could be applied or provide potential directions to enhance the state of the art of symbolic execution techniques. In particular, we discuss separation logic for data structures, techniques from the program verification and program analysis domains for dealing with path explosion, and symbolic computation for dealing with non-linear constraints.
-}
+%}
 % , i.e., polynomial constraints over variables
 
 % Reynolds02,IO-POPL01
 \subsection{Separation Logic}
-\mytempedit{
+%\mytempedit{
 Checking memory safety properties for pointer programs is a major challenge in program verification. Recent years have witnessed {\em separation logic} (SL)~\cite{Reynolds02} emerging as one leading approach to reason about heap manipulations in imperative programs. SL extends Hoare logic to facilitate reasoning about programs that manipulate pointer data structures, and allows expressing complex invariants of heap configurations in a succinct manner.
 
 At its core, a {\em separating conjunction} binary operator $*$ is used to assert that the heap can be partitioned in two components where its arguments separately hold. For instance, predicate $A * x\mapsto [n:y]$ says that there is a single heap cell $x$ pointing to a record that holds $y$ in its $n$ field, while $A$ holds for the rest of the heap.
@@ -20,11 +20,11 @@ A key to the success of SL lies in the local form of reasoning enabled by its $*
 
 % verification (Section~\ref{se:constraint-solving})
 Several tools based on SL are available to date, for instance, for automatic memory bug discovery in user and system code, and verification of annotated programs against memory safety properties or design patterns. While some of them implement tailor-made decision procedures, \cite{BPS-ENTCS09,PWZ-CAV13} have shown that provers for decidable SL fragments can be integrated in an SMT solver, allowing for complete combinations with other theories relevant to program verification. This can pave the way to applications of SL in a broader setting: for instance, a symbolic executor could use it to reason inductively about code that manipulates structures such as lists and trees. While symbolic execution is at the core of SL, to the best of our knowledge there have not been uses of SL in symbolic executors to date.%We believe this might represent a promising research direction to follow.
-}
+%}
 
 \subsection{Invariants} 
 \label{ss:invariants}
-\mytempedit{
+%\mytempedit{
 % is not just a quantity that remains unchanged throughout executions of the loop body, but
 Loop invariants play a key role in verifiers that can prove programs correct against their full functional specification. An invariant is an inductive property that holds when the loop is first entered and is preserved for an arbitrary number of iterations~\cite{FMV-CSUR14,GFM-TSE15}. Leveraging invariants can be beneficial to symbolic executors, in order to compactly capture the effects of a loop and reason about them. Unfortunately, we are not aware of symbolic executors taking advantage of this approach. One of the reasons might lie in the difficulty of computing loop invariants without requiring manual intervention from domain experts. In fact, lessons from the verification practice suggest that providing loop invariants is much harder compared to other specification elements such as method pre/post-conditions.
 
@@ -39,7 +39,8 @@ However, many researchers have recently explored techniques for inferring loop i
 {\em LoopFrog}~\cite{LOOPFROG-ATVA08} replaces loops using a symbolic abstract transformer with respect to a set of abstract domains, obtaining a conservative abstraction of the original code. Abstract transformers are computed starting from the innermost loop, and the output is a loop-free summary of the program that can be handed to a model checker for verification. This approach can also be applied to non-recursive function calls, and might deserve some investigation in symbolic executors. 
 
 Loop invariants can also be extracted using {\em interpolation}, a general technique that has already been applied in symbolic execution for different goals (Section~\ref{ss:interpolation}). %More generally, we believe that modern advances in invariant generation can provide potential solutions for handling loops more efficiently in a symbolic executor.
-}
+%
+%}
 
 % DROPPED as it's an application
 \iffullver{
@@ -50,14 +51,14 @@ On the other hand, symbolic execution has proven useful to derive loop invariant
 %this can be exploited by a symbolic engine for automatically discovering some invariants over the loop. In~\cite{PV-SPIN04}, this is achieved by iteratively using \mynote{[D] Define?} invariant strengthening and approximation techniques. 
 
 \subsection{Function Summaries}
-\mytempedit{
+%\mytempedit{
 Function summaries (Section~\ref{ss:summarization}) have largely been employed in static and dynamic program analysis, especially in program verification. A number of such works could offer interesting opportunities to advance the state of the art in symbolic execution. For instance, the Calysto static checker~\cite{CALYSTO-ICSE08} walks the call graph of a program to construct a symbolic representation of the effects of each function, i.e., return values, writes to global variables, and memory locations accessed depending on its arguments. Each function is processed once, possibly inlining effects of small ones at their call sites. Static checkers such as Calysto and Saturn~\cite{SATURN-POPL05} trade scalability for soundness in summary construction, as they unroll loops only to a small number of iterations: their use in a symbolic execution setting may thus result in a loss of soundness. More fine-grained summaries are constructed in~\cite{RACERX-SOSP03} by taking into account different input conditions using a summary cache for memoizing the effects of a function.
 
 \cite{SFS11} proposes a technique to extract function summaries for model checking where multiple specifications are typically checked one a time, so that summaries can be reused across verification runs. In particular, they are computed as over-approximations using interpolation (Section~\ref{ss:interpolation}) and refined across runs when too weak. The strength of this technique lies in the fact that an interpolant-based summary can capture all the possible execution traces through a function in a more compact way than the function itself. The technique has later been extended to deal with nested function calls in~\cite{SFS12}.%, which discusses an useful application in incremental update checking of programs.
-}
+%}
 
 \subsection{Program analysis and optimization}
-\mytempedit{
+%\mytempedit{
 We believe that the symbolic execution practice might also benefit from solutions that have been proposed for related problems in the program analysis realm. For instance, in the parallel computing community transformations such as {\em loop coalescing}~\cite{BGS-CSUR94} can restructure nested loops into a single loop by flattening the iteration space of their indexes. Such a transformation could potentially simplify a symbolic exploration, empowering search heuristics and state merging strategies. 
 
 {\em Loop unfolding}~\cite{SK-SIGPLAN-NOTICES04} may potentially be interesting as well, as it allows exposing ``well-structured'' loops (e.g., showing invariant code, or having constants or affine functions as subscripts of array references) by peeling several iterations.
@@ -67,12 +68,15 @@ In Section~\ref{se:environment-thirdparty} we discussed its usage in~\cite{JQF-I
 %has shown that program synthesis can be used to build models for complex Java components by abstracting away the details and entanglements of their implementations while capturing their functional behavior. In particular, 
 
 \subsection{Symbolic Computation}
-Although the satisfiability problem is known to be NP-hard already for SAT, the mathematical developments over the past decades have produced several practically applicable methods to solve arithmetic formulas. In particular, studies in the area of {\em symbolic computation}, also known as computer algebra, have produced powerful methods such as Gr\"{o}bner bases for solving systems of polynomial constraints, cylindrical algebraic decomposition for real algebraic geometry, and virtual substitution for non-linear real arithmetic formulas~\cite{Abraham15}.
+%In particular, studies in the area of {\em symbolic computation}, also known as computer algebra,
+Although the satisfiability problem is known to be NP-hard already for SAT, the mathematical developments over the past decades have produced several practically applicable methods to solve arithmetic formulas. In particular, advances in {\em symbolic computation} have produced powerful methods such as Gr\"{o}bner bases for solving systems of polynomial constraints, cylindrical algebraic decomposition for real algebraic geometry, and virtual substitution for non-linear real arithmetic formulas~\cite{Abraham15}.
 
 % handling complex Boolean constraints and; quantifier-free non-linear
-While SMT solvers have proven to be very efficient at combining theories and heuristics when processing complex expressions, they make use of symbolic computation techniques only to a little extent, and their support for non-linear real and integer arithmetic is still in its infancy~\cite{Abraham15}. To the best of our knowledge, only Z3~\cite{Z3-TACS08} and SMT-RAT~\cite{SMTRAT15} provide support to reason about them both.
+% have proven to be
+While SMT solvers are very efficient at combining theories and heuristics when processing complex expressions, they make use of symbolic computation techniques only to a little extent, and their support for non-linear real and integer arithmetic is still in its infancy~\cite{Abraham15}. To the best of our knowledge, only Z3~\cite{Z3-TACS08} and SMT-RAT~\cite{SMTRAT15} can reason about them both.
+%provide support to reason about them both.
 
-Using symbolic computation techniques as theory plugins for SMT solvers is a promising symbiosis, as they provide powerful procedures for solving conjunctions of arithmetic constraints~\cite{Abraham15}. The realisation of this idea is hindered by the fact that available implementations of such procedures do not comply with the incremental, backtracking and explanation of inconsistencies properties expected of SMT-compliant theory solvers. One interesting project to look at is SC\textsuperscript{2}~\cite{SC2}, whose goal is to create a new community aiming at bridging the gap between symbolic computation and satisfiability checking, combining the strengths of both worlds in order to pursue problems currently beyond their individual reach.
+\cite{Abraham15} states that using symbolic computation techniques as theory plugins for SMT solvers is a promising symbiosis, as they provide powerful procedures for solving conjunctions of arithmetic constraints. The realisation of this idea is hindered by the fact that available implementations of such procedures do not comply with the incremental, backtracking and explanation of inconsistencies properties expected of SMT-compliant theory solvers. One interesting project to look at is SC\textsuperscript{2}~\cite{SC2}, whose goal is to create a new community aiming at bridging the gap between symbolic computation and satisfiability checking, combining the strengths of both worlds in order to pursue problems currently beyond their individual reach.
 
 Further opportunities to increase efficiency when tackling non-linear expressions might be found in the recent advances in {\em symbolic-numeric computation}~\cite{HandbookOfCompAlgebra}. In particular, these techniques aim at developing efficient polynomial solvers by combining numerical algorithms, which are very efficient in approximating local solutions but lack a global view, with the guarantees from symbolic computation techniques. This hybrid techniques can extend the domain of efficiently solvable problems, and thus be of interest for non-linear constraints from symbolic execution.
 
