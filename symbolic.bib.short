@@ -15,7 +15,7 @@
 } 
 
 @inproceedings{ZCWDL15,
- author = {Zhang, Yufeng and Clien, Zhenbang and Wang, Ji and Dong, Wei and Liu, Zhiming},
+ author = {Zhang, Yufeng and Chen, Zhenbang and Wang, Ji and Dong, Wei and Liu, Zhiming},
  title = {Regular Property Guided Dynamic Symbolic Execution},
  booktitle = {Proc. 37th Int. Conf. on Software Engineering},
  year = {2015},
@@ -89,19 +89,26 @@
  keywords = {concolic execution, countermeasures, divergent patterns, misleading inputs, path divergences, prevalence},
 } 
 
-
 @article{CHEN20131758,
-title = "State of the art: Dynamic symbolic execution for automated test generation",
-journal = "Future Gen. Comp. Systems",
-volume = "29",
-number = "7",
-pages = "1758-1773",
-year = "2013",
-issn = "0167-739X",
-doi = "http://dx.doi.org/10.1016/j.future.2012.02.006",
-url = "http://www.sciencedirect.com/science/article/pii/S0167739X12000398",
-author = "Ting Chen and Xiao-song Zhang and Shi-ze Guo and Hong-yuan Li and Yue Wu",
-}
+ author = {Chen, Ting and Zhang, Xiao-Song and Guo, Shi-Ze and Li, Hong-Yuan and Wu, Yue},
+ title = {State of the Art: Dynamic Symbolic Execution for Automated Test Generation},
+ oldJournal = {Future Gener. Comput. Syst.},
+ journal = {Future Gen. Comput. Syst.},
+ issue_date = {September, 2013},
+ volume = {29},
+ number = {7},
+ oldMonth = sep,
+ year = {2013},
+ issn = {0167-739X},
+ pages = {1758--1773},
+ numpages = {16},
+ url = {http://dx.doi.org/10.1016/j.future.2012.02.006},
+ doi = {10.1016/j.future.2012.02.006},
+ acmid = {2489467},
+ publisher = {Elsevier Science Publishers B. V.},
+ address = {Amsterdam, The Netherlands, The Netherlands},
+ keywords = {Automated test generation, Challenges and solutions, Dynamic symbolic execution, High code-coverage, Low false positives, Prospects, Tools analysis},
+} 
 
 @article{QNR13,
  author = {Qi, Dawei and Nguyen, Hoang D. T. and Roychoudhury, Abhik},
@@ -594,11 +601,11 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
 }
 
 @INPROCEEDINGS{YYG15, 
- author={Q. Yi and Z. Yang and S. Guo and C. Wang and J. Liu and C. Zhao}, 
+ author={Yi, Qiuping and Yang, Zijiang and Guo, Shengjian and Wang, Chao and Liu, Jian and Zhao, Chen}, 
  booktitle={2015 IEEE 8th Int. Conf. on Software Testing, Verification and Validation (ICST)}, 
  title={Postconditioned Symbolic Execution}, 
  year={2015}, 
- pages={1-10}, 
+ oldPages={1-10}, 
  doi={10.1109/ICST.2015.7102601}, 
  ISSN={2159-4848}, 
  month={April},
@@ -733,7 +740,7 @@ month={Oct},}
 }
 
 @ARTICLE{GFM-TSE15, 
-author={J. P. Galeotti and C. A. Furia and E. May and G. Fraser and A. Zeller}, 
+author={Galeotti, Juan P. and Furia, Carlo A. and May, Eva and Fraser, Gordon and Zeller, Andreas}, 
 journal={IEEE Trans. on Softw. Eng.}, 
 title={Inferring Loop Invariants by Mutation, Dynamic Analysis, and Static Checking}, 
 year={2015}, 
@@ -2557,7 +2564,7 @@ month={Oct},}
 	Numpages = {12},
 	Pages = {234--245},
 	Publisher = {ACM},
-	Title = {SELECT: a Formal System for Testing and Debugging Programs by Symbolic Execution},
+	Title = {SELECT -- A Formal System for Testing and Debugging Programs by Symbolic Execution},
 	Url = {http://doi.acm.org/10.1145/800027.808445},
 	Year = {1975},
 	Bdsk-Url-1 = {http://doi.acm.org/10.1145/800027.808445},
