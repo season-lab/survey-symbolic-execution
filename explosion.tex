@@ -414,7 +414,8 @@ A deeper understanding of a program's behavior can help a symbolic engine \mytem
 %\mytempedit{\myparagraph{State matching} This approach determines whether an abstract state is subsumed by another}, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
 
 \revedit{
-\myparagraph{Program Differencing} Dependence analyses can identify branches and data flows affected by code edits. {\em Directed incremental symbolic execution}~\cite{DISE-TOSEM14} statically identifies CFG nodes affected by changes, and reduces the scope of the exploration by pruning paths that would result in path conditions unaffected by changes.}
+\myparagraph{Program Differencing} Dependence analyses can identify branches and data flows affected by code edits. {\em Directed incremental symbolic execution}~\cite{DISE-TOSEM14} statically identifies CFG nodes affected by changes, and reduces the scope of the exploration by analyzing only those paths that exercise uncovered sequences of affected nodes.}
+% pruning paths that would result in path conditions unaffected by changes.}
 
 \mytempedit{
 \myparagraph{Compiler Optimizations}
