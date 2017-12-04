@@ -377,7 +377,7 @@ A deeper understanding of a program's behavior can help a symbolic engine optimi
 
  %given a program slice related to a target program point, symbolic exploration can be restricted to paths contained in the program slice. \iffullver{We discuss an example of use in Section~\ref{ss:auth-bypass}.}{}
 
-\myparagraph{Taint Analysis} This technique~\cite{SAB-SP10} attempts to check which variables of a program may hold values derived from potentially dangerous external sources such as user input. The analysis can be performed both statically and dynamically, with the latter yielding more accurate results. In the context of symbolic execution, taint analysis can help an engine to detects which paths depend on tainted values. For instance,~\cite{MAYHEM-SP12} focuses its analysis on paths where a jump instruction is tainted and uses symbolic execution to generate an exploit.
+\myparagraph{Taint Analysis} This technique~\cite{SAB-SP10} attempts to check which variables of a program may hold values derived from potentially dangerous external sources such as user input. The analysis can be performed both statically and dynamically, with the latter yielding more accurate results. In the context of symbolic execution, taint analysis can help an engine detect which paths depend on tainted values. For instance,~\cite{MAYHEM-SP12} focuses its analysis on paths where a jump instruction is tainted and uses symbolic execution to generate an exploit.
 % skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space.}
 %In the context of symbolic execution, taint analysis can help an engine skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space~\cite{SAB-SP10}.
 
