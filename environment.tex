@@ -1,12 +1,12 @@
 % !TEX root = main.tex
 %\vspace{-2mm} % TODO
-\section{Interaction with the environment and third-party components}
+\revedit{\section{Interaction with the environment}}
 \label{se:environment-thirdparty}
 
 When a program interacts with its environment -- e.g., file system, environment variables, network -- a symbolic executor has to take into account the whole software stack surrounding it, including system libraries, kernel, and drivers.
 Third-party closed-source components and popular frameworks (such as Java Swing and Android) pose further challenges discussed throughout this section.
  
-\mytempedit{\myparagraph{Environment}}
+\mytempedit{\revedit{\myparagraph{System Environment}}}
 A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05},  {\sc CUTE}~\cite{CUTE-FSE05}, and {\sc EXE}~\cite{EXE-CCS06}) includes the environment in symbolic analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. 
 \mytempedit{
 In an online executor this choice may also result in having external calls from distinct paths of execution interfere with each other. Indeed, since there is no mechanism for tracking the side effects of each external call, there is potentially a risk of state inconsistency, e.g., an execution path may read from a file while at the same time another execution path is trying to delete it.
@@ -35,7 +35,7 @@ External functions are simulated by nondeterministically returning any value of 
 
 \mytempedit{
 % symbolically analyzed
-\myparagraph{Third-Party Components}
+\revedit{\myparagraph{Application Environment}}
 Calls to native Java methods, unmanaged code in .NET, or closed-source components are typical instances of a scenario where symbolic values may flow outside the boundaries of the code being analyzed~\cite{AOH-TACAS07}. For instance, frameworks such as Swing and Android embody abstract designs to invoke application code (e.g., via callbacks) that an engine must account for~\cite{JQF-ICSE16}. Furthermore, native methods and reflection features in Java  depend on the internals of the underlying Java virtual machine~\cite{Anand12}.
 
 %For instance, an engine must account for the fact that native methods and reflection features in Java depend on the internals of the underlying Java virtual machine~\cite{Anand12}. Moreover, frameworks like Java Swing or the Android platform have important control and data flows occurring within the framework, such as callbacks for events, that would be missed by a symbolic execution of the application code only~\cite{JQF-ICSE16}.
