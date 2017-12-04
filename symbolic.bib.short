@@ -768,9 +768,9 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
 }
 
 @INPROCEEDINGS{SFS12, 
-author={O. Sery and G. Fedyukovich and N. Sharygina}, 
+author={Sery, Ondrej and Fedyukovich, Grigory and Sharygina, Natasha}, 
 booktitle={2012 Formal Methods in Computer-Aided Design (FMCAD)}, 
-title={Incremental upgrade checking by means of interpolation-based function summaries}, 
+title={Incremental Upgrade Checking by Means of Interpolation-based Function Summaries}, 
 year={2012}, 
 pages={114-121}, 
 keywords={C language;formal verification;function approximation;hardware-software codesign;interpolation;Craig interpolation;bounded C model checking;evolving systems;function summaries;incremental changes;incremental upgrade checking;incremental verification;industrial programs;interpolation-based function summaries;local incremental check;software-hardware design;Algorithm design and analysis;Context;Design automation;Interpolation;Model checking;Optimization;Safety}, 
@@ -1139,7 +1139,7 @@ oldMonth={Oct},}
 }
 
 @inproceedings{PR-POPL89,
- author = {Pnueli, A. and Rosner, R.},
+ author = {Pnueli, Amir and Rosner, Roni},
  title = {On the Synthesis of a Reactive Module},
  booktitle = {Proc. 16th ACM SIGPLAN-SIGACT Symp. on Principles of Programming Languages},
  series = {POPL '89},
