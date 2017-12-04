@@ -2,9 +2,8 @@
 
 \section{Further Directions}
 \label{se:hang}
-\mytempedit{
+
 In this section we discuss how recent advances in related research areas could be applied or provide potential directions to enhance the state of the art of symbolic execution techniques. In particular, we discuss separation logic for data structures, techniques from the program verification and program analysis domains for dealing with path explosion, and symbolic computation for dealing with non-linear constraints.
-%}
 % , i.e., polynomial constraints over variables
 
 % Reynolds02,IO-POPL01
@@ -79,4 +78,3 @@ While SMT solvers are very efficient at combining theories and heuristics when p
 \cite{Abraham15} states that using symbolic computation techniques as theory plugins for SMT solvers is a promising symbiosis, as they provide powerful procedures for solving conjunctions of arithmetic constraints. The realisation of this idea is hindered by the fact that available implementations of such procedures do not comply with the incremental, backtracking and explanation of inconsistencies properties expected of SMT-compliant theory solvers. One interesting project to look at is SC\textsuperscript{2}~\cite{SC2}, whose goal is to create a new community aiming at bridging the gap between symbolic computation and satisfiability checking, combining the strengths of both worlds in order to pursue problems currently beyond their individual reach.
 
 Further opportunities to increase efficiency when tackling non-linear expressions might be found in the recent advances in {\em symbolic-numeric computation}~\cite{HandbookOfCompAlgebra}. In particular, these techniques aim at developing efficient polynomial solvers by combining numerical algorithms, which are very efficient in approximating local solutions but lack a global view, with the guarantees from symbolic computation techniques. This hybrid techniques can extend the domain of efficiently solvable problems, and thus be of interest for non-linear constraints from symbolic execution.
-}

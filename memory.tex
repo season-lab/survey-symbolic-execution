@@ -71,19 +71,15 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 \noindent An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
 
-\mytempedit{
 Due to its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to improve scalability, which elaborate along the following main lines:
 
 \begin{itemize}
-
 \item {\em Representing memory in a compact form.} This approach was taken in~\cite{MEMSIGHT-ASE17}, which maps symbolic -- rather than concrete -- address expressions to data, representing the possible alternative states resulting from referencing memory using symbolic addresses in a compact, implicit form. Queries are offloaded to efficient paged interval tree implementations to determine which stored data are possibly referenced by a memory read operation.
 
 \item {\em Trading soundness for performance.} The idea, discussed in the remainder of this section, consists in corseting symbolic exploration to a subset of the execution states by replacing symbolic pointers with concrete addresses.
 
 \item {\em Heap modeling.} An additional idea is to corset the exploration to states where pointers are restricted to be either null, or point to previously heap-allocated objects, rather than to any generic memory location (Section~\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}).
-
 \end{itemize}
-}
 
 \begin{figure}[t]
 \begin{center}
@@ -110,12 +106,11 @@ In all cases where the combinatorial complexity of the analysis explodes as poin
 
 
 %\mynote{DART is mentioned in CS-CACM13 as  using theories of arrays} --> added to the list above.
-\mytempedit{ Concretization naturally arises in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05},
+Concretization naturally arises in offline executors (Section~\ref{ss:principles}). Prominent examples are {\sc DART}~\cite{DART-PLDI05} and {\sc CUTE}~\cite{CUTE-FSE05},
 %and early {\sc SAGE} releases~\cite{SAGE-NDSS08}. % that concretely execute one path at a time while collecting path constraints along executed paths. %\mynote{[D] was: equality and inequality}  
 which handle memory initialization by concretizing a reference of type {\tt T*} either to {\tt NULL}, or to the address of a newly allocated object of {\tt sizeof(T)} bytes. DART makes the choice randomly, while CUTE first tries {\tt NULL}, and then, in a subsequent execution, a concrete address. If {\tt T} is a structure, the same concretization approach is recursively applied to all fields of a pointed object. Since memory addresses (e.g., returned by {\tt malloc}) may non-deterministically change at different concrete executions, CUTE uses {\em logical addresses} in symbolic formulas to maintain consistency across different runs.
 Another reason for concretization is due to efficiency in constraint solving: for instance, CUTE reasons only about pointer equality constraints using an equivalence graph, resorting to concretization for more general constraints that would need costly SMT theories.
 %Another reason for concretization is due to limitations in constraint handling: for instance, CUTE is capable of reasoning only about equality constraints for pointers, as they can be solved efficiently, and resort to concretization for general symbolic references.
-}
 
 %we normally get or set a concrete value at a particular memory address. When executing symbolically, a design choice for a symbolic engine concerns what to do when a memory reference is an expression instead of a concrete address.
 
@@ -146,8 +141,7 @@ This algorithm comes with a number of caveats: for instance, querying the solver
 %\subsection{Complex Objects}
 %
 
-%\mytempedit{\myparagraph{Lazy Initialization}}
-\subsection{\mytempedit{Lazy Initialization}}
+\subsection{Lazy Initialization}
 \label{ss:complex-objects}
 
 \cite{KPV-TACAS03} \revedit{proposes} symbolic execution techniques for advanced object-oriented language constructs, such as those offered by C++ and Java. The authors describe a framework for software verification that combines symbolic execution and model checking to handle linked data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
@@ -167,24 +161,22 @@ When an uninitialized reference field is accessed, the algorithm forks the curre
   %\vspace{-3mm}
 \end{figure*}
 
-\mytempedit{
 \boxedexample{
 % For the sake of simplicity, we assume that fragment C does not actually evaluate {\tt l->next}, but leaves this task to fragment A. When expanding the [...] 
 %the value of
  Figure~\ref{fig:example-lazy-initialization} shows a recursive Java method {\tt add}, which appends a node of type {\tt Node} to a linked list, and a minimal representation of its symbolic execution when applying lazy initialization. The tree nodes represent executions of straight-line fragments of {\tt add}. Initially, fragment A evaluates reference {\tt l}, which is symbolic and thus uninitialized. The symbolic engine considers three  options: (1) {\tt l} is {\tt null}, (2) {\tt l} points to a new object, and (3) {\tt l} points to a previously allocated object. Since this is the first time that a reference of type {\tt Node} is met, option (3) is ruled out. The two remaining options are then expanded, executing the involved fragments. While the first path ends after executing fragment B, the second one implicitly creates a new object {\tt o$_\texttt{1}$} due to lazy initialization and then executes C, recursively invoking {\tt add}. When expanding the recursive call, fragment A is executed and the three options are again considered by the engine, which forks into three distinct paths. Option (3) is now taken into account since a {\tt Node} object has been previously allocated (i.e., {\tt o$_\texttt{1}$}). However, this path is soon aborted by the engine since it violates the acyclicity precondition (expressed as a comment in this example). The other forked paths are further expanded, repeating the same process. Since the linked list has an unknown maximum length, the exploration can proceed indefinitely. For this reason, it is common to assume an upper bound on the depth of the materialization (i.e., field instantiation) chain.
 }
-}
+
 % \boxedexample{Consider the C function {\tt add} shown in Figure~\ref{fig:example-lazy-initialization}. This recursive function appends a node of type {\tt node\_t} to the tail of a linked list. A compact representation of the symbolic tree for {\tt add} when applying lazy initialization is given in Figure~\ref{fig:example-lazy-initialization}. Tree nodes A, B, C, and D represent execution of straight-line fragments of code in {\tt add}. Initially, fragment A evaluates the value of the pointer {\tt l}, which is symbolic and thus uninitialized. The symbolic engine considers the three possible options: (1) {\tt l} is {\tt NULL}, (2) {\tt l} points to a new object of type {\tt node\_t}, and (3) {\tt l} points to a previously allocated object. Since this is the first time that a pointer of type {\tt node\_t} is met, option (3) is not considered. The two remaining options are then expanded, executing the required fragments. While the first path ends after executing fragment B, the second path implicitly creates a new object {\tt o$_\texttt{1}$} due to lazy initialization and then executes C, recursively invoking the {\tt add} function. For the sake of simplicity, we assume that fragment C does not actually evaluate {\tt l->next}, but leaves this task to fragment A. Expanding the recursive call, fragment A is executed and the three options are again considered by the engine, forking into three distinct paths. In this case, option (3) is taken into account since an object of type {\tt node\_t} has been previously allocated (i.e., {\tt o$_\texttt{1}$}). However, this forked path is soon aborted by the engine since it violates the acyclic precondition (which is simply expressed as a comment in this example). The other forked paths are further expanded, repeating the same process. Since the linked list has an unknown maximum length, the exploration can proceed indefinitely. For this reason, it is common to assume an upper bound on the depth of the materialization chain.}
 
-\mytempedit{
 Recent advances in the area have focused on improving efficiency in generating heap configurations. For instance, in~\cite{DLR-ASE12} the concretization of a reference variable is deferred until the object is actually accessed. The work also provides a formalization of lazy initialization. \cite{BLISS-TSE15} instead employs bound refinement to prune uninteresting heap configurations by using information from already concretized fields, while a SAT solver is used to check whether declarative -- rather than imperative as in the original algorithm -- preconditions hold for a given configuration.
 %Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}. \cite{DLR-ASE12} besides providing a formalization of this technique, extends lazy initialization by adding support for subtypes and by deferring even further concretization when possible (e.g., a check for nullity does not always imply immediate materialization for an object). \cite{BLI-NFM13} presents {\em bounded lazy initialization} (BLI), which exploits {\em tight field bounds}~\cite{GRP-ISSTA10} to prune unfeasible heap configurations. BLISS~\cite{BLISS-TSE15} extends BLI by integrating two techniques: {\em bound refinement} and {\em satisfiability checks}. The former prunes uninteresting heap configurations by leveraging information from already-concretized fields, while the latter queries a SAT solver to check declarative preconditions, discarding unrealistic heap configurations.
-}
+
 
 %, which all share the goal of reducing the number of heap configurations to generate when forking the state. extends lazy initialization by handling subtypes and by making the approach even more lazier, provides a formal treatment of lazy initialization in Java.
 
 \iffullver{
-\mytempedit{\myparagraph{Verifying Client Code Only}}
+\myparagraph{Verifying Client Code Only}
 Of a different flavor is the technique presented in~\cite{SHZ-TAIC07} for symbolic execution over objects instantiated from commonly used libraries. The authors argue that performing symbolic execution at the representation level might be redundant if the aim is to only check the client code, thus trusting the correctness of the library implementation. They discuss the idea of symbolically executing methods of the Java {\tt String} class using a finite-state automaton that abstracts away the implementation details. They present a case study of an application that dynamically generates SQL queries: symbolic execution is used to check whether the statements conform to the SQL grammar and possibly match injection patterns. \iffullver{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps. It is worth mentioning that symbolic execution is used to detect SQL injection vulnerabilities also in~\cite{FLP-COMPSAC07}.}{The authors mention that their approach might be used to symbolically execute over standard container classes such as trees or maps.}
 }{}
 

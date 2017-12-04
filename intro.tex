@@ -21,9 +21,9 @@ Symbolic execution techniques have been brought to the attention of a heterogeno
 
 % other static program
 % which were missed by other program analyses and blackbox testing techniques
-More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly 30\% of all the bugs discovered \mytempedit{by file fuzzing} during the development of Windows 7, which other program analyses and blackbox testing techniques missed~\cite{SAGE-QUEUE12}.
+More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly 30\% of all the bugs discovered by file fuzzing during the development of Windows 7, which other program analyses and blackbox testing techniques missed~\cite{SAGE-QUEUE12}.
 
-\mytempedit{In this article, we survey the main aspects of symbolic execution and discuss the most prominent techniques employed for instance in software testing and computer security applications. Our discussion is mainly focused on {\em forward} symbolic execution, where a symbolic engine analyzes many paths simultaneously starting its exploration from the main entry point of a program.} 
+In this article, we survey the main aspects of symbolic execution and discuss the most prominent techniques employed for instance in software testing and computer security applications. Our discussion is mainly focused on {\em forward} symbolic execution, where a symbolic engine analyzes many paths simultaneously starting its exploration from the main entry point of a program.
 %its extensive usage in software testing and computer security applications\mynote{[D] this should change}, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. 
 %A different approach is symbolic {\em backward} execution, where exploration is started from a specific point of the program (e.g., an {\tt assert} statement) and the engine proceeds backward, trying to reconstruct a valid path from an entry point of the program. Since forward symbolic execution is the mainline technique in literature, throughout this article we will always refer to this approach when using the term symbolic execution. Nonetheless, some benefits offered by symbolic backward execution will be pointed out when relevant for the discussion.
 %
@@ -128,7 +128,6 @@ In the example discussed in Section~\ref{symbolic-execution-example} symbolic ex
 
 Challenges that symbolic execution has to face when processing real-world code can be significantly more complex than those illustrated in our warm-up example. Several observations and questions naturally arise:
 
-\mytempedit{
 \begin{itemize}[itemsep=1mm]
 %%%
 \item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Code manipulating pointers and data structures may give rise not only to symbolic stored data, but also to addresses being described by symbolic expressions.
@@ -163,7 +162,6 @@ SMT solvers can scale to complex combinations of constraints over hundreds of va
 %%%   
 \end{itemize}
 %Depending on the specific application context of symbolic execution
-}
 
 \noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
 
@@ -175,27 +173,19 @@ SMT solvers can scale to complex combinations of constraints over hundreds of va
 \subsection{Related Work}
 \label{ss:related-surveys}
 
-\mytempedit{
 Symbolic execution has been the focus of a vast body of literature. As of August 2017, Google Scholar reports 742 articles that include the exact phrase ``symbolic execution'' in the title. Prior to this survey, other authors have contributed technical overviews of the field, such as \cite{PV-JSTTT09} and \cite{CS-CACM13}. \cite{CHEN20131758} focuses on the more specific setting of automated test generation: it provides a comprehensive view of the literature, covering in depth a variety of techniques and complementing the technical discussions with a number of running examples.
 %Besides  complementing the technical discussions with a number of running examples, it covers in depth recent techniques for key aspects such as memory modelling, environment interaction, path explosion, and constraint solving.
-}
-
-
-
 
 % --------------------------------------------------------------------------------------------------------------------
 \subsection{Organization of the Article}
 \label{ss:article-organization}
 
-\iffullver{
-The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
-}
-{
-\mytempedit{
+%\iffullver{
+%The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
+%}
+
 The remainder of this article is organized as follows. In Section~\ref{se:executors} we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while Section~\ref{se:hang} discusses how recent advances in other areas could be applied to enhance symbolic execution techniques. Concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
 The appendix addresses further challenges that arise when applying symbolic execution to binary code, discusses some prominent applications of symbolic execution, and includes tables listing some prominent tools and techniques.
-}
-}
 
 
 %\vspace{2cm}
