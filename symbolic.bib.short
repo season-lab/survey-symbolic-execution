@@ -1414,6 +1414,7 @@ oldMonth={Oct},}
                David A. Molnar},
   title     = {Automated Whitebox Fuzz Testing},
   booktitle = {Proc. Network and Distributed System Security Symp.},
+  series = {NDSS'08},
   year      = {2008},
   url       = {http://www.isoc.org/isoc/conferences/ndss/08/papers/10_automated_whitebox_fuzz.pdf},
   timestamp = {Thu, 18 Jun 2009 21:33:57 +0200},
