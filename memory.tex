@@ -15,13 +15,6 @@ The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the addres
 \subsection{Fully Symbolic Memory}
 \label{ss:fully-symbolic-memory}
 
-At the highest level of generality, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Two fundamental approaches, pioneered by King in its seminal paper~\cite{K-CACM76}, are the following:
-
-\begin{itemize}
-
-\item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
-\boxedexample{Consider the code shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assignment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
-
 \begin{figure}[t]
 \vspace{-1mm}
 \begin{center}
@@ -42,12 +35,30 @@ At the highest level of generality, an engine may treat memory addresses as full
 \end{figure}
 
 \begin{figure}[t]
-\vspace{-1mm}
+\vspace{-3mm}
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
 \vspace{-4.5mm}
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
 \vspace{-0.5mm}
+\end{figure}
+
+At the highest level of generality, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Two fundamental approaches, pioneered by King in its seminal paper~\cite{K-CACM76}, are the following:
+
+\begin{itemize}
+
+\item {\em State forking.} If an operation reads from or writes to a symbolic address, the state is forked by considering all possible states that may result from the operation. The path constraints are updated accordingly for each forked state.
+\boxedexample{Consider the code shown in Figure~\ref{fi:example-mem}. The write operation at line 4 affects either $a[0]$ or $a[1]$, depending on the unknown value of array index $i$. State forking creates two states after executing the memory assignment to explicitly consider both possible scenarios (Figure~\ref{fi:memory-fork}). The path constraints for the forked states encode the assumption made on the value of $i$. Similarly, the memory read operation \texttt{a[j]} at line 5 may access either $a[0]$ or $a[1]$, depending on the unknown value of array index $j$. Therefore, for each of the two possible outcomes of the assignment \texttt{a[i]=5}, there are two possible outcomes of the \texttt{assert}, which are explicitly explored by forking the corresponding states. }
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.7\columnwidth]{images/memory-ite}
+\end{center}
+\vspace{-3mm}
+\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
+%\vspace{-1mm} % TODO
+\label{fi:memory-ite}
+\vspace{-1.5mm}
 \end{figure}
 
 % otherwise\footnote{In propositional logic, the $ite(\texttt{c}, \texttt{t}, \texttt{f})$ expression could be replaced with the formula $(\texttt{c} \wedge \texttt{t}) \vee (\neg\texttt{c} \wedge \texttt{f})$.}.
@@ -69,7 +80,8 @@ Notice that in both cases, a memory operation introduces in the store as many $i
 
 %\noindent To model fully symbolic pointers, an extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of SMT solvers to model array operations as first-class entities in constraint formulas using a {\em theory of arrays} in the decision procedure~\cite{STP-CAV07}.
 
-\noindent An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
+%\noindent % TODO trick if you need one more line
+An extensive line of research (e.g., {\sc EXE}~\cite{EXE-CCS06}, {\sc KLEE}~\cite{KLEE-OSDI08}, {\sc SAGE}~\cite{EGL-ISSTA09}) leverages the expressive power of some SMT solvers to model fully symbolic pointers. Using a {\em theory of arrays}~\cite{STP-CAV07}, array operations can in fact be expressed as first-class entities in constraint formulas.
 
 Due to its generality, fully symbolic memory supports the most accurate description of the memory behavior of a program, accounting for all possible memory manipulations. In many practical scenarios, the set of possible addresses a memory operation may reference is small~\cite{BITBLAZE-ICISS08} as in the example shown in Figure~\ref{fi:example-mem} where indexes $i$ and $j$ range in a bounded interval, allowing accurate analyses using a reasonable amount of resources. In general, however, a symbolic address may reference any cell in memory, leading to an intractable explosion in the number of possible states. For this reason, a number of techniques have been designed to improve scalability, which elaborate along the following main lines:
 
@@ -80,17 +92,6 @@ Due to its generality, fully symbolic memory supports the most accurate descript
 
 \item {\em Heap modeling.} An additional idea is to corset the exploration to states where pointers are restricted to be either null, or point to previously heap-allocated objects, rather than to any generic memory location (Section~\ref{ss:address-concretization} and Section~\ref{ss:complex-objects}).
 \end{itemize}
-
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width=0.7\columnwidth]{images/memory-ite} % TODO 0.7
-\end{center}
-\vspace{-2.5mm}
-\caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
-%\vspace{-1mm} % TODO
-\label{fi:memory-ite}
-\end{figure}
-
 
 %When obtained ranges are too large, {\sc BitBlaze}~\cite{BITBLAZE-ICISS08} adds a further constraint to the system to limit its size. However, the authors observe that most symbolic memory accesses are typically already constrained to small ranges in practice, making it unnecessary.
 
@@ -155,7 +156,8 @@ When an uninitialized reference field is accessed, the algorithm forks the curre
 \begin{figure*}[t]
   %\vspace{-3mm}
   \centering
-  \includegraphics[width=0.9\columnwidth]{images/lazy-initialization} 
+  \includegraphics[width=0.875\columnwidth]{images/lazy-initialization} % TODO was 0.9
+  \vspace{-0.75mm}
   \caption{Example of lazy initialization}
   \label{fig:example-lazy-initialization}
   %\vspace{-3mm}
@@ -170,6 +172,7 @@ When an uninitialized reference field is accessed, the algorithm forks the curre
 % \boxedexample{Consider the C function {\tt add} shown in Figure~\ref{fig:example-lazy-initialization}. This recursive function appends a node of type {\tt node\_t} to the tail of a linked list. A compact representation of the symbolic tree for {\tt add} when applying lazy initialization is given in Figure~\ref{fig:example-lazy-initialization}. Tree nodes A, B, C, and D represent execution of straight-line fragments of code in {\tt add}. Initially, fragment A evaluates the value of the pointer {\tt l}, which is symbolic and thus uninitialized. The symbolic engine considers the three possible options: (1) {\tt l} is {\tt NULL}, (2) {\tt l} points to a new object of type {\tt node\_t}, and (3) {\tt l} points to a previously allocated object. Since this is the first time that a pointer of type {\tt node\_t} is met, option (3) is not considered. The two remaining options are then expanded, executing the required fragments. While the first path ends after executing fragment B, the second path implicitly creates a new object {\tt o$_\texttt{1}$} due to lazy initialization and then executes C, recursively invoking the {\tt add} function. For the sake of simplicity, we assume that fragment C does not actually evaluate {\tt l->next}, but leaves this task to fragment A. Expanding the recursive call, fragment A is executed and the three options are again considered by the engine, forking into three distinct paths. In this case, option (3) is taken into account since an object of type {\tt node\_t} has been previously allocated (i.e., {\tt o$_\texttt{1}$}). However, this forked path is soon aborted by the engine since it violates the acyclic precondition (which is simply expressed as a comment in this example). The other forked paths are further expanded, repeating the same process. Since the linked list has an unknown maximum length, the exploration can proceed indefinitely. For this reason, it is common to assume an upper bound on the depth of the materialization chain.}
 
 Recent advances in the area have focused on improving efficiency in generating heap configurations. For instance, in~\cite{DLR-ASE12} the concretization of a reference variable is deferred until the object is actually accessed. The work also provides a formalization of lazy initialization. \cite{BLISS-TSE15} instead employs bound refinement to prune uninteresting heap configurations by using information from already concretized fields, while a SAT solver is used to check whether declarative -- rather than imperative as in the original algorithm -- preconditions hold for a given configuration.
+%For instance, in~\cite{DLR-ASE12} the concretization of a reference variable is deferred until the object is actually accessed. The work also provides a formalization of lazy initialization. \cite{BLISS-TSE15} instead employs bound refinement to prune uninteresting heap configurations by using information from already concretized fields, while a SAT solver is used to check whether declarative -- rather than imperative as in the original algorithm -- preconditions hold for a given configuration.
 %Further refinements to lazy initialization are described in a number of works, e.g.,~\cite{DLR-ASE12,BLI-NFM13,BLISS-TSE15}. \cite{DLR-ASE12} besides providing a formalization of this technique, extends lazy initialization by adding support for subtypes and by deferring even further concretization when possible (e.g., a check for nullity does not always imply immediate materialization for an object). \cite{BLI-NFM13} presents {\em bounded lazy initialization} (BLI), which exploits {\em tight field bounds}~\cite{GRP-ISSTA10} to prune unfeasible heap configurations. BLISS~\cite{BLISS-TSE15} extends BLI by integrating two techniques: {\em bound refinement} and {\em satisfiability checks}. The former prunes uninteresting heap configurations by leveraging information from already-concretized fields, while the latter queries a SAT solver to check declarative preconditions, discarding unrealistic heap configurations.
 
 
