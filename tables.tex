@@ -2,15 +2,13 @@
 
 \section{Additional Tables}
 
-\subsection{Tools}
-
-\begin{table}[t]
+\begin{table}[b]
   \centering
   \begin{adjustbox}{width=1.01\columnwidth} % TODO was 1
   %\begin{small}
   \begin{tabular}{| l || c || l |}
     \hline      
-    {\bf Symbolic engine} & {\bf References} & {\bf Project URL} (last retrieved: August 2016)  \\ \hline\hline
+    {\bf Symbolic engine} & {\bf References} & {\bf Project URL} (last retrieved: December 2017)  \\ \hline\hline
     
     % CNC is not a symbolic engine but it uses constrained solver
     %{\sc Check 'n' Crash} & \cite{CS-ICSE05} & \url{http://ranger.uta.edu/~csallner/cnc/}\\
@@ -30,7 +28,7 @@
     {\sc Cloud9} & \cite{CLOUD9-EUROSYS11} & \url{http://cloud9.epfl.ch/} \\
     {\sc Mayhem} & \cite{MAYHEM-SP12} & -- \\
     {\sc SymDroid} & \cite{JMF-TECH12} & -- \\
-    {\sc \stwoe} & \cite{CKC-TOCS12} & \url{http://s2e.epfl.ch/} \\
+    {\sc \stwoe} & \cite{CKC-TOCS12} & \url{http://s2e.systems/} \\
     {\sc FuzzBALL} & \cite{MMP-ASPLOS12,FUZZBALL-ESORICS13} & \url{http://bitblaze.cs.berkeley.edu/fuzzball.html} \\
     {\sc Jalangi} & \cite{SKB-FSE13} & \url{https://github.com/Samsung/jalangi2} \\
     {\sc Pathgrind} & \cite{S-ICSE04} & \url{https://github.com/codelion/pathgrind} \\
@@ -56,9 +54,10 @@
   \vspace{-3mm} % TODO
 \end{table}
 
-Table~\ref{tab:symbolic-engines}\mynote{check URLs} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the main article.
+\myparagraph{Tools}
+Table~\ref{tab:symbolic-engines} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the main article.
 
-\subsection{Path Selection Heuristics}
+\myparagraph{Path Selection Heuristics}
 Table~\ref{tab:heuristics} provides a categorization of the search heuristics that have been discussed in Section 2.3 of the main article. For each category, we list several works that have proposed interesting embodiments of the category.
 
 \begin{table}[t]
