@@ -449,6 +449,7 @@
  acmid = {1247401},
  publisher = {USENIX Association},
  AddressUSENIX = {Berkeley, CA, USA},
+ pages = {41--41},
 } 
 
 @inproceedings{XX-ISSTA15,
@@ -702,7 +703,7 @@ url="https://doi.org/10.1007/978-3-319-24318-4_26"
   author={Grabmeier, Johannes and Kaltofen, Erich and Weispfenning, Volker},
   volume={1},
   year={2003},
-  pages={109-124},
+  pages={109--124},
   oldNumpages={16},
   publisher={Springer Science \& Business Media}
 }
@@ -1680,7 +1681,7 @@ oldMonth={Oct},}
   series	= {TOCS 2011},
   volume    = {30},
   number    = {1},
-  pages     = {2},
+  pages     = {2:1--2:49},
   year      = {2012},
   url       = {http://doi.acm.org/10.1145/2110356.2110358},
   doi       = {10.1145/2110356.2110358},
