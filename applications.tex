@@ -1,11 +1,16 @@
 % !TEX root = appendix.tex
 
-\section{Sample Applications}
+\section{Applications of Symbolic Execution}
 \label{se:applications}
 
-%\revedit{
-The last decade has witnessed an increasing adoption of symbolic execution techniques not only in the software testing domain, but also to address other compelling engineering problems such as automatic generation of exploits or authentication bypass. We now discuss \iffullver{three prominent}{prominent} applications of symbolic execution techniques to these domains. Examples of extensions to other areas can be found, e.g., in~\cite{CGK-ICSE11}.
-%}
+\revedit{
+\cite{CGK-ICSE11} observes how the recent explosion of research work in symbolic execution makes for an interesting story about the increasing impact of this program analysis since its introduction in the mid '70s. The availability of powerful off-the-shelf SMT solvers and hardware resources, along with advances in symbolic execution techniques to deal with the challenges identified in Section 1.2, facilitated the application of symbolic execution to increasing large problem instances from many domains.
+
+%The last decade has witnessed an increasing adoption of symbolic execution techniques not only in the software testing domain, but also to address other compelling engineering problems such as automatic generation of exploits or authentication bypass. We now discuss prominent applications of symbolic execution techniques to these domains. Examples of extensions to other areas can be found, e.g., in~\cite{CGK-ICSE11}.
+
+We do not aim here at presenting a comprehensive overview of applications of symbolic execution. Our goal is instead to provide the reader with an (incomplete) selection of works appeared in recent years that have incubated novel ideas that we believe might be effective in other domains too (for instance to deal with the path explosion problem), or that significantly affected the state of the art of a specific field.
+
+Works discussed in the remainder of this section are drawn from four domains: software testing, program understanding, bug exploitation, and authentication bypass. Other fields that have seen uses of symbolic execution, such as automatic filter generation (e.g., \cite{BND-SP06,BOUNCER-SOSP07}) and code analysis (e.g., \cite{HMH-VSTTE12,BCP-USENIXSEC17}), are not covered. Also, we do not address techniques specific to programs with concurrent threads (e.g., \cite{BGC-OOPSLA14,GKW-ESEC15}) or floating-point arithmetic (e.g., \cite{RPW-SIGSOFT15,LSC-ASE17}).}
 
 %The last decade has witnessed an increasing adoption of symbolic execution techniques not only in the software testing domain, but also to address other compelling engineering problems such as automatic generation of exploits or authentication bypass. We now discuss \iffullver{three prominent}{prominent} applications of symbolic execution techniques to these domains. Examples of extensions to other areas can be found, e.g., in~\cite{CGK-ICSE11}.
 
