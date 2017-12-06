@@ -382,7 +382,7 @@ A deeper understanding of a program's behavior can help a symbolic engine optimi
 % skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space.}
 %In the context of symbolic execution, taint analysis can help an engine skip execution paths that do not depend upon tainted values, effectively reducing the exploration state space~\cite{SAB-SP10}.
 
-\myparagraph{Fuzzing} This software testing approach randomly mutates user-provided test inputs to cause crashes or assertion failures, possibly finding potential memory leaks. Fuzzing can be augmented with symbolic execution to collect constraints for an input and negate them to generate new inputs. On the other hand, a symbolic executor can be augmented with fuzzing to reach deeper states in the exploration more quickly and efficiently. Two notable embodiments of this idea are presented {\em hybrid concolic testing}~\cite{RK-ICSE07} and Driller~\cite{DRILLER-NDSS16}.
+\myparagraph{Fuzzing} This software testing approach randomly mutates user-provided test inputs to cause crashes or assertion failures, possibly finding potential memory leaks. Fuzzing can be augmented with symbolic execution to collect constraints for an input and negate them to generate new inputs. On the other hand, a symbolic executor can be augmented with fuzzing to reach deeper states in the exploration more quickly and efficiently. Two notable embodiments of this idea are represented by {\em hybrid concolic testing}~\cite{RK-ICSE07} and Driller~\cite{DRILLER-NDSS16}.
 %\iffullver{: we present two embodiments of this approach in Section~\ref{ss:bug-detection}.} 
 
 %{.\mynote{CD: consider citing fuzzers formerly in the apps section}}
