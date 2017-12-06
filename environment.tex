@@ -7,7 +7,7 @@
  
 \revedit{\myparagraph{System Environment}}
 % symbolic analysis \revedit
-A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05},  {\sc CUTE}~\cite{CUTE-FSE05}, and {\sc EXE}~\cite{EXE-CCS06}) includes the \revedit{system} environment in the analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. 
+A body of early works (e.g., {\sc DART}~\cite{DART-PLDI05},  {\sc CUTE}~\cite{CUTE-FSE05}, and {\sc EXE}~\cite{EXE-CCS06}) include the \revedit{system} environment in the analysis by actually executing external calls using concrete arguments for them. This indeed limits the behaviors they can explore compared to a fully symbolic strategy, which on the other hand might be unfeasible. 
 %
 In an online executor this choice may also result in having external calls from distinct paths of execution interfere with each other. \revedit{As} there is no mechanism for tracking the side effects of each external call, there is potentially a risk of state inconsistency, e.g., an execution path may read from a file while at the same time another execution path is trying to delete it.
 
