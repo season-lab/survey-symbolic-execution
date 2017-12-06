@@ -20,7 +20,7 @@ Motivated by the complexity in modeling native instructions and by the variety o
 
 % encoded as architecture-agnostic
 % for expressing
-Reasoning at the intermediate representation level allows program analyses to be encoded \revedit{in an architecture-agnostic fashion}. Translated instructions will always expose all the side-effects of a native instruction, and support for additional platforms can be added over time. A number of symbolic executors use VEX, the intermediate representation format from the Valgrind dynamic instrumentation \iffullver{framework~\cite{VALGRIND-PLDI07}.}{framework.} VEX is a RISC-like language designed for program analysis that offers a compact set of instructions \revedit{to express} programs in static single assignment form~\cite{SSA-TOPLAS91}. Lifters are available for both 32-bit and 64-bit ARM, MIPS, PPC, and x86 binaries.
+Reasoning at the intermediate representation level allows for encoding program analyses in an architecture-agnostic fashion. Translated instructions will always expose all the side-effects of a native instruction, and support for additional platforms can be added over time. A number of symbolic executors use VEX, the intermediate representation format from the Valgrind dynamic instrumentation \iffullver{framework~\cite{VALGRIND-PLDI07}.}{framework.} VEX is a RISC-like language designed for program analysis that offers a compact set of instructions \revedit{to express} programs in static single assignment form~\cite{SSA-TOPLAS91}. Lifters are available for both 32-bit and 64-bit ARM, MIPS, PPC, and x86 binaries.
 
 \begin{figure}[t!]
   \centering
