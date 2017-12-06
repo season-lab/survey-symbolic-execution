@@ -3378,7 +3378,7 @@ oldMonth={Oct},}
 @inproceedings{ZBF-NDSS14,
   author    = {Jonas Zaddach and
                Luca Bruno and
-               Aur{\'{e}}lien Francillon and
+               Aurelien Francillon and
                Davide Balzarotti},
   title     = {{AVATAR:} {A} Framework to Support Dynamic Security Analysis of Embedded
                Systems' Firmwares},
