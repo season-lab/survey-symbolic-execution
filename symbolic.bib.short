@@ -166,8 +166,8 @@
 
 @inproceedings{SSJ-NFM15,
     author={Schwartz-Narbonne, Daniel
-    and Sch{\"a}f, Martin
-    and Jovanovi{\'{c}}, Dejan
+    and Schaf, Martin
+    and Jovanovic, Dejan
     and R{\"u}mmer, Philipp
     and Wies, Thomas},
   title= {Conflict-Directed Graph Coverage},
@@ -261,7 +261,7 @@
 
 
 @article{APV09,
- author = {Anand, Saswat and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
+ author = {Anand, Saswat and Pasareanu, Corina S. and Visser, Willem},
  title = {Symbolic Execution with Abstraction},
  journal = {Int. J. Softw. Tools Technol. Transf.},
  volume = {11},
@@ -321,7 +321,7 @@
 } 
 
 @inproceedings{FPV-ICSE13,
- author = {Filieri, Antonio and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
+ author = {Filieri, Antonio and Pasareanu, Corina S. and Visser, Willem},
  title = {Reliability Analysis in Symbolic Pathfinder},
  booktitle = {Proc. 2013 Int. Conf.  on Software Engineering},
  series = {ICSE '13},
@@ -685,7 +685,7 @@ author="Corzilius, Florian
 and Kremer, Gereon
 and Junges, Sebastian
 and Schupp, Stefan
-and {\'A}brah{\'a}m, Erika",
+and Abraham, Erika",
 editor="Heule, Marijn
 and Weaver, Sean",
 title="SMT-RAT: An Open Source C++ Toolbox for Strategic and Parallel SMT Solving",
@@ -972,7 +972,7 @@ oldMonth={Oct},}
 }
 
 @inproceedings{RACERX-SOSP03,
- author = {Engler, Dawson and Ashcraft, Ken},
+ author = {Engler, Dawson R. and Ashcraft, Ken},
  title = {RacerX: Effective, Static Detection of Race Conditions and Deadlocks},
  booktitle = {Proc, of the 19th ACM Symp. on Operating Systems Principles},
  series = {SOSP '03},
@@ -1213,10 +1213,19 @@ oldMonth={Oct},}
 @inproceedings{MEMSIGHT-ASE17,
  author = {Coppa, Emilio and D'Elia, Daniele Cono and Demetrescu, Camil},
  title = {Rethinking Pointer Reasoning in Symbolic Execution},
- booktitle = {Proc. 32nd ACM/IEEE Int. Conf. on Automated Software Engineering},
+ booktitle = {Proc. 32nd IEEE/ACM Int. Conf. on Automated Software Engineering},
  series = {ASE '17},
- year = {2017}
-}
+ year = {2017},
+ isbn = {978-1-5386-2684-9},
+ _location = {Urbana-Champaign, IL, USA},
+ pages = {613--618},
+ numpages = {6},
+ url = {http://dl.acm.org/citation.cfm?id=3155562.3155638},
+ acmid = {3155638},
+ _publisher = {IEEE Press},
+ _address = {Piscataway, NJ, USA},
+ _keywords = {cybersecurity, fully symbolic memory, program analysis, symbolic execution},
+} 
 
 @inproceedings{PR-POPL89,
  author = {Pnueli, Amir and Rosner, Roni},
@@ -1302,7 +1311,7 @@ oldMonth={Oct},}
 @article{PV-JSTTT09,
 	Acmid = {1667869},
 	AddressSpringer = {Berlin Heidelberg},
-	Author = {P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
+	Author = {Pasareanu, Corina S. and Visser, Willem},
 	Doi = {10.1007/s10009-009-0118-1},
 	Issn = {1433-2779},
 	Journal = {Int. Journal on Software Tools for Technology Transfer},
@@ -1353,7 +1362,7 @@ oldMonth={Oct},}
 } 
 
 @inproceedings{KLEE-OSDI08,
- author = {Cadar, Cristian and Dunbar, Daniel and Engler, Dawson},
+ author = {Cadar, Cristian and Dunbar, Daniel and Engler, Dawson R.},
  title = {{KLEE}: Unassisted and Automatic Generation of High-coverage Tests for Complex Systems Programs},
  booktitle = {Proc. 8th USENIX Conf. on Operating Systems Design and Implementation},
  series = {OSDI'08},
@@ -1467,7 +1476,8 @@ oldMonth={Oct},}
 	
 @phdthesis{MAYHEM-THESIS,
  title={Exploiting Trade-offs in Symbolic Execution for Identifying Security Bugs},
- author={Avgerinos, Athanasios},
+ author={Avgerinos, Thanassis},
+ _author={Avgerinos, Athanasios},
  advisor = {Brumley, David},
  year = {2014},
  publisher = {Carnegie Mellon University},
@@ -1506,7 +1516,7 @@ oldMonth={Oct},}
 	Acmid = {2094081},
 	AddressACM = {New York, NY, USA},
 	Articleno = {20},
-	Author = {Godefroid, Patrice and Levin, Michael Y. and Molnar, David},
+	Author = {Godefroid, Patrice and Levin, Michael Y. and Molnar, David A.},
 	Doi = {10.1145/2090147.2094081},
 	Issn = {1542-7730},
 	Journal = {Queue},
@@ -1718,7 +1728,7 @@ oldMonth={Oct},}
 	oldMonth={July},}
 
 @inproceedings{CGK-ICSE11,
- author = {Cadar, Cristian and Godefroid, Patrice and Khurshid, Sarfraz and P\u{a}s\u{a}reanu, Corina S. and Sen, Koushik and Tillmann, Nikolai and Visser, Willem},
+ author = {Cadar, Cristian and Godefroid, Patrice and Khurshid, Sarfraz and Pasareanu, Corina S. and Sen, Koushik and Tillmann, Nikolai and Visser, Willem},
  title = {Symbolic Execution for Software Testing in Practice: Preliminary Assessment},
  booktitle = {Proc. 33rd Inter. Conf. on Software Engineering},
  year = {2011},
@@ -1735,7 +1745,7 @@ oldMonth={Oct},}
 } 
 
 @inproceedings{PRV-ISSTA11,
- author = {P\u{a}s\u{a}reanu, Corina S. and Rungta, Neha and Visser, Willem},
+ author = {Pasareanu, Corina S. and Rungta, Neha and Visser, Willem},
  title = {Symbolic Execution with Mixed Concrete-symbolic Solving},
  booktitle = {Proc. 2011 Int. Symp. on Software Testing and Analysis},
  series = {ISSTA'11},
@@ -1789,7 +1799,7 @@ oldMonth={Oct},}
 	Year = {2015}}
 
 @inproceedings{UCKLEE-USEC15,
- author = {Ramos, David A. and Engler, Dawson},
+ author = {Ramos, David A. and Engler, Dawson R.},
  title = {Under-constrained Symbolic Execution: Correctness Checking for Real Code},
  booktitle = {Proc. 24th USENIX Conf. on Security Symp.},
  series = {SEC'15},
@@ -1818,7 +1828,7 @@ oldMonth={Oct},}
 	Year = {2005}}
 
 @inproceedings{KRV-ACSAC04,
-	Author = {Christopher Kr{\"{u}}gel and William K. Robertson and Giovanni Vigna},
+	Author = {Christopher Kruegel and William K. Robertson and Giovanni Vigna},
 	Booktitle = {20th Annual Computer Security Applications Conf. {(ACSAC} 2004), 6-10 December 2004, Tucson, AZ, {USA}},
 	Pages = {91--100},
 	Title = {Detecting Kernel-Level Rootkits Through Binary Analysis},
@@ -2068,7 +2078,7 @@ oldMonth={Oct},}
 	//Url = {http://doi.acm.org/10.1145/1273463.1273464},
 	Acmid = {1273464},
 	AddressACM = {New York, NY, USA},
-	Author = {Engler, Dawson and Dunbar, Daniel},
+	Author = {Engler, Dawson R. and Dunbar, Daniel},
 	Booktitle = {Proc. of 2007 Int. Symp. on Soft. Test. and Analysis},
 	Doi = {10.1145/1273463.1273464},
 	Isbn = {978-1-59593-734-6},
@@ -2150,7 +2160,7 @@ oldMonth={Oct},}
 	Year = {2007}}
 
 @inproceedings{PATHFINDER-ASE10,
- author = {P\u{a}s\u{a}reanu, Corina S. and Rungta, Neha},
+ author = {Pasareanu, Corina S. and Rungta, Neha},
  title = {Symbolic PathFinder: Symbolic Execution of Java Bytecode},
  booktitle = {Proc. IEEE/ACM Int. Conf. on Automated Software Engineering},
  series = {ASE'10},
@@ -2366,7 +2376,7 @@ oldMonth={Oct},}
 	Year = {2016}}
 
 @inproceedings{PV-SPIN04,
-	Author = {Corina S. P\u{a}s\u{a}reanu and Willem Visser},
+	Author = {Corina S. Pasareanu and Willem Visser},
 	Booktitle = {Model Checking Software: 11th Int. SPIN Workshop},
 	series = {SPIN 2004},
 	publisher = {Springer Berlin Heidelberg},
@@ -2445,7 +2455,7 @@ oldMonth={Oct},}
 @inproceedings{APV-SPIN06,
 	Acmid = {2182170},
 	AddressSpringer = {Berlin Heidelberg},
-	Author = {Anand, Saswat and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
+	Author = {Anand, Saswat and Pasareanu, Corina S. and Visser, Willem},
 	Booktitle = {Proc. 13th Int. Conf. on Model Checking Software},
 	Doi = {10.1007/11691617_10},
 	Isbn = {3-540-33102-6, 978-3-540-33102-5},
@@ -2460,7 +2470,7 @@ oldMonth={Oct},}
 	Bdsk-Url-1 = {http://dx.doi.org/10.1007/11691617_10}}
 
 @inproceedings{VPP-ISSTA06,
- author = {Visser, Willem and P\v{a}s\v{a}reanu, Corina S. and Pel\'{a}nek, Radek},
+ author = {Visser, Willem and Pasareanu, Corina S. and Pel\'{a}nek, Radek},
  title = {Test Input Generation for Java Containers Using State Matching},
  booktitle = {Proc. 2006 Int. Symp. on Software Testing and Analysis},
  series = {ISSTA 2006},
@@ -2554,7 +2564,7 @@ oldMonth={Oct},}
 	Bdsk-Url-1 = {http://dx.doi.org/10.1007/978-3-540-89862-7_1}}
 
 @inproceedings{PMB-ISSTA08,
-	Author = {P\v{a}s\v{a}reanu, Corina S. and Mehlitz, Peter C. and Bushnell, David H. and Gundy-Burlet, Karen and Lowry, Michael and Person, Suzette and Pape, Mark},
+	Author = {Pasareanu, Corina S. and Mehlitz, Peter C. and Bushnell, David H. and Gundy-Burlet, Karen and Lowry, Michael and Person, Suzette and Pape, Mark},
 	Booktitle = {Proc. 2008 Int. Symp. on Software Testing and Analysis},
 	oldNumpages = {12},
 	Pages = {15--26},
@@ -2591,7 +2601,7 @@ oldMonth={Oct},}
 @inproceedings{KPV-TACAS03,
 	Acmid = {1765924},
 	AddressSpringer = {Berlin Heidelberg},
-	Author = {Khurshid, Sarfraz and P\u{a}s\u{a}reanu, Corina S. and Visser, Willem},
+	Author = {Khurshid, Sarfraz and Pasareanu, Corina S. and Visser, Willem},
 	Booktitle = {Proc. 9th Int. Conf. on Tools and Algorithms for the Construction and Analysis of Systems},
 	Isbn = {3-540-00898-5},
 	Location = {Warsaw, Poland},
@@ -2608,7 +2618,7 @@ oldMonth={Oct},}
 @inproceedings{SPF-ISSTA04,
 	Acmid = {1007526},
 	AddressACM = {New York, NY, USA},
-	Author = {Visser, Willem and P\v{a}s\v{a}reanu, Corina S. and Khurshid, Sarfraz},
+	Author = {Visser, Willem and Pasareanu, Corina S. and Khurshid, Sarfraz},
 	Booktitle = {Proc. 2004 ACM SIGSOFT Int. Symp. on Software Testing and Analysis},
 	Doi = {10.1145/1007512.1007526},
 	Isbn = {1-58113-820-2},
@@ -2759,7 +2769,7 @@ oldMonth={Oct},}
 
 @inbook{TS-ATVA14,
 	AddressCHAM = {Cham},
-	Author = {Trt{\'\i}k, Marek and Strej{\v{c}}ek, Jan},
+	Author = {Trtik, Marek and Strej{\v{c}}ek, Jan},
 	Booktitle = {Proc. of 12th Int. Symp. on Automated Technology for Verification and Analysis},
 	series = {ATVA 2014},
 	Pages = {380--395},
@@ -2812,7 +2822,7 @@ oldMonth={Oct},}
 @inproceedings{SST-ATVA13,
   author    = {Jiri Slaby and
                Jan Strejcek and
-               Marek Trt{\'{\i}}k},
+               Marek Trtik},
   title     = {Compact Symbolic Execution},
   booktitle = {11th Int. Symp. on Automated Technology for Verification and Analysis},
   series 	= {{ATVA}'13},
@@ -2833,7 +2843,7 @@ oldMonth={Oct},}
 	Year = {2011}}
 
 @inproceedings{ST-ISSTA12,
-	Author = {Jan Strejcek and Marek Trt{\'{\i}}k},
+	Author = {Jan Strejcek and Marek Trtik},
 	Booktitle = {Int. Symp. on Software Testing and Analysis, {ISSTA} 2012, Minneapolis, MN, USA, July 15-20, 2012},
 	Pages = {155--165},
 	Title = {Abstracting path conditions},
@@ -2910,7 +2920,7 @@ oldMonth={Oct},}
 @inproceedings{MEMO-ISSTA12,
 	Acmid = {2336771},
 	AddressACM = {New York, NY, USA},
-	Author = {Yang, Guowei and P\u{a}s\u{a}reanu, Corina S. and Khurshid, Sarfraz},
+	Author = {Yang, Guowei and Pasareanu, Corina S. and Khurshid, Sarfraz},
 	Booktitle = {Proc. 2012 Int. Symp. on Software Testing and Analysis},
 	Doi = {10.1145/2338965.2336771},
 	Isbn = {978-1-4503-1454-1},
@@ -3086,7 +3096,7 @@ oldMonth={Oct},}
 	Bdsk-Url-1 = {http://www.choco-solver.org}}
 
 @inproceedings{CORAL-NFM11,
- author = {Souza, Matheus and Borges, Mateus and d'Amorim, Marcelo and P\u{a}s\u{a}reanu, Corina S.},
+ author = {Souza, Matheus and Borges, Mateus and d'Amorim, Marcelo and Pasareanu, Corina S.},
  title = {CORAL: Solving Complex Constraints for Symbolic Pathfinder},
  booktitle = {Proc. 3rd Int. NASA Formal Methods Symp.},
  year = {2011},
@@ -3290,7 +3300,7 @@ oldMonth={Oct},}
                John Grosen and
                Siji Feng and
                Christophe Hauser and
-               Christopher Kr{\"{u}}gel and
+               Christopher Kruegel and
                Giovanni Vigna},
   title     = {{SOK:} (State of) The Art of War: Offensive Techniques in Binary Analysis},
   booktitle = {{IEEE} Symp. on Security and Privacy},
@@ -3623,7 +3633,7 @@ oldMonth={Oct},}
 } 
 
 @article{RPW-SIGSOFT15,
- author = {Ramachandran, Jaideep and P\u{a}s\u{a}reanu, Corina and Wahl, Thomas},
+ author = {Ramachandran, Jaideep and Pasareanu, Corina and Wahl, Thomas},
  title = {Symbolic Execution for Checking the Accuracy of Floating-Point Programs},
  journal = {ACM SIGSOFT Softw. Engineering Notes},
  volume = {40},
