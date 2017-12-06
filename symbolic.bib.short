@@ -19,6 +19,20 @@
  keywords = {Program differencing, software evolution, symbolic execution},
 }
 
+@inproceedings{BPR-SPIN13,
+  author    = {Backes, John D. and Person, Suzette and Rungta, Neha and Tkachuk, Oksana},
+  title     = {Regression Verification Using Impact Summaries},
+  booktitle = {Proc. 20th Int. SPIN Symposium on Model Checking of Software},
+  series = {SPIN'13},
+  pages     = {99--116},
+  year      = {2013},
+  url       = {https://doi.org/10.1007/978-3-642-39176-7_7},
+  doi       = {10.1007/978-3-642-39176-7_7},
+  timestamp = {Wed, 17 May 2017 14:24:39 +0200},
+  biburl    = {http://dblp.org/rec/bib/conf/spin/BackesPRT13},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
 @inproceedings{BND-SP06,
  author = {Brumley, David and Newsome, James and Song, Dawn and Wang, Hao and Jha, Somesh},
  title = {Towards Automatic Generation of Vulnerability-Based Signatures},
@@ -2201,13 +2215,6 @@ oldMonth={Oct},}
 	Series = {PLDI'11},
 	Title = {Directed Incremental Symbolic Execution},
 	Year = {2011}}
-
-@inproceedings{BPR-SPIN13,
-	Author = {John D. Backes and Suzette Person and Neha Rungta and Oksana Tkachuk},
-	Booktitle = {Model Checking Software - 20th Int. Symp., {SPIN} 2013, Stony Brook, NY, USA, July 8-9, 2013. Proceedings},
-	Pages = {99--116},
-	Title = {Regression Verification Using Impact Summaries},
-	Year = {2013}}
 
 @inproceedings{CHW-ASPLOS13,
 	Author = {Cui, Heming and Hu, Gang and Wu, Jingyue and Yang, Junfeng},
