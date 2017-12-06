@@ -3646,7 +3646,7 @@ oldMonth={Oct},}
 } 
 
 @article{RPW-SIGSOFT15,
- author = {Ramachandran, Jaideep and Pasareanu, Corina and Wahl, Thomas},
+ author = {Ramachandran, Jaideep and Pasareanu, Corina S. and Wahl, Thomas},
  title = {Symbolic Execution for Checking the Accuracy of Floating-Point Programs},
  journal = {ACM SIGSOFT Software Engineering Notes},
  volume = {40},
