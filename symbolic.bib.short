@@ -1213,10 +1213,19 @@ oldMonth={Oct},}
 @inproceedings{MEMSIGHT-ASE17,
  author = {Coppa, Emilio and D'Elia, Daniele Cono and Demetrescu, Camil},
  title = {Rethinking Pointer Reasoning in Symbolic Execution},
- booktitle = {Proc. 32nd ACM/IEEE Int. Conf. on Automated Software Engineering},
+ booktitle = {Proc. 32nd IEEE/ACM Int. Conf. on Automated Software Engineering},
  series = {ASE '17},
- year = {2017}
-}
+ year = {2017},
+ isbn = {978-1-5386-2684-9},
+ _location = {Urbana-Champaign, IL, USA},
+ pages = {613--618},
+ numpages = {6},
+ url = {http://dl.acm.org/citation.cfm?id=3155562.3155638},
+ acmid = {3155638},
+ _publisher = {IEEE Press},
+ _address = {Piscataway, NJ, USA},
+ _keywords = {cybersecurity, fully symbolic memory, program analysis, symbolic execution},
+} 
 
 @inproceedings{PR-POPL89,
  author = {Pnueli, Amir and Rosner, Roni},
