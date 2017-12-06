@@ -109,7 +109,7 @@
  url = {http://dl.acm.org/citation.cfm?id=3155562.3155637},
  acmid = {3155637},
  publisher = {IEEE Press},
- address = {Piscataway, NJ, USA},
+ oldAddress = {Piscataway, NJ, USA},
  keywords = {symbolic execution floating-point IEEE-754},
 } 
 
@@ -706,7 +706,7 @@ doi="10.1007/978-3-319-24318-4_26",
 url="https://doi.org/10.1007/978-3-319-24318-4_26"
 }
 
-@book{HandbookOfCompAlgebra,
+@inbook{HandbookOfCompAlgebra,
   title={Computer Algebra Handbook: Foundations, Applications, Systems},
   author={Grabmeier, Johannes and Kaltofen, Erich and Weispfenning, Volker},
   volume={1},
@@ -2958,11 +2958,12 @@ oldMonth={Oct},}
  keywords = {Deobfuscation, Virtualization-Obfuscation, Return Oriented Programming},
 } 
 
-@inbook{WMJ-ESORICS11,
+@inproceedings{WMJ-ESORICS11,
 	AddressSpringer = {Berlin Heidelberg},
 	Author = {Wang, Zhi and Ming, Jiang and Jia, Chunfu and Gao, Debin},
-	Booktitle = {Computer Security -- ESORICS 2011: 16th European Symp. on Research in Computer Security, Leuven, Belgium, September 12-14,2011. Proceedings},
+	Booktitle = {Proc. 16th European Symp. on Research in Computer Security},
 	Doi = {10.1007/978-3-642-23822-2_12},
+	Series = {ESORICS'11},
 	Editor = {Atluri, Vijay and Diaz, Claudia},
 	Isbn = {978-3-642-23822-2},
 	Pages = {210--226},
@@ -2972,10 +2973,11 @@ oldMonth={Oct},}
 	Year = {2011},
 	Bdsk-Url-1 = {http://dx.doi.org/10.1007/978-3-642-23822-2_12}}
 
-@inbook{HOT-FPS15,
+@inproceedings{HOT-FPS15,
 	AddressCHAM = {Cham},
 	Author = {Hai, Nguyen Minh and Ogawa, Mizuhito and Tho, Quan Thanh},
-	Booktitle = {Foundations and Practice of Security: 8th Int. Symp., FPS 2015, Clermont-Ferrand, France, October 26-28, 2015, Revised Selected Papers},
+	Booktitle = {Proc. 8th Int. Symp on Foundations and Practice of Security},
+	series={FPS'15},
 	Doi = {10.1007/978-3-319-30303-1_14},
 	Editor = {Garcia-Alfaro, Joaquin and Kranakis, Evangelos and Bonfante, Guillaume},
 	Isbn = {978-3-319-30303-1},
@@ -3407,10 +3409,9 @@ oldMonth={Oct},}
 @inproceedings{TRITON-SSTIC15,
   author    = {Florent Saudel and Jonathan Salwan},
   title     = {Triton: A Dynamic Symbolic Execution Framework},
-  booktitle = {Symp. sur la s{\'{e}}curit{\'{e}} des technologies de
-               l'information et des communications, SSTIC, France, Rennes,
-               June 3-5 2015},
-  publisher = {SSTIC},
+  booktitle = {Symp. sur la S{\'{e}}curit{\'{e}} des Technologies de
+               l'Information et des Communications},
+  series = {SSTIC'15},
   pages     = {31--54},
   year      = {2015},
   url = {http://triton.quarkslab.com/files/sstic2015_wp_fr_saudel_salwan.pdf}
