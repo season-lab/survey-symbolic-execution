@@ -3335,7 +3335,7 @@ oldMonth={Oct},}
 @inproceedings{CZF-USEC14,
   author    = {Andrei Costin and
                Jonas Zaddach and
-               Aur{\'{e}}lien Francillon and
+               Aurelien Francillon and
                Davide Balzarotti},
   title     = {A Large-Scale Analysis of the Security of Embedded Firmwares},
   booktitle = {Proc. 23rd {USENIX} Security Symp.},
@@ -3358,7 +3358,7 @@ oldMonth={Oct},}
 @inproceedings{ZBF-NDSS14,
   author    = {Jonas Zaddach and
                Luca Bruno and
-               Aur{\'{e}}lien Francillon and
+               Aurelien Francillon and
                Davide Balzarotti},
   title     = {{AVATAR:} {A} Framework to Support Dynamic Security Analysis of Embedded
                Systems' Firmwares},
