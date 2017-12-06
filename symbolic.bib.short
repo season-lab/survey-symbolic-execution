@@ -651,7 +651,7 @@
   publisher = "London Mathematical Society and Smith Institute for Industrial Mathematics and System Engineering",
 }
 
-@Inbook{SC2,
+@InProceedings{SC2,
 oldFirstAuthor="{\'A}brah{\'a}m, Erika",
 author="Abraham, Erika
 and Abbott, John
@@ -668,15 +668,11 @@ and Griggio, Alberto
 and Kroening, Daniel
 and Seiler, Werner M.
 and Sturm, Thomas",
-editor="Kohlhase, Michael
-and Johansson, Moa
-and Miller, Bruce
-and de Moura, Leonardo
-and Tompa, Frank",
 title="SC2: Satisfiability Checking Meets Symbolic Computation",
-bookTitle="Intelligent Computer Mathematics: 9th Int. Conf., CICM 2016, Bialystok, Poland, July 25-29, 2016, Proceedings",
+bookTitle="Proc. 9th Int. Conf. on Intelligent Computer Math.",
+series="CICM'16",
 year="2016",
-publisher="Springer Int. Publishing",
+publisher="Springer",
 AddressCHAM = {Cham},
 pages="28--43",
 isbn="978-3-319-42547-4",
