@@ -7,7 +7,7 @@ One of the main challenges of symbolic execution is the path explosion problem: 
 
 The main sources of path explosion are loops and function calls. Each iteration of a loop can be seen as an {\tt if-goto} statement, leading to a conditional branch in the execution tree. If the loop condition involves one or more symbolic values, the number of generated branches may be potentially infinite, as suggested by the following example. 
 
-\vspace{-3pt} % TODO
+%\vspace{-3pt}
 \begin{shaded}\noindent{\bf\small Example.} Consider the following code fragment~\cite{CS-CACM13}:
   \vspace{-1mm}
   \begin{lstlisting}[basicstyle=\ttfamily\small]
@@ -20,7 +20,7 @@ The main sources of path explosion are loops and function calls. Each iteration 
 \[ \pi = \left( {\bigwedge}_{i \in [1, k]}\,\alpha_i > 0 \right) \wedge (\alpha_{k+1} \leq 0) \]
 \noindent where $k$ is the number of iterations and $\alpha_i$ is the symbol produced by \texttt{sym\_input()} at the $i$-th iteration.
 \end{shaded}
-\vspace{-3pt} 
+%\vspace{-3pt} 
 
 %\noindent
 While it would be simple (and is indeed common) to bound the loop exploration up to a limited number of iterations, interesting paths could be easily missed with this approach.  A large number of works have thus explored more advanced strategies, e.g., by characterizing similarities across distinct loop iterations or function invocations through summarization strategies that prevent repeated explorations of a code portion or by inferring invariants that inductively describe the properties of a computation. In the remainder of this section we present a variety of prominent techniques, often based on the computation of an under-approximation of the analysis with the aim of exploring only a relevant subset of the state space.
@@ -40,7 +40,7 @@ A first natural strategy to reduce the path space is to invoke the constraint so
   %\vspace{-3mm}
   %\centering
   \begin{subfigure}{.29\textwidth}
-    \vspace{0mm}
+    %\vspace{0mm}
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
    if (a > 0) { ... } 
 
@@ -110,7 +110,7 @@ A large symbolic state space offers scope for techniques that explore path simil
 Modern SAT solvers rely on a mutual reinforcing combination of search and deduction, using the latter to drive the former away from a conflict when it becomes blocked. In a similar manner, symbolic execution can benefit from {\em interpolation} techniques to derive properties from program paths that did not show a desired property, so to prevent the exploration of similar paths that would not satisfy it either.
 %so to prevent the execution from exploring other paths that would lead to a failure in the same way.
 
-{\em Craig interpolants}~\cite{Craig1957} allow deciding what information about a formula is relevant to a property. Assuming an implication $P\rightarrow Q$ holds in some logic, one can construct an interpolant $I$ such that $P\rightarrow I$ and $I\rightarrow Q$ are valid, and every non-logical symbol in $I$ occurs in both $P$ and $Q$. \revedit{Interpolation is commonly used in program verification as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, a {\em reverse interpolant} $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.}
+{\em Craig interpolants}~\cite{Craig1957} allow deciding what information about a formula is relevant to a property. Assuming an implication $P\rightarrow Q$ holds in some logic, one can construct an interpolant $I$ such that $P\rightarrow I$ and $I\rightarrow Q$ are valid, and every non-logical symbol in $I$ occurs in both $P$ and $Q$. Interpolation is commonly used in program verification as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, a {\em reverse interpolant} $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.
 %In program verification, interpolants are typically devised as follows: given a refutation proof for an unsatisfiable formula $P\wedge Q$, an interpolant $I$ can be constructed such that $P\rightarrow I$ is valid and $I\wedge Q$ is unsatisfiable.
 
 % aims at the falsification of safety properties of a program
@@ -144,10 +144,8 @@ To cope with a possibly unbounded number of states, the work proposes abstractio
 
 %Even with subsumption, the number of symbolic states may still be unbounded. Hence, \cite{APV09} adds {\em abstractions} to limit the model checker's search space: for each explored state, the model checker computes and stores an abstract version of the state, as specified by suitable abstraction mappings, and subsumption checking is performed on the abstract states, effectively exploring an under-approximation of the feasible paths. 
 
-\myparagraph{Path Partitioning} \revedit{Dependence analyses for control and data flows expose casual relationships that one can use during the exploration to filter out paths unable to reveal additional program behavior. \cite{FLOWTEST-CAV09} partitions inputs for concolic execution in non-interfering blocks, symbolically exploring each block while others are kept fixed to concrete values. Interference of two inputs happens when they jointly affect one statement, or statements linked by control or data dependences. \cite{QNR13} focuses on outputs, placing two paths in the same partition if they have the same relevant slice with respect to the program output. A relevant slice is the transitive closure of dynamic data and control dependencies, and also of potential dependencies involving statements that affect the output by not getting executed. \cite{DGSE-TSE17} explores also faults irrelevant to the output by building relevant slices for individual statements, capturing how they are computed from symbolic inputs. A dependency analysis efficiently checks for equivalence of slices, deeming a path redundant when the slices for all its statement instances are collectively covered by previous paths.
+\myparagraph{Path Partitioning} Dependence analyses for control and data flows expose casual relationships that one can use during the exploration to filter out paths unable to reveal additional program behavior. \cite{FLOWTEST-CAV09} partitions inputs for concolic execution in non-interfering blocks, symbolically exploring each block while others are kept fixed to concrete values. Interference of two inputs happens when they jointly affect one statement, or statements linked by control or data dependences. \cite{QNR13} focuses on outputs, placing two paths in the same partition if they have the same relevant slice with respect to the program output. A relevant slice is the transitive closure of dynamic data and control dependencies, and also of potential dependencies involving statements that affect the output by not getting executed. \cite{DGSE-TSE17} explores also faults irrelevant to the output by building relevant slices for individual statements, capturing how they are computed from symbolic inputs. A dependency analysis efficiently checks for equivalence of slices, deeming a path redundant when the slices for all its statement instances are collectively covered by previous paths.
 % (which include also an additional kind named interactive)
-}
-%\mytempedit{\myparagraph{Path Partitioning} Based on the observation that a large number of paths can be considered ``equivalent'' since the symbolic expressions describing the output are the same, \cite{QNR13} proposes a path partitioning approach where two program paths are placed in the same partition if they have the same relevant slice with respect to the program output. A relevant slice is the transitive closure of dynamic data and control dependencies as well as potential dependencies, which capture statements that affect the output by not getting executed. Paths are partitioned on-the-fly during their exploration, computing a concise semantic signature for a program, which describes all the different symbolic expressions that the output can assume along different paths.}
 
 
 % ---------------------------------------------------------------------------------------------------
@@ -250,11 +248,11 @@ Common types of preconditions considered in symbolic execution are: {\em known-l
 \begin{wrapfigure}{r}{0.4\textwidth}
   \vspace{-4.2mm}
   \begin{lstlisting}[basicstyle=\ttfamily\small]
-start: get_input(&pkt);
-for(k = 0; k < 128; k++)
-  if (pkt[k] != header[k])
-    goto start;
-parse_payload(&pkt)
+ start: get_input(&pkt);
+ for(k = 0; k < 128; k++)
+   if (pkt[k] != header[k])
+     goto start;
+ parse_payload(&pkt)
 \end{lstlisting}
 \vspace{-5.8mm}
 \end{wrapfigure}
@@ -322,7 +320,7 @@ Note that the path constraints of the execution states $D$ and $E$ can be merged
 %\noindent A symbolic execution engine may perform state merging in the following way:\noindent where {\em ite} represents an {\tt if-then-else} statement and $\bot$ a non-taken branch.
 
 \begin{figure}[t]
-  \vspace{-3mm}
+  %\vspace{-3mm}
   \centering
   \begin{subfigure}{.5\textwidth}
     \centering
@@ -394,12 +392,10 @@ A deeper understanding of a program's behavior can help a symbolic engine optimi
 
 \myparagraph{Type Checking} Symbolic analysis can be effectively mixed with typed checking~\cite{KCF-PLDI10}:  for instance, type checking can determine the return type of a function that is difficult to analyze symbolically: such information can then potentially be used by the executor to prune certain paths\footnote{The work also discusses how a symbolic analysis can help type checking, e.g, by providing context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
 
-%\footnote{Interestingly,~\cite{KCF-PLDI10} discusses also how symbolic analysis can help a type checker. For instance, a symbolic engine can provide context-sensitive properties over a variable that would rule out certain type errors, improving the precision of the type checker.}.
 
 %\mytempedit{\myparagraph{State matching} This approach determines whether an abstract state is subsumed by another}, and can be used to analyze an under-approximation of a program's behavior. For instance, \cite{APV-SPIN06,VPP-ISSTA06} explore different heap shapes in the context of test generation for data structures, using subsumption checking to determine whether a symbolic state is being revisited. % ~\cite{XGM-ISSTA08} implements a different form of under-approximation: it looks for buffer overflows by having only a prefix of a buffer handled symbolically, and a symbolic length that may exceed the lenght of the prefix (any byte beyond the prefix is filled with concrete random data) - [D] I'm dropping this for now as we would have to call the item 'under-approximation' and change the first part of the text
 
-\revedit{
-\myparagraph{Program Differencing} Dependence analyses can identify branches and data flows affected by code edits. {\em Directed incremental symbolic execution}~\cite{DISE-TOSEM14} statically identifies CFG nodes affected by changes, and uses such information to drive the exploration to only those paths that exercise uncovered sequences of affected nodes.}
+\myparagraph{Program Differencing} Dependence analyses can identify branches and data flows affected by code edits. {\em Directed incremental symbolic execution}~\cite{DISE-TOSEM14} statically identifies CFG nodes affected by changes, and uses such information to drive the exploration to only those paths that exercise uncovered sequences of affected nodes.
 % pruning paths that would result in path conditions unaffected by changes.}
 
 \myparagraph{Compiler Optimizations}
@@ -409,13 +405,3 @@ A deeper understanding of a program's behavior can help a symbolic engine optimi
 % D-THESIS14 superseded by DOZ-ISSRE15
 %and none of them has tackled the analysis of binary programs.
 While the effects of a compiler optimization can usually be predicted on the number or size of the instructions executed at run time, a similar reduction is not obvious in symbolic execution~\cite{DOZ-ISSRE15}, mostly because the constraint solver is typically used as a black-box. To the best of our knowledge, only a few works have attempted to analyze the impact of compiler optimizations on constraint generation and path exploration~\cite{WKC-HOTOS13,DOZ-ISSRE15}, leaving interesting open questions. \mynote{TODO: Move to 3.1?}Of a different flavor is the work presented in~\cite{PMZ-ISSTA17}, which explores transformations such as dynamic constant folding and optimized constraint encoding to speed up memory operations in symbolic executors based on theories of arrays (Section~\ref{ss:fully-symbolic-memory}).
-
-
-   %%%% DROPPED PARTS
-    %\item {\em compositional techniques}: caching and reusing the analysis of lower-level function in subsequent computations. The main idea is to compute function summaries. See, e.g.,~\cite{G-POPL07,G-PLDI11,MS-TR07}.
-   %%%% REWRITTEN PARTS
-  %\item {\em phi-node folding} is a code transformation that can be used for statically merging some paths\mynote{E: relation with state merging?}. The main idea is to replace branches with predicated select instructions. Using this technique, the number of paths that must be explored by a symbolic engine can be significantly decreased. For instance,~\cite{CCK-EUROSYS11} used an aggressive variant of phi-node folding, called {\em if-conversion}~\cite{CCF-CGO03}, that allowed them to reduce the number of paths by an exponential factor on some benchmarks.
-%\item \cite{DRILLER-NDSS16} is an example of {\em symbolic-assisted fuzzing}: their technique temporarily exploits concolic execution only when a fuzzer cannot generate a valid input to explore an uncovered branch.
- % \item {\em abstraction}~\cite{C-SEFM07} is a technique that may be used for computing {\em under-approximations} or {\em over-approximations} of a program state. This approach has been exploited in prior works~\cite{APV-SPIN06,VPP-ISSTA06,XGM-ISSTA08}\mynote{check these papers}. Since some of these works reason about state subsumption, they may be connected with the incremental solving optimization discussed in Section~\ref{constraint-optimizations}.
-   %\item {\em type-checking}: \cite{KCF-PLDI10} shows how symbolic analysis can be effectively mixed with type-checking analysis. For instance, type-checking analysis can help a symbolic execution engine by detecting the type of an object (e.g., the type of a value returned by a {\em hard to reason} function). Although no assumption can be made on the value of the returned type, this information may still be useful for the symbolic engine (e.g., if the type has a fixed size, some preconditions can be set, possibly pruning some paths). Similarly, symbolic analysis can help a type checker. For instance, the symbolic engine may provide context-sensitive properties over a variable that clearly rules out type errors, reducing the number of false positive given by a traditional context-insensitive type checker.
-   

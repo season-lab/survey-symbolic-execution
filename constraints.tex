@@ -97,7 +97,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
 \begin{figure}[t]
   \begin{center}
   \begin{subfigure}{.43\textwidth}
-    \vspace{0mm}
+    %\vspace{0mm}
     \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
     1. void test(int x, int y) {
     2.    if (non_linear(y) == x) 
@@ -120,7 +120,7 @@ Compared to the {\em eager} approach of checking the feasibility of a branch as 
   \vspace{-4.0mm}
   \caption{Example with non-linear constraints.}
   \label{fi:non-linear-constraints}
-  \vspace{-2mm}
+  %\vspace{-2mm}
 \end{figure}
 
 
@@ -138,7 +138,7 @@ To partially overcome the incompleteness due to concretization,~\cite{PRV-ISSTA1
 
 \myparagraph{Handling Problematic Constraints}
 Strong SMT solvers allow executors to handle more path constraints directly, reducing the need to resort to concretization. This also results in a lower risk to incur a {\em blind commitment} to concrete values~\cite{DA-FSE14}, which happens when the under-approximation of path conditions from a random choice of concrete values for some variables results in an arbitrary restriction of the search space.
-\revedit{However, the decision problem for certain classes of constraints is well known to be undecidable, e.g., like for non-linear integer arithmetic, or the theory of reals with trigonometric functions often used to model real-world systems.}
+However, the decision problem for certain classes of constraints is well known to be undecidable, e.g., like for non-linear integer arithmetic, or the theory of reals with trigonometric functions often used to model real-world systems.
 %\revedit{However, problems such as non-linear integer arithmetic or the theory of reals together with trigonometric functions are well known to be undecidable.} % SHORT VERSION
 %Unfortunately, some constraints remain prohibitive for SMT solvers: for instance, non-linear integer arithmetic is undecidable in general; also, a branch condition might contain calls to opaque library methods such as trigonometric functions that would require special extensions to the solver to reason about.
 

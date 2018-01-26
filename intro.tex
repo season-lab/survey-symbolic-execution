@@ -2,7 +2,7 @@
 
 \epigraph{\textit{``Sometimes you can't see how important something is in its moment, even if it seems kind of important. This is probably one of those times.''}}{(Cyber Grand Challenge highlights from DEF CON 24, August 6, 2016)}
 
-\vspace{-2.5mm}
+%\vspace{-2.5mm}
 \section{Introduction}
 \label{se:intro}
 
@@ -18,7 +18,7 @@ The key idea is to allow a program to take on {\em symbolic} -- rather than conc
 %Variables and control flow paths are associated with expressions and constraints in terms of those symbols during a symbolic execution of the program, and constraints are eventually solved via SMT (satisfiability modulo theories) solvers.
 
 Symbolic execution techniques have been brought to the attention of a heterogeneous audience since DARPA announced in 2013 the Cyber Grand Challenge, a two-year competition seeking to create automatic systems for vulnerability detection, exploitation, and patching in near real-time~\cite{ANGR-SSP16}.
-
+%
 % other static program
 % which were missed by other program analyses and blackbox testing techniques
 More remarkably, symbolic execution tools have been running 24/7 in the testing process of many Microsoft applications since 2008, revealing for instance nearly 30\% of all the bugs discovered by file fuzzing during the development of Windows 7, which other program analyses and blackbox testing techniques missed~\cite{SAGE-QUEUE12}.
@@ -26,7 +26,7 @@ More remarkably, symbolic execution tools have been running 24/7 in the testing 
 In this article, we survey the main aspects of symbolic execution and discuss the most prominent techniques employed for instance in software testing and computer security applications. Our discussion is mainly focused on {\em forward} symbolic execution, where a symbolic engine analyzes many paths simultaneously starting its exploration from the main entry point of a program.
 %its extensive usage in software testing and computer security applications\mynote{[D] this should change}, where software vulnerabilities can be found by symbolically executing programs at the level of either source or binary code. 
 %A different approach is symbolic {\em backward} execution, where exploration is started from a specific point of the program (e.g., an {\tt assert} statement) and the engine proceeds backward, trying to reconstruct a valid path from an entry point of the program. Since forward symbolic execution is the mainline technique in literature, throughout this article we will always refer to this approach when using the term symbolic execution. Nonetheless, some benefits offered by symbolic backward execution will be pointed out when relevant for the discussion.
-%
+
 We start with a simple example that highlights many of the fundamental issues addressed in the remainder of the article.
 
 % --------------------------------------------------------------------------------------------------------------------
@@ -52,18 +52,18 @@ We start with a simple example that highlights many of the fundamental issues ad
 \vspace{-2mm}
 \caption{Warm-up example: which values of \texttt{a} and \texttt{b} make the \texttt{assert} fail?}
 \label{fig:example-1}
-\vspace{-1.5mm}
+%\vspace{-1.5mm}
 \end{figure}
 
 %\revedit{in the common 4-byte representation}
-Consider the C code of Figure~\ref{fig:example-1} and assume that our goal is to determine which inputs make the {\tt assert} at line 8 of function \texttt{foobar} fail. Since each \revedit{4-byte} input parameter can take as many as $2^{32}$ distinct integer values, the approach of running concretely function \texttt{foobar} on randomly generated inputs will unlikely pick up exactly the assert-failing inputs.
+Consider the C code of Figure~\ref{fig:example-1} and assume that our goal is to determine which inputs make the {\tt assert} at line 8 of function \texttt{foobar} fail. Since each 4-byte input parameter can take as many as $2^{32}$ distinct integer values, the approach of running concretely function \texttt{foobar} on randomly generated inputs will unlikely pick up exactly the assert-failing inputs.
 %Techniques such as random testing could generate bottomless input tests for this function. 
 %However, it is unlikely that exactly the assert-failing inputs would be randomly picked up\mynote{Fuzzing?}. 
 By evaluating the code using symbols for its inputs, instead of concrete values, symbolic execution overcomes this limitation and makes it possible to reason on {\em classes of inputs}, rather than single input values. 
 
 In more detail, every value that cannot be determined by a static analysis of the code, such as an actual parameter of a function or the result of a system call that reads data from a stream, is represented by a symbol $\alpha_i$. At any time, the symbolic execution engine maintains a state $(stmt,~\sigma,~\pi)$ where:
 
-\begin{itemize}[itemsep=1pt]
+\begin{itemize}[itemsep=2pt]
 
 \item $stmt$ is the next statement to evaluate. For the time being, we assume that $stmt$ can be an assignment, a conditional branch, or a jump (more complex constructs such as function calls and loops will be discussed in  Section~\ref{se:path-explosion}).
 
@@ -77,7 +77,7 @@ In more detail, every value that cannot be determined by a static analysis of th
 
 \noindent Depending on $stmt$, the symbolic engine changes the state as follows:
 
-\begin{itemize}[topsep=3pt,itemsep=1pt] % TODO
+\begin{itemize}[topsep=3pt,itemsep=2pt] % TODO
   \item The evaluation of an assignment $x=e$ updates the symbolic store $\sigma$ by associating $x$ with a new symbolic expression $e_s$. We denote this association with $x\mapsto e_s$, where $e_s$ is obtained by evaluating $e$ in the context of the current execution state and  can be any expression involving unary or binary operators over symbols and concrete values.
   
 %   $\alpha_i = e$: when an expression $e$ is assigned to a symbol $\alpha_i$, $pc$ is extended by adding a constraint on $\alpha_i$:
@@ -108,7 +108,7 @@ In more detail, every value that cannot be determined by a static analysis of th
   \caption{Symbolic execution tree of function {\tt foobar} given in Figure~\ref{fig:example-1}. Each execution state, labeled with an upper case letter, shows the statement to be executed, the symbolic store $\sigma$, and the path constraints $\pi$. Leaves are evaluated against the condition in the {\tt assert} statement. }
 %For the sake of presentation the conjunction of constraints is shown as a list of constraints. }
   \label{fig:example-symbolic-execution}
-  \vspace{-1mm}
+  %\vspace{-1mm}
 \end{figure}
 
 \noindent A symbolic execution of function {\tt foobar}, which can be effectively represented as a tree, is shown in Figure~\ref{fig:example-symbolic-execution}. Initially (execution state $A$) the path constraints are {\tt true} and input arguments {\tt a} and {\tt b} are associated with symbolic values. 
@@ -133,7 +133,7 @@ Challenges that symbolic execution has to face when processing real-world code c
 \item \noindent {\em Memory}: how does the symbolic engine handle pointers, arrays, or other complex objects? Code manipulating pointers and data structures may give rise not only to symbolic stored data, but also to addresses being described by symbolic expressions.
 %Any arbitrarily complex object can be regarded as an array of bytes and each byte associated with a distinct symbol. However, when possible, exploiting structural properties of the data may be more convenient: for instance, relational bounds on the class fields in object-oriented languages could be used for refining the search performed by symbolic execution.
 %%%
-\item {\em Environment}: how does the engine handle interactions across the software stack? Calls to library and system code can cause side-effects, e.g., the creation of a file \revedit{or a call back to user code}, that could later affect the execution and must be accounted for. However, evaluating any possible interaction outcome may be unfeasible.
+\item {\em Environment}: how does the engine handle interactions across the software stack? Calls to library and system code can cause side-effects, e.g., the creation of a file or a call back to user code, that could later affect the execution and must be accounted for. However, evaluating any possible interaction outcome may be unfeasible.
 %: it would give rise to a large number of states, while only a fraction of them can \mynote{[D] likely?}actually happen in a non-symbolic scenario.
 %%\mytempedit{Also, third-party closed-source components and popular frameworks (e.g., Java Swing and Android) pose further challenges to an executor, for instance because of the control flows occurring within them through callbacks.}\mynote{CD: may be dropped if we run out of space}
 % Real-world applications constantly interact with the environment (e.g., the file system or the network) through libraries and system calls. These interactions may cause side-effects (such as the creation of a file) that could later affect the execution and must be therefore taken into account. Evaluating any possible interaction outcome is generally unfeasible: it could generate a large number of execution states, of which only a small number can actually happen in a non-symbolic scenario. %A typical strategy is to consider popular library and system routines and create models that can help the symbolic engine analyze only significant outcomes.
@@ -165,7 +165,6 @@ SMT solvers can scale to complex combinations of constraints over hundreds of va
 
 \noindent Depending on the specific context in which symbolic execution is used, different choices and assumptions are made to address the questions highlighted above. Although these choices typically affect soundness or completeness, in several scenarios a partial exploration of the space of possible execution states may be sufficient to achieve the goal (e.g., identifying a crashing input for an application) within a limited time budget.
 
-%\mynote{Better example?}
 
 %different choices and assumptions are made to address the above questions. Although soundness and completeness of symbolic execution may be negatively affected by these choices, there are several application scenarios where a partial exploration of the possible execution states is sufficient for reaching the ultimate goal (e.g., identify a single input that crashes an application).
 
@@ -180,45 +179,4 @@ Symbolic execution has been the focus of a vast body of literature. As of August
 \subsection{Organization of the Article}
 \label{ss:article-organization}
 
-%\iffullver{
-%The remainder of this article is organized as follows. In Section~\ref{se:executors}, we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:symbolic-binary} address the key challenges that we listed in Section~\ref{example-discussion}. Prominent applications based on symbolic execution techniques are discussed in Section~\ref{se:applications}, while concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
-%}
-
-The remainder of this article is organized as follows. In Section~\ref{se:executors} we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while Section~\ref{se:hang} discusses how recent advances in other areas could be applied to enhance symbolic execution techniques. Concluding remarks are addressed in Section~\ref{se:conclusions}. %We provide a glossary of the main terms used in the article in Section~\ref{se:glossary}.
-
-% removed as \revedit{}
-%The appendix addresses further challenges that arise when applying symbolic execution to binary code, discusses some prominent applications of symbolic execution, and includes tables listing some prominent tools and techniques.
-
-
-%\vspace{2cm}
-%\subsection{Removed stuff}
-%
-%\paragraph{Black-box approach versus white-box approach}
-%
-%Discussion\mynote{IF: do we really need this?} of black-box approach and white-box approach. Symbolic execution is a white-box technique. Black-box approaches can be very fast but not always effective. White-box approaches can be very effective but are typically slower than black-box techniques. An in-depth discussion of this aspect will be done when we will discuss~\cite{DRILLER-NDSS16}.
-%
-%\begin{figure}[H]
-%  \vspace{-3mm}
-%  \centering
-%  \begin{subfigure}{.5\textwidth}
-%    \centering
-%    \includegraphics[width=0.9\linewidth]{images/blackbox} 
-%    \caption{Black-box approach}
-%    %\label{fig:sub1}
-%  \end{subfigure}%
-%  \begin{subfigure}{.5\textwidth}
-%    \centering
-%    \includegraphics[width=0.9\linewidth]{images/whitebox} 
-%    \caption{White-box approach}
-%    %\label{fig:sub2}
-%  \end{subfigure}
-%  %\label{fig:example-symbolic-execution}
-%  \vspace{-3mm}
-%\end{figure}
-%
-%\paragraph{Taken from old Overview}
-%
-%Symbolic execution has been originally introduced in~\cite{K-CACM76} and~\cite{H-TSE77}. A good introduction to symbolic execution is presented in~\cite{KLEE-OSDI08}.\mynote{Extend this paragraph}
-%%(while~\cite{EXE-CCS06} is a previous effort of the same authors).
-%\cite{SAGE-NDSS08} is one successful story of symbolic execution. \cite{SAB-SP10} presents a neat formalization of symbolic execution and of taint analysis as well.
-%
+The remainder of this article is organized as follows. In Section~\ref{se:executors} we discuss the overall principles and evaluation strategies of a symbolic execution engine. Section~\ref{memory-model} through Section~\ref{se:constraint-solving} address the key challenges that we listed in Section~\ref{example-discussion}, while Section~\ref{se:hang} discusses how recent advances in other areas could be applied to enhance symbolic execution techniques. Concluding remarks are addressed in Section~\ref{se:conclusions}.

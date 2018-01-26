@@ -16,7 +16,7 @@ The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the addres
 \label{ss:fully-symbolic-memory}
 
 \begin{figure}[t]
-\vspace{-1mm}
+%\vspace{-1mm}
 \begin{center}
 \begin{tabular}{c}
 \begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
@@ -29,18 +29,18 @@ The {\em symbolic memory address} problem~\cite{SAB-SP10} arises when the addres
 \end{lstlisting}
 \end{tabular}
 \end{center}
-\vspace{-2.5mm}
+\vspace{-2mm}
 \caption{Memory modeling example: which values of \texttt{i} and \texttt{j} make the \texttt{assert} fail?}
 \label{fi:example-mem}
 \end{figure}
 
 \begin{figure}[t]
-\vspace{-3mm}
+%\vspace{-3mm}
 \includegraphics[width=1\columnwidth]{images/memory-fork} 
 \vspace{-4.5mm}
 \caption{Fully symbolic memory via state forking for the example of Figure~\ref{fi:example-mem}.}
 \label{fi:memory-fork}
-\vspace{-0.5mm}
+%\vspace{-0.5mm}
 \end{figure}
 
 At the highest level of generality, an engine may treat memory addresses as fully symbolic. This is the approach taken by a number of works (e.g., {\sc BitBlaze}~\cite{BITBLAZE-ICISS08},~\cite{TLL-CAV10}, {\sc BAP}~\cite{BAP-CAV11}, and~\cite{TS-ATVA14}). Two fundamental approaches, pioneered by King in a seminal paper~\cite{K-CACM76}, are the following:
@@ -52,7 +52,7 @@ At the highest level of generality, an engine may treat memory addresses as full
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=0.7\columnwidth]{images/memory-ite}
+\includegraphics[width=0.75\columnwidth]{images/memory-ite}
 \end{center}
 \vspace{-3mm}
 \caption{Fully symbolic memory via if-then-else formulas for the example of Figure~\ref{fi:example-mem}.}
@@ -145,7 +145,7 @@ This algorithm comes with a number of caveats: for instance, querying the solver
 \subsection{Lazy Initialization}
 \label{ss:complex-objects}
 
-\cite{KPV-TACAS03} \revedit{proposes} symbolic execution techniques for advanced object-oriented language constructs, such as those offered by C++ and Java. The authors describe a framework for software verification that combines symbolic execution and model checking to handle linked data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
+\cite{KPV-TACAS03} proposes symbolic execution techniques for advanced object-oriented language constructs, such as those offered by C++ and Java. The authors describe a framework for software verification that combines symbolic execution and model checking to handle linked data structures such as lists and trees. % [D] added dynamically allocated & discarded primitive data types, and concurrency.
 
 In particular, they generalize symbolic execution by introducing {\em lazy initialization} to effectively handle dynamically allocated objects. Compared to our warm-up example from Section~\ref{symbolic-execution-example}, the state representation is extended with a {\em heap configuration} used to maintain such objects. Symbolic execution of a method taking complex objects as inputs starts with uninitialized fields, and assigns values to them in a lazy fashion, i.e., they are initialized when first accessed during execution.
 

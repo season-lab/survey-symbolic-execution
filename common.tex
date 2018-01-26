@@ -1,5 +1,5 @@
 % !TEX root = main.tex
-\usepackage{a4wide}
+%\usepackage{a4wide}
 \usepackage{listings}
 \usepackage{comment}
 \usepackage{amsmath}
@@ -20,7 +20,7 @@
 \usepackage{wasysym} % \brokenvert
 \usepackage{wrapfig}
 
-\usepackage[usenames, dvipsnames]{xcolor}
+%\usepackage[usenames, dvipsnames]{xcolor} % for acmart
 
 % commands
 %\newcommand{\fullver}{}
@@ -30,25 +30,10 @@
 \newcommand{\iffullver}[2]{#2}
 \fi
 
-\usepackage{tikz}
-\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
-            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+%\usepackage{tikz}
+%\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-%\usepackage{titlesec}
- %\titlespacing{\section}{0pt}{*1.2}{*1.2}
- %\titlespacing{\subsection}{0pt}{*1.1}{*1.1}
- %\titlespacing{\subsubsection}{0pt}{*.6}{*.6}
-%\titlespacing{\paragraph}{0pt}{*.6}{*.60}
-%\titleformat{\paragraph}[runin]{\normalsize\bfseries\scshape}{}{}{}
-%Get rid of some extra whitespace in the bibliography
- %\setlength{\bibsep}{0.75pt}
-%Get rid of some extra whitespace around float (containing figures)
- %\setlength{\textfloatsep}{4pt plus 0.25pt minus 1pt}
- %\setlength{\intextsep}{4.0pt plus 0.25pt minus .5pt}
- %\setlength{\floatsep}{2pt plus 2pt minus 1pt}
- %\setlength{\abovecaptionskip}{5pt plus 1pt minus 1pt}
-% \setlength{\belowcaptionskip}{10pt plus 1pt minus 1pt}
- %\setlength{\parskip}{0pt}
 
 \renewcommand{\epigraphsize}{\footnotesize}
 \setlength{\epigraphwidth}{10cm}
@@ -65,20 +50,11 @@
   pdfauthor= {Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu, Irene Finocchi}
 }	
 
-%\usepackage{xcolor}
-%\newcommand{\myedit}[1]{{\leavevmode\color{red}#1}}
-%\newcommand{\mytempedit}[1]{{\leavevmode\color{blue}#1}}
-%\newcommand{\myedit}[1]{{\color{red}\underline{#1}}}
-%\newcommand{\mytempedit}[1]{{\color{black}#1}}
+
 \newcommand{\mytempedit}[1]{\ignorespaces#1}
 \newcommand{\revedit}[1]{{\color{blue}#1}}
-\newcommand{\lateredit}[1]{{\color{red}#1}}
 
-%\newcommand{\mytempedit}[1]{{\color{blue}#1}}
 
-%\newcommand{\mytempedit}[1]{{\color{blue}\fontfamily{lmdh}\selectfont #1}}
-
-%\setlength{\parindent}{0pt}
 \setlength{\FrameSep}{2pt}
 \newcommand{\myparagraph}[1]{\medskip\noindent{\bf\small #1.} }
 \newcommand{\myparagraphnoperiod}[1]{\medskip\noindent{\bf\small #1} }
@@ -89,7 +65,6 @@
 
 \newcommand{\stwoe}{\text{S\textsuperscript{2}E}}
 \newcommand{\myinput}[1]{\ifdefined\internalrep \input{../#1} \else \input{#1} \fi}
-\newcommand{\missing}{\textbf{XXX}}
 %\newcommand{\boxedexample}[1]{\vspace{2mm}\noindent\fbox{\parbox{0.98\textwidth}{{\em Example.} #1}}}
 
 \ifdefined\arxivver

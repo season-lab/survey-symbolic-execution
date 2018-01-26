@@ -1,14 +1,12 @@
 % !TEX root = main.tex
 
-\vspace{-2pt} % TODO
 \section{Conclusions}
 \label{se:conclusions}
 
-\revedit{
 Symbolic execution techniques have evolved significantly in the last decade, with notable applications to compelling problems from several domains like software testing (e.g., test input generation, regression testing), security (e.g., exploit generation, authentication bypass), and code analysis (e.g., program deobfuscation, dynamic software updating). This trend has not only improved existing solutions, but also led to novel ideas and, in some cases, to major practical breakthroughs. For instance, the push for scalable automated program analyses in security has culminated in the 2016 DARPA Cyber Grand Challenge, which hosted systems for detecting and fixing vulnerabilities in unknown software with no human intervention, such as {\sc Angr}~\cite{ANGR-SSP16} and {\sc Mayhem}~\cite{MAYHEM-SP12}, that competed for nearly \$4M in prize money.
 
 %\noindent
-This survey has discussed some of the key aspects and challenges of symbolic execution, presenting for a broad audience the basic design principles of symbolic executors and the main optimization techniques. We hope it will help non-experts grasp the key inventions in this exciting line of research, inspiring further work and new ideas.}
+This survey has discussed some of the key aspects and challenges of symbolic execution, presenting for a broad audience the basic design principles of symbolic executors and the main optimization techniques. We hope it will help non-experts grasp the key inventions in this exciting line of research, inspiring further work and new ideas.
 
 \specialcomment{online}{
 \begingroup
@@ -24,6 +22,10 @@ This survey has discussed some of the key aspects and challenges of symbolic exe
 The online appendix of this manuscript discusses a selection of prominent applications of symbolic execution techniques, addresses further challenges that arise in the analysis of programs in binary form, and provides a list of popular symbolic engines.
 }
 %\end{online}
+
+\begin{acks}
+We would like to thank the anonymous referees for their valuable comments and helpful suggestions. This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
+\end{acks}
 
 \iffalse
 Techniques for symbolic execution have evolved significantly in the last decade, leading to major practical breakthroughs. In 2016, the DARPA Cyber Grand Challenge hosted systems that can detect and fix vulnerabilities in unknown software with no human intervention, such as {\sc Angr}~\cite{ANGR-SSP16} and {\sc Mayhem}~\cite{MAYHEM-SP12}, which won the \$2M first prize. {\sc Mayhem} was also the first autonomous software to play the Capture-The-Flag contest at the DEF CON 24 hacker convention\footnote{\url{https://www.defcon.org/html/defcon-24/dc-24-ctf.html}.}. The event demonstrated that tools for automatic exploit detection based on symbolic execution can be competitive with human experts, paving the road to unprecedented applications %and the rise of start-ups 

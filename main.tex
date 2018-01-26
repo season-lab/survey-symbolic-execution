@@ -11,7 +11,9 @@
 %
 % For tracking purposes => this is v1.3 - March 2012
 
-\documentclass[prodmode,acmcsur]{acmsmall} % Aptara syntax
+\documentclass[format=acmsmall, review=false]{acmart} % Aptara syntax
+
+%\usepackage{booktabs} % For formal tables % TODO
 
 % Package to generate and customize Algorithm as per ACM style
 \usepackage[ruled]{algorithm2e} 
@@ -23,11 +25,21 @@
 \IncMargin{-\parindent}
 
 % Metadata Information
+\acmJournal{CSUR}
 \acmVolume{0}
 \acmNumber{0}
 \acmArticle{0}
-\acmYear{0000}
+\acmYear{2018}
 \acmMonth{0}
+\copyrightyear{2018}
+
+\acmDOI{0000001.0000001}
+\setcopyright{acmcopyright}
+
+\received{October 2016}
+\received[revised]{December 2017}
+\received[accepted]{January 2018}
+
 
 % Copyright
 %\setcopyright{acmcopyright}
@@ -40,21 +52,29 @@
 
 \input{common}
 
-% DOI
-\doi{0000001.0000001}
-
-%ISSN
-\issn{1234-56789}
-
 % Document starts
 \begin{document}
 
-% Page heads
-\markboth{R. Baldoni, E. Coppa, D. C. D'Elia, C. Demetrescu, and I. Finocchi}{A Survey of Symbolic Execution Techniques}
-
 % Title portion
-\title{A Survey of Symbolic Execution Techniques\\}
-\author{ROBERTO BALDONI
+\title{A Survey of Symbolic Execution Techniques}
+
+% Author info
+\author{Roberto Baldoni}
+\email{baldoni@diag.uniroma1.it}
+\author{Emilio Coppa}
+\email{coppa@diag.uniroma1.it}
+\author{Daniele Cono D'Elia}
+\email{delia@diag.uniroma1.it}
+\author{Camil Demetrescu}
+\email{demetres@diag.uniroma1.it}
+\author{Irene Finocchi}
+\email{finocchi@di.uniroma1.it}
+\affiliation{
+	\institution{Sapienza University of Rome}
+}
+
+\iffalse
+\email{
 \affil{\href{http://www.cis.uniroma1.it/}{Cyber Intelligence and Information Security Research Center}, Sapienza}
 EMILIO COPPA
 \affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
@@ -65,6 +85,7 @@ CAMIL DEMETRESCU
 IRENE FINOCCHI
 \affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
 }
+\fi
 % NOTE! Affiliations placed here should be for the institution where the
 %       BULK of the research was done. If the author has gone to a new
 %       institution, before publication, the (above) affiliation should NOT be changed.
@@ -113,8 +134,8 @@ Many security and software testing applications require checking whether certain
 
 \keywords{Symbolic execution, static analysis, concolic execution, software testing}
 
-\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu,
-and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
+%\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu,
+%and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
 % At a minimum you need to supply the author names, year and a title.
 % IMPORTANT:
 % Full first names whenever they are known, surname last, followed by a period.
@@ -126,21 +147,27 @@ and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
 % is followed by a period and they are separated by a space.
 % The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
 
-\begin{bottomstuff}
-%This work is supported by the National Science Foundation, under grant CNS-0435060, grant CCR-0325197 and grant EN-CS-0329609.
+\authorsaddresses{Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. E-mail addresses: \{baldoni, coppa, delia, demetrescu\}@diag.uniroma1.it, finocchi@di.uniroma1.it.}
 
-Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. 
-This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
+\iffalse
+\begin{bottomstuff}
+%This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
 \end{bottomstuff}
+\fi
+
+
+% Page heads
+%\markboth{R. Baldoni, E. Coppa, D. C. D'Elia, C. Demetrescu, and I. Finocchi}{A Survey of Symbolic Execution Techniques}
+\renewcommand{\shortauthors}{R. Baldoni et al.}
 
 \maketitle
 
 \input{intro}
-\myinput{executors}
-\myinput{memory}
-\myinput{environment}
-\myinput{explosion}
-\myinput{constraints}
+\input{executors}
+\input{memory}
+\input{environment}
+\input{explosion}
+\input{constraints}
 \input{hang}
 \input{conclusions}
 
