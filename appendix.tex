@@ -11,7 +11,8 @@
 %
 % For tracking purposes => this is v1.3 - March 2012
 
-\documentclass[prodmode,acmcsur]{acmsmall} % Aptara syntax
+%\documentclass[prodmode,acmcsur]{acmsmall} % Aptara syntax
+\documentclass[format=acmsmall, review=false]{acmart}
 
 % Package to generate and customize Algorithm as per ACM style
 \usepackage[ruled]{algorithm2e} 
@@ -23,28 +24,18 @@
 \IncMargin{-\parindent}
 
 % Metadata Information
+\acmJournal{CSUR}
 \acmVolume{0}
 \acmNumber{0}
 \acmArticle{0}
-\acmYear{0000}
+\acmYear{2018}
 \acmMonth{0}
+\copyrightyear{2018}
 
-% Copyright
-%\setcopyright{acmcopyright}
-%\setcopyright{acmlicensed}
-%\setcopyright{rightsretained}
-%\setcopyright{usgov}
-%\setcopyright{usgovmixed}
-%\setcopyright{cagov}
-%\setcopyright{cagovmixed}
+\acmDOI{0000001.0000001}
+\setcopyright{none}
 
 \input{common}
-
-% DOI
-\doi{0000001.0000001}
-
-%ISSN
-\issn{1234-56789}
 
 % Document starts
 \begin{document}
@@ -54,83 +45,21 @@
 
 % Title portion
 \title{Online Appendix to:\\ A Survey of Symbolic Execution Techniques\\}
-\author{ROBERTO BALDONI
-\affil{\href{http://www.cis.uniroma1.it/}{Cyber Intelligence and Information Security Research Center}, Sapienza}
-EMILIO COPPA
-\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
-DANIELE CONO D'ELIA
-\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
-CAMIL DEMETRESCU
-\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
-IRENE FINOCCHI
-\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
+\author{Roberto Baldoni}
+\email{baldoni@diag.uniroma1.it}
+\author{Emilio Coppa}
+\email{coppa@diag.uniroma1.it}
+\author{Daniele Cono D'Elia}
+\email{delia@diag.uniroma1.it}
+\author{Camil Demetrescu}
+\email{demetres@diag.uniroma1.it}
+\author{Irene Finocchi}
+\email{finocchi@di.uniroma1.it}
+\affiliation{
+	\institution{Sapienza University of Rome}
 }
-% NOTE! Affiliations placed here should be for the institution where the
-%       BULK of the research was done. If the author has gone to a new
-%       institution, before publication, the (above) affiliation should NOT be changed.
-%       The authors 'current' address may be given in the "Author's addresses:" block (below).
-%       So for example, Mr. Abdelzaher, the bulk of the research was done at UIUC, and he is
-%       currently affiliated with NASA.
 
-%\begin{abstract}
-%\end{abstract}
-
-\begin{comment}
-\begin{CCSXML} % http://dl.acm.org/ccs.cfm
-<ccs2012>
-<concept>
-<concept_id>10011007.10010940.10010992.10010998.10010999</concept_id>
-<concept_desc>Software and its engineering~Software verification</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-<concept>
-<concept_id>10011007.10010940.10010992.10010998.10011001</concept_id>
-<concept_desc>Software and its engineering~Dynamic analysis</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-<concept>
-<concept_id>10011007.10011074.10011099.10011102.10011103</concept_id>
-<concept_desc>Software and its engineering~Software testing and debugging</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-<concept>
-<concept_id>10002978.10003022</concept_id>
-<concept_desc>Security and privacy~Software and application security</concept_desc>
-<concept_significance>100</concept_significance>
-</concept>
-</ccs2012>
-\end{CCSXML}
-
-\ccsdesc[500]{Software and its engineering~Software verification}
-\ccsdesc[300]{Software and its engineering~Dynamic analysis}
-\ccsdesc[300]{Software and its engineering~Software testing and debugging}
-\ccsdesc[100]{Security and privacy~Software and application security}
-\end{comment}
-
-% We no longer use \terms command
-%\terms{Design, Algorithms, Performance}
-
-%\keywords{Symbolic execution, static analysis, concolic execution, malware analysis}
-
-%\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu, and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
-% At a minimum you need to supply the author names, year and a title.
-% IMPORTANT:
-% Full first names whenever they are known, surname last, followed by a period.
-% In the case of two authors, 'and' is placed between them.
-% In the case of three or more authors, the serial comma is used, that is, all author names
-% except the last one but including the penultimate author's name are followed by a comma,
-% and then 'and' is placed before the final author's name.
-% If only first and middle initials are known, then each initial
-% is followed by a period and they are separated by a space.
-% The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
-
-
-%\begin{bottomstuff}
-\begin{comment}
-Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. 
-This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
-\end{comment}
-%\end{bottomstuff}
+\authorsaddresses{Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. E-mail addresses: \{baldoni, coppa, delia, demetrescu\}@diag.uniroma1.it, finocchi@di.uniroma1.it.}
 
 \maketitle
 
