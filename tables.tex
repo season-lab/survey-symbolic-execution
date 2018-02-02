@@ -1,16 +1,9 @@
 % !TEX root = appendix.tex
-\section{Additional Tables}
-
-\myparagraph{Path Selection Heuristics}
-Table~\ref{tab:heuristics} provides a categorization of the search heuristics that have been discussed in Section 2.3 of the main article. For each category, we list several works that have proposed interesting embodiments of the category.
-
-\myparagraph{Tools}
-Table~\ref{tab:symbolic-engines} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the main article.
 
 {\renewcommand{\arraystretch}{1.1}
-\begin{table}[b!]
+\begin{table}[t]
   \centering
-  \begin{adjustbox}{width=0.95\linewidth} % TODO was 1; with 0.88 the last paragraph will fit
+  \begin{adjustbox}{width=0.85\linewidth} % TODO was 1; with 0.88 the last paragraph will fit
   \begin{small}
   \begin{tabular}{| l || l |}
     \hline      
@@ -37,6 +30,7 @@ Table~\ref{tab:symbolic-engines} lists a number of symbolic execution engines th
 \end{table}
 
 \begin{table}[t!]
+  \vspace{-4mm}
   \centering
   \begin{adjustbox}{width=0.75\columnwidth}
   \begin{small}
@@ -83,5 +77,13 @@ Table~\ref{tab:symbolic-engines} lists a number of symbolic execution engines th
   \end{adjustbox}
   \caption{Selection of symbolic executors, along with their reference article(s) and project web site (if any).} % execution engines, software project
   \label{tab:symbolic-engines}
-  %\vspace{-3.2mm} % TODO
+  \vspace{-3mm}
 \end{table}
+
+\section{Additional Tables}
+
+%\myparagraph{Path Selection Heuristics}
+Table~\ref{tab:heuristics} provides a categorization of the search heuristics that have been discussed in Section 2.3 of the main article. For each category, we list several works that have proposed interesting embodiments of the category.
+
+%\myparagraph{Tools}
+Table~\ref{tab:symbolic-engines} lists a number of symbolic execution engines that have worked as incubators for several of the techniques surveyed in this article. The novel contributions introduced by tools that represented milestones in the area are described in the appropriate sections throughout the main article.
