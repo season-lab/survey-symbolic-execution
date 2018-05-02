@@ -11,10 +11,9 @@
 %
 % For tracking purposes => this is v1.3 - March 2012
 
-\documentclass[10pt,a4paper]{article} % Aptara syntax
+\documentclass[format=acmsmall, review=false]{acmart} % Aptara syntax
 
-\usepackage{authblk}
-\usepackage{breakcites}
+%\usepackage{booktabs} % For formal tables % TODO
 
 % Package to generate and customize Algorithm as per ACM style
 \usepackage[ruled]{algorithm2e} 
@@ -25,89 +24,172 @@
 \SetAlCapHSkip{0pt}
 \IncMargin{-\parindent}
 
-\newcommand{\fullver}{}
-\newcommand{\arxivver}{}
+% Metadata Information
+\acmJournal{CSUR}
+\acmVolume{51}
+\acmNumber{3}
+\acmArticle{0}
+\acmYear{2018}
+\acmMonth{0}
+\copyrightyear{2018}
+
+\acmDOI{0000001.0000001}
+\setcopyright{acmcopyright}
+
+\received{October 2016}
+\received[revised]{December 2017}
+\received[accepted]{January 2018}
+
+
+% Copyright
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\setcopyright{usgov}
+%\setcopyright{usgovmixed}
+%\setcopyright{cagov}
+%\setcopyright{cagovmixed}
+
 \input{common}
+
+% arXiv stuff
+%\usepackage{fancyhdr}
+%\rhead{Aaron}
+%\usepackage[margin=40mm]{geometry}
+\usepackage{background}
+\setlength\fboxrule{1pt}
+\SetBgContents{\fcolorbox{red}{white}{\parbox{\dimexpr\linewidth+12\fboxsep-2\fboxrule}{\itshape\small If you are considering citing this survey, we would appreciate if you could use the following BibTeX entry: \href{http://goo.gl/Hf5Fvc}{http://goo.gl/Hf5Fvc}}}}
+% \em\small If you are considering citing this survey, we would appreciate if you could use the following BibTeX entry: \href{http://goo.gl/Hf5Fvc}{http://goo.gl/Hf5Fvc}
+\SetBgScale{1}
+\SetBgColor{black}
+\SetBgAngle{0}
+\SetBgOpacity{1}
+\SetBgPosition{current page.north}
+\SetBgVshift{-0.75cm}
+\SetBgHshift{0cm}
 
 % Document starts
 \begin{document}
 
-% Page heads
-\markboth{R. Baldoni, E. Coppa, D. C. D'Elia, C. Demetrescu, and I. Finocchi}{A Survey of Symbolic Execution Techniques}
-
 % Title portion
-\title{\fontsize{22}{12}\selectfont{A Survey of Symbolic Execution Techniques}}
-\author[1]{Roberto Baldoni}
-\author[2]{Emilio Coppa}
-\author[2]{Daniele Cono D'Elia}
-\author[2]{\authorcr Camil Demetrescu}
-\author[2]{Irene Finocchi}
-\affil[1]{\small\href{http://www.cis.uniroma1.it/}{Cyber Intelligence and Information Security Research Center}, Sapienza University of Rome}
-\affil[2]{\href{season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
-\affil[ ]{{\vskip 1pt}\textit {\{baldoni,coppa,delia,demetres\}@dis.uniroma1.it\\ finocchi@di.uniroma1.it}}
+\title{A Survey of Symbolic Execution Techniques}
 
-\date{\vspace{-4mm}}
+% Author info
+\author{Roberto Baldoni}
+\email{baldoni@diag.uniroma1.it}
+\author{Emilio Coppa}
+\email{coppa@diag.uniroma1.it}
+\author{Daniele Cono D'Elia}
+\email{delia@diag.uniroma1.it}
+\author{Camil Demetrescu}
+\email{demetres@diag.uniroma1.it}
+\author{Irene Finocchi}
+\email{finocchi@di.uniroma1.it}
+\affiliation{
+	\institution{Sapienza University of Rome}
+}
 
-\maketitle
+\iffalse
+\email{
+\affil{\href{http://www.cis.uniroma1.it/}{Cyber Intelligence and Information Security Research Center}, Sapienza}
+EMILIO COPPA
+\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
+DANIELE CONO D'ELIA
+\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
+CAMIL DEMETRESCU
+\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
+IRENE FINOCCHI
+\affil{\href{http://season-lab.github.io}{SEASON Lab}, Sapienza University of Rome}
+}
+\fi
+% NOTE! Affiliations placed here should be for the institution where the
+%       BULK of the research was done. If the author has gone to a new
+%       institution, before publication, the (above) affiliation should NOT be changed.
+%       The authors 'current' address may be given in the "Author's addresses:" block (below).
+%       So for example, Mr. Abdelzaher, the bulk of the research was done at UIUC, and he is
+%       currently affiliated with NASA.
 
 \begin{abstract}
 Many security and software testing applications require checking whether certain properties of a program hold for any possible usage scenario. For instance, a tool for identifying software vulnerabilities may need to rule out the existence of any backdoor to bypass a program's authentication. One approach would be to test the program using different, possibly random inputs. As the backdoor may only be hit for very specific program workloads, automated exploration of the space of possible inputs is of the essence. Symbolic execution provides an elegant solution to the problem, by systematically exploring many possible execution paths at the same time without necessarily requiring concrete inputs. Rather than taking on fully specified input values, the technique abstractly represents them as symbols, resorting to constraint solvers to construct actual instances that would cause property violations. Symbolic execution has been incubated in dozens of tools developed over the last four decades, leading to major practical breakthroughs in a number of prominent software reliability applications. The goal of this survey is to provide an overview of the main ideas, challenges, and solutions developed in the area, distilling them for a broad audience.
 \end{abstract}
 
+%\begin{comment}
+\begin{CCSXML} % http://dl.acm.org/ccs.cfm
+<ccs2012>
+<concept>
+<concept_id>10011007.10010940.10010992.10010998.10010999</concept_id>
+<concept_desc>Software and its engineering~Software verification</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10010940.10010992.10010998.10011001</concept_id>
+<concept_desc>Software and its engineering~Dynamic analysis</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10011074.10011099.10011102.10011103</concept_id>
+<concept_desc>Software and its engineering~Software testing and debugging</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+<concept>
+<concept_id>10002978.10003022</concept_id>
+<concept_desc>Security and privacy~Software and application security</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Software and its engineering~Software verification}
+%\ccsdesc[300]{Software and its engineering~Dynamic analysis}
+\ccsdesc[300]{Software and its engineering~Software testing and debugging}
+\ccsdesc[100]{Security and privacy~Software and application security}
+%\end{comment}
+
 % We no longer use \terms command
 %\terms{Design, Algorithms, Performance}
 
-%\keywords{Symbolic execution, static analysis, concolic execution, malware analysis}
+\keywords{Symbolic execution, static analysis, concolic execution, software testing}
 
-%\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu, and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
+%\acmformat{Roberto Baldoni, Emilio Coppa, Daniele Cono D'Elia, Camil Demetrescu,
+%and Irene Finocchi, 2016. A survey of symbolic execution techniques.}
+% At a minimum you need to supply the author names, year and a title.
+% IMPORTANT:
+% Full first names whenever they are known, surname last, followed by a period.
+% In the case of two authors, 'and' is placed between them.
+% In the case of three or more authors, the serial comma is used, that is, all author names
+% except the last one but including the penultimate author's name are followed by a comma,
+% and then 'and' is placed before the final author's name.
+% If only first and middle initials are known, then each initial
+% is followed by a period and they are separated by a space.
+% The remaining information (journal title, volume, article number, date, etc.) is 'auto-generated'.
+
+\authorsaddresses{Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. E-mail addresses: \{baldoni, coppa, delia, demetrescu\}@diag.uniroma1.it, finocchi@di.uniroma1.it.}
 
 \iffalse
 \begin{bottomstuff}
-Author's addresses: R. Baldoni, E. Coppa, D.C. D'Elia, and C. Demetrescu, Department of Computer, Control, and Management Engineering, Sapienza University of Rome; I. Finocchi, Department of Computer Science, Sapienza University of Rome. 
+%This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI National Laboratory of Cyber Security. % (Consorzio Interuniversitario Nazionale Informatica) 
 \end{bottomstuff}
 \fi
 
 
+% Page heads
+%\markboth{R. Baldoni, E. Coppa, D. C. D'Elia, C. Demetrescu, and I. Finocchi}{A Survey of Symbolic Execution Techniques}
+\renewcommand{\shortauthors}{R. Baldoni et al.}
 
-% \input{intro}
-% \myinput{executors}
-% \myinput{memory}
-% \myinput{environment}
-% \myinput{loops}
-% \myinput{explosion}
-% \myinput{constraints}
-% \myinput{binary}
-% \input{applications}
-% \input{conclusions}
-% \input{glossary}
+\maketitle
 
 \input{intro}
-\myinput{executors}
-\myinput{memory}
-\myinput{environment}
-\myinput{explosion}
-\myinput{constraints}
-%\myinput{binary}
-%\input{applications}
+\input{executors}
+\input{memory}
+\input{environment}
+\input{explosion}
+\input{constraints}
 \input{hang}
 \input{conclusions}
 
-\myparagraph{Acknowledgements}
-%This work is partially supported by a grant of the Italian Presidency of Ministry Council and by the CINI  (Consorzio Interuniversitario Nazionale Informatica) Cybersecurity National Laboratory.
-This work is supported in part by a grant of the Italian Presidency of the Council of Ministers and by the CINI (Consorzio Interuniversitario Nazionale Informatica) National Laboratory of Cyber Security.
-
-
-\input{glossary}
-
-\appendix
-\input{tables}
-\myinput{binary}
-\input{applications}
-
-
 % Bibliography
 %\bibliographystyle{abstract} 
-\bibliographystyle{apalike-refs}
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{symbolic}
 
 % History dates
